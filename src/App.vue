@@ -9,6 +9,9 @@
 
     <p v-if="user">Logged in as: {{ user.email }}</p>
   </div>
+  <div class="bg-blue-500 text-white p-4">
+    Hello, Tailwind!
+  </div>
 </template>
 
 <script>
