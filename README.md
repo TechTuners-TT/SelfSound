@@ -87,6 +87,4 @@ To enable GitHub Pages for your repository, follow these steps:
 
 After a few moments, your app should be live at:
 
-`
 https://techtuners-tt.github.io/frontend/
-`
