@@ -8,10 +8,12 @@
     <button v-if="user" @click="verifyToken">Verify Google Token</button>
 
     <p v-if="user">Logged in as: {{ user.email }}</p>
+  
+    <div class="bg-blue-500 text-white p-4">
+      Hello, Tailwind!
+    </div>
   </div>
-  <div class="bg-blue-500 text-white p-4">
-    Hello, Tailwind!
-  </div>
+
 </template>
 
 <script>

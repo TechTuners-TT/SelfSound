@@ -6,6 +6,10 @@ const supabase = createClient(
   process.env.VUE_APP_SUPABASE_ANON_KEY
 );
 
+
+// cheack is it connected to Supabase
+console.log(supabase);
+
 // Template to get data from tables
 const fetchData = async () => {
   const { data, error } = await supabase.from('User').select('*');
