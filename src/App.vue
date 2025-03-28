@@ -1,6 +1,7 @@
 <template>
   <div class="app">
     <h1>Google Auth with Supabase</h1>
+    <h2>Hello it is test</h2>
 
     <button v-if="!user" @click="loginWithGoogle">Login with Google</button>
     <button v-if="user" @click="logout">Logout</button>
