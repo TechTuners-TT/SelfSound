@@ -1,14 +1,7 @@
-
-import { supabase } from '../supabase';
+import { supabase } from '../clients/supabase';
 
 export async function getGoogleToken() {
-  const { data, error } = await supabase.auth.getSession();
-
-  if (error) {
-    console.error("Error getting session:", error);
-    return null;
-  }
-
+  const { data } = await supabase.auth.getSession();
   return data?.session?.provider_token || null;
 }
 
@@ -27,14 +20,9 @@ export async function verifyGoogleToken() {
       body: JSON.stringify({ id_token: idToken }),
     });
 
-    if (!response.ok) {
-      throw new Error('Failed to verify token');
-    }
-
     return await response.json();
   } catch (error) {
     console.error('Token verification failed:', error);
     return null;
   }
 }
-
