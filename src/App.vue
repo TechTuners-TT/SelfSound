@@ -1,24 +1,37 @@
 <template>
   <div class="app">
     <h1>Google Auth with Supabase</h1>
-    <h2>Hello it is test</h2>
 
     <button v-if="!user" @click="loginWithGoogle">Login with Google</button>
     <button v-if="user" @click="logout">Logout</button>
     <button v-if="user" @click="verifyToken">Verify Google Token</button>
 
     <p v-if="user">Logged in as: {{ user.email }}</p>
-  
-    <div class="bg-blue-500 text-white p-4">
-      Hello, Tailwind!
+  </div>
+
+  <header>
+
+    <div class="wrapper">
+      <nav>
+        <RouterLink to="/">Home</RouterLink>
+        <RouterLink to="/secret">Secret</RouterLink>
+		<RouterLink to="/login">Login</RouterLink>
+      </nav>
     </div>
+  </header>
+
+  <div class="content">
+	<RouterView />
   </div>
 
 </template>
 
+
 <script>
+// import { RouterLink, RouterView } from 'vue-router'
+
 import { ref, onMounted } from 'vue';
-import { supabase } from './supabase';
+import { supabase } from './clients/supabase';
 import { verifyGoogleToken } from './api/auth';
 
 export default {
@@ -70,4 +83,26 @@ button {
   font-size: 16px;
   cursor: pointer;
 }
+
+nav {
+	display: flex;
+	justify-content: center;
+}
+
+nav a {
+	padding: 1em;
+}
+
+.content {
+	display: flex;
+	align-items: center;
+	flex-direction: column;
+	width: 500px;
+	border: solid 1px black;
+	margin-left: auto;
+	margin-right: auto;
+	border-radius: 1em;
+	padding: 2em 0 2em 0;
+}
 </style>
+
