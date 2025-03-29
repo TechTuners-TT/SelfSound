@@ -3,6 +3,8 @@ import { supabase } from '../clients/supabase'
 import HomeView from '../views/HomeView.vue'
 import LoginView from '../views/LoginView.vue'
 import UnauthorizedView from '../views/UnauthorizedView.vue'
+import SignIn from '../views/SignIn.vue'
+import SignUp from '../views/SignUp.vue'
 
 let localUser;
 
@@ -29,6 +31,16 @@ const router = createRouter({
       path: '/unauthorized',
       name: 'unauthorized',
       component: UnauthorizedView
+	},
+  {
+      path: '/signin',
+      name: 'signin',
+      component: SignIn
+	},
+  {
+      path: '/signup',
+      name: 'signup',
+      component: SignUp
 	}
   ]
 })

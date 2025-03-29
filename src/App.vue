@@ -15,7 +15,9 @@
       <nav>
         <RouterLink to="/">Home</RouterLink>
         <RouterLink to="/secret">Secret</RouterLink>
-		<RouterLink to="/login">Login</RouterLink>
+        <RouterLink to="/login">Login</RouterLink>
+        <RouterLink to="/signin">SignIn design</RouterLink>
+        <RouterLink to="/signup">SignUp design</RouterLink>
       </nav>
     </div>
   </header>
@@ -94,7 +96,8 @@ nav a {
 }
 
 .content {
-	display: flex;
+	/*
+  display: flex;
 	align-items: center;
 	flex-direction: column;
 	width: 500px;
@@ -103,6 +106,7 @@ nav a {
 	margin-right: auto;
 	border-radius: 1em;
 	padding: 2em 0 2em 0;
+  */
 }
 </style>
 
