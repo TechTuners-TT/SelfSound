@@ -18,6 +18,7 @@
         <RouterLink to="/login">Login</RouterLink>
         <RouterLink to="/signin">SignIn design</RouterLink>
         <RouterLink to="/signup">SignUp design</RouterLink>
+        <RouterLink to="/about">About design</RouterLink>
       </nav>
     </div>
   </header>

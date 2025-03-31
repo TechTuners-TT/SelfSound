@@ -5,6 +5,7 @@ import LoginView from '../views/LoginView.vue'
 import UnauthorizedView from '../views/UnauthorizedView.vue'
 import SignIn from '../views/SignIn.vue'
 import SignUp from '../views/SignUp.vue'
+import About from '../views/AboutView.vue'
 
 let localUser;
 
@@ -22,26 +23,31 @@ const router = createRouter({
       component: () => import('../views/SecretView.vue'),
       meta: { requiresAuth: true }
     },
-	{
+    {
       path: '/login',
       name: 'login',
       component: LoginView
-	},
-	{
+	  },
+	  {
       path: '/unauthorized',
       name: 'unauthorized',
       component: UnauthorizedView
-	},
-  {
+	  },
+    {
       path: '/signin',
       name: 'signin',
       component: SignIn
-	},
-  {
+	  },
+    {
       path: '/signup',
       name: 'signup',
       component: SignUp
-	}
+	  },
+    {
+    path: '/about',
+    name: 'about',
+    component: About
+    }
   ]
 })
 
