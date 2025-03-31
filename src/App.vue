@@ -74,7 +74,7 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
 .app {
   text-align: center;
   margin-top: 50px;
