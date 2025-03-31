@@ -5,14 +5,17 @@
       <div class="form-container">
         <h2>Sign up your Profile</h2>
         <form @submit.prevent="handleSignUp">
+
           <div>
             <label>Your Name</label>
             <input v-model="name" type="text" required />
           </div>
+
           <div>
             <label>Email address</label>
             <input v-model="email" type="email" required />
           </div>
+
           <div class="password-container">
     <label>Password</label>
     <input :type="showPassword ? 'text' : 'password'" v-model="password" required />
@@ -21,18 +24,18 @@
            alt="Toggle Password Visibility" />
     </span>
   </div>
-          <button type="submit">Sign Up</button>
+          <button type="submit" @click="bounceEffect" >Sign Up</button>
         </form>
         <div class="divider">
           <span class="line"></span>
           <span>or continue with</span>
           <span class="line"></span>
         </div>
-        <button @click="signUpWithGoogle" class="google-btn">
-          <img src="https://www.svgrepo.com/show/303108/google-icon-logo.svg" alt="Google" />
-          Google
-        </button>
-        <button class="Guest-btn">Guest mode</button>
+        <button @click="(event) => { signUpWithGoogle(); bounceEffect(event); }" class="google-btn">
+  <img src="https://www.svgrepo.com/show/303108/google-icon-logo.svg" alt="Google" />
+  Google
+</button>
+        <button @click="bounceEffect" class="Guest-btn">Guest mode</button>
         <p><a href="#">Already have an account? Log in here!</a></p>
        
       </div>
@@ -48,7 +51,8 @@
         name: '',
         email: '',
         password: '',
-        showPassword: false
+        showPassword: false,
+       
       };
     },
     methods: {
@@ -56,15 +60,23 @@
     togglePasswordVisibility() {
       this.showPassword = !this.showPassword;
     },
-  
-  
-  
+    
+
       handleSignUp() {
         console.log('Signing up with', this.name, this.email, this.password);
       },
       signUpWithGoogle() {
         console.log('Signing up with Google');
+      },
+     
+
+      bounceEffect(event) {
+        event.target.classList.add('bounce');
+        setTimeout(() => {
+          event.target.classList.remove('bounce');
+        }, 500);
       }
+
     }
   };
   </script>
@@ -153,8 +165,27 @@
     margin-top: 30px;
     font-weight: bold;
     font-size: 16px;
+    transition: transform 0.2s;
+  }
+  .bounce {
+    animation: bounce 0.5s ease;
   }
   
+
+  @keyframes bounce {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  25%,
+  75% {
+    transform: scale(0.9);
+  }
+  50% {
+    transform: scale(1.1);
+  }
+}
+
   .divider {
     display: flex;
     align-items: center;
@@ -195,7 +226,8 @@
     background: rgb(0, 12, 156);
   }
   
-  .password-container {
+  
+.password-container {
     position: relative;
   }
   
@@ -211,6 +243,8 @@
     width: 24px;
     height: 24px;
   }
+  
+
   
   p {
       margin-top: 18px;

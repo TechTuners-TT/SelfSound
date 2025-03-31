@@ -1,14 +1,14 @@
 <template>
-    <div class="container">
-      <div class="bg-overlay"></div>
-      <div class="form-container">
-        <h2>Log in to your Profile</h2>
-        <form @submit.prevent="handleLogin">
-          <div>
-            <label>Email address</label>
-            <input v-model="email" type="email" required />
-          </div>
-          <div class="password-container">
+  <div class="container">
+    <div class="bg-overlay"></div>
+    <div class="form-container">
+      <h2>Log in to your Profile</h2>
+      <form @submit.prevent="handleLogin">
+        <div>
+          <label>Email address</label>
+          <input v-model="email" type="email" required />
+        </div>
+        <div class="password-container">
     <label>Password</label>
     <input :type="showPassword ? 'text' : 'password'" v-model="password" required />
     <span class="toggle-password" @click="togglePasswordVisibility">
@@ -16,183 +16,209 @@
            alt="Toggle Password Visibility" />
     </span>
   </div>
-          <button type="submit">Sign In</button>
-        </form>
-        <div class="divider">
-          <span class="line"></span>
-          <span>or continue with</span>
-          <span class="line"></span>
-        </div>
-        <button @click="loginWithGoogle" class="google-btn">
-          <img src="https://www.svgrepo.com/show/303108/google-icon-logo.svg" alt="Google" />
-          Google
-        </button>
-        <button class="Guest-btn">Guest mode</button>
-      <p><a href="#">Don’t have a profile? Sign up here! </a></p>
+        <button type="submit" @click="bounceEffect">Sign In</button>
+      </form>
+      <div class="divider">
+        <span class="line"></span>
+        <span>or continue with</span>
+        <span class="line"></span>
       </div>
+      <button @click="(event) => { loginWithGoogle(); bounceEffect(event); }" class="google-btn">
+        <img src="https://www.svgrepo.com/show/303108/google-icon-logo.svg" alt="Google" />
+        Google
+      </button>
+      <button @click="bounceEffect" class="Guest-btn" >Guest mode</button>
+    <p><a href="#">Don’t have a profile? Sign up here! </a></p>
     </div>
-  </template>
-  
-  <script>
-  export default {
-    name: 'App', // works at Add.vue with name Add connected main.js
-    //name: 'Sign_in'
-    components: {
-      
-    },
-    data() {
-      return {
-        email: '',
-        password: '',
-        showPassword: false
-      };
-    },
-    methods: {
-      togglePasswordVisibility() {
-      this.showPassword = !this.showPassword;
-    },
-  
-  
-  
-  
-      handleLogin() {
-        console.log('Logging in with', this.email, this.password);
-      },
-      loginWithGoogle() {
-        console.log('Logging in with Google');
-      }
-    }
-  };
-  </script>
-  
-  <style scoped>
-  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap');
-  
-  * {
-    font-family: 'Inter', sans-serif;
-  }
-  
-  .container {
-    display: flex;
-    min-height: 100vh;
-    align-items: center;
-    justify-content: center;
-    background: rgb(6,3,16);
-    position: relative;
-    overflow: hidden;
-  }
-  
-  .bg-overlay {
-    position: absolute;
-    inset: 0;
-    background-size: 20px 20px;
-    background: rgb(6,3,16);
-    opacity: 0.1;
-  }
-  
-  .form-container {
-    position: relative;
-  
-    z-index: 10;
-    width: 100%;
-    padding: 20px;
-    border-radius: 8px;
-    text-align: center; 
-  
-  }
-  
-  h2 {
-    color: white;
-    font-size: 24px;
-    font-weight: bold;
-    max-width: 100%;
-    height: auto;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: normal;
-    word-break: break-word;
-    text-align: center;
-    margin-bottom: 50px;
-    height: 36px;
-    margin-top: 0px;
-  }
-  
-  label {
-    display: block;
-    text-align: left;
-    color: white;
-    font-size: 16px;
-    font-weight: medium;
-    margin-top: 18px;
-    width: 384px;
-    height: 24px;
-  }
-  
-  input {
-    width: 364px;
-    padding: 10px;
-    margin-top: 8px;
-    border-radius: 5px;
-    border: none;
-    background: white;
-    color: black;
-  }
-  
-  button {
-    width: 384px;
-    height: 36px;
-    padding: 10px;
-    background: rgb(2, 3, 61);
-    color: white;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    margin-top: 30px;
-    font-weight: bold;
-    font-size: 16px;
-  }
-  
-  .divider {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: white;
-    margin: 18px 0;
-    font-size: 16px;
-    font-weight: medium;
-    height: 12px;
-    margin-top: 18px;
-    margin-bottom: 18px;
-  }
-  
-  .line {
-    flex-grow: 1;
-    height: 1px;
-    background: white;
-    margin: 0 10px;
+  </div>
+</template>
+
+<script>
+export default {
+  name: 'App', // works at Add.vue with name Add connected main.js
+  //name: 'Sign_in'
+  components: {
     
+  },
+  data() {
+    return {
+      email: '',
+      password: '',
+      showPassword: false
+    };
+  },
+  methods: {
+    togglePasswordVisibility() {
+    this.showPassword = !this.showPassword;
+  },
+
+
+    handleLogin() {
+      console.log('Logging in with', this.email, this.password);
+    },
+    loginWithGoogle() {
+      console.log('Logging in with Google');
+    },
+    bounceEffect(event) {
+        event.target.classList.add('bounce');
+        setTimeout(() => {
+          event.target.classList.remove('bounce');
+        }, 500);
+    }
+    
+
+  }
+};
+</script>
+
+<style scoped>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap');
+
+* {
+  font-family: 'Inter', sans-serif;
+}
+
+.container {
+  display: flex;
+  min-height: 100vh;
+  align-items: center;
+  justify-content: center;
+  background: rgb(6,3,16);
+  position: relative;
+  overflow: hidden;
+}
+
+.bg-overlay {
+  position: absolute;
+  inset: 0;
+  background-size: 20px 20px;
+  background: rgb(6,3,16);
+  opacity: 0.1;
+}
+
+.form-container {
+  position: relative;
+
+  z-index: 10;
+  width: 100%;
+  padding: 20px;
+  border-radius: 8px;
+  text-align: center; 
+
+}
+
+h2 {
+  color: white;
+  font-size: 24px;
+  font-weight: bold;
+  max-width: 100%;
+  height: auto;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: normal;
+  word-break: break-word;
+  text-align: center;
+  margin-bottom: 50px;
+  height: 36px;
+  margin-top: 0px;
+}
+
+label {
+  display: block;
+  text-align: left;
+  color: white;
+  font-size: 16px;
+  font-weight: medium;
+  margin-top: 18px;
+  width: 384px;
+  height: 24px;
+}
+
+input {
+  width: 364px;
+  padding: 10px;
+  margin-top: 8px;
+  border-radius: 5px;
+  border: none;
+  background: white;
+  color: black;
+}
+
+button {
+  width: 384px;
+  height: 36px;
+  padding: 10px;
+  background: rgb(2, 3, 61);
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-top: 30px;
+  font-weight: bold;
+  font-size: 16px;
+  transition: transform 0.2s;
+  }
+  .bounce {
+    animation: bounce 0.5s ease;
   }
   
-  .google-btn {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 10px;
-    margin-top: 10px;
+
+  @keyframes bounce {
+  0%,
+  100% {
+    transform: scale(1);
   }
+  25%,
+  75% {
+    transform: scale(0.9);
+  }
+  50% {
+    transform: scale(1.1);
+  }
+}
+
+.divider {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  margin: 18px 0;
+  font-size: 16px;
+  font-weight: medium;
+  height: 12px;
+  margin-top: 18px;
+  margin-bottom: 18px;
+}
+
+.line {
+  flex-grow: 1;
+  height: 1px;
+  background: white;
+  margin: 0 10px;
   
-  .google-btn img {
-    width: 20px;
-    height: auto;
-  }
-  .Guest-btn{
-    margin-top: 18px;
-  }
-  button:hover {
-    background: rgb(0, 12, 156);
-  }
-  
-  .password-container {
+}
+
+.google-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.google-btn img {
+  width: 20px;
+  height: auto;
+}
+.Guest-btn{
+  margin-top: 18px;
+}
+button:hover {
+  background: rgb(0, 12, 156);
+}
+
+
+.password-container {
     position: relative;
   }
   
@@ -208,7 +234,6 @@
     width: 24px;
     height: 24px;
   }
-  
   
   
   
