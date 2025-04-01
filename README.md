@@ -1,4 +1,6 @@
-# selfsound-frontend
+# Selfsound-frontend
+
+![Banner](./docs/img/GitHub banner.png)
 
 ## Features
 
