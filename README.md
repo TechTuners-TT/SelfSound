@@ -2,7 +2,7 @@
 
 ![Banner](https://github.com/TechTuners-TT/frontend/blob/main/docs/img/GitHub%20banner.png?raw=true)
 
-Frontend development for a social network for musicians combines Twitter and SoundCloud's best features.
+Frontend development for a social network for musicians combines Threads and SoundCloud's best features.
 
 ---
 <div align="center">
