@@ -1,6 +1,6 @@
 # Selfsound-frontend
 
-![Banner](./docs/img/GitHub banner.png)
+![Banner]([./docs/img/GitHub banner.png](https://github.com/TechTuners-TT/frontend/blob/main/docs/img/GitHub%20banner.png))
 
 ## Features
 
