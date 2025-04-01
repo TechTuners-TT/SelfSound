@@ -6,7 +6,7 @@ Frontend development for a social network for musicians combines Twitter and Sou
 
 ---
 <div align="center">
-  <a href="https://www.example.com">🔭 Frontend structure </a> -
+  <a href="docs/PROJECT-STRUCTURE.md">🔭 Frontend structure </a> -
   <a href="https://www.example.com">💻 About project</a> - 
   <a href="docs/CONTRIBUTING.md">✏️ How to contribute?</a> 
 </div>
