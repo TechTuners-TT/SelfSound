@@ -1,12 +1,9 @@
-<script setup>
-
+<script setup lang="ts">
+import TheWelcome from "../components/TheWelcome.vue";
 </script>
 
 <template>
-  <h1> Home Page </h1>
-
-  <p> This is some random content viewable by everyone! </p>
+  <main>
+    <TheWelcome />
+  </main>
 </template>
-
-<style scoped>
-</style>
