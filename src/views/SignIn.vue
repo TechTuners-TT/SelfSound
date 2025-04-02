@@ -170,10 +170,10 @@ button {
   }
   25%,
   75% {
-    transform: scale(0.9);
+    transform: scale(0.95);
   }
   50% {
-    transform: scale(1.1);
+    transform: scale(1);
   }
 }
 
