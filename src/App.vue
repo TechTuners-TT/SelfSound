@@ -15,9 +15,9 @@ import { RouterLink, RouterView } from "vue-router";
       <router-view />
     </main>
 
-    <!-- Footer -->
+    <!-- Footer
     <footer class="bg-gray-800 text-white text-center p-4">
       &copy; 2025 My Website
-    </footer>
+    </footer> -->
   </div>
 </template>
