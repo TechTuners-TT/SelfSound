@@ -12,4 +12,4 @@
     align-items: center;
   }
 }
-<
+</style>
