@@ -21,4 +21,7 @@ export default defineConfig({
       '@': fileURLToPath(new URL('./src', import.meta.url))
     },
   },
+  
+  base: '/', // or simply remove this line (defaults to '/')
+
 })
