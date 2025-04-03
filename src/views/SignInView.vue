@@ -1,15 +1,96 @@
 <template>
-  <div class="about">
-    <h1>This is a SignIn page</h1>
-  </div>
+  <main
+  class="flex flex-col justify-center items-center px-5 w-full  min-h-screen"
+  style="background-color: rgba(6, 3, 16, 1);">
+    <section class="w-full max-w-sm">
+      <header class="mb-6.5 text-2xl font-bold text-center text-white">
+        <h1>Log in to your Profile</h1>
+      </header>
+
+      <form @submit.prevent="handleSubmit">
+        <LoginFormInput
+          id="email"
+          label="Email address"
+          type="email"
+          v-model="email"
+         
+        />
+
+        <LoginFormInput
+          id="password"
+          label="Password"
+          type="password"
+          v-model="password"
+         
+        />
+
+        <LoginFormButton type="submit" marginClass="mb-4.5 , mt-7.5">
+          Sign In
+        </LoginFormButton>
+
+        <LoginFormDivider text="or continue with"  />
+
+        <LoginFormButton
+          @click="handleGoogleSignIn"
+          marginClass="mb-4.5"
+          :hasIcon="true"
+        >
+          <template #icon>
+            <GoogleIcon />
+          </template>
+          Google
+        </LoginFormButton>
+
+        <LoginFormButton @click="handleGuestMode" marginClass="mb-4.5">
+          Guest mode
+        </LoginFormButton>
+
+        <p class="text-base font-semibold text-center text-white">
+          
+          <a
+            href="#"
+            @click.prevent="handleSignUp"
+            class=" hover:text-gray-300"
+            >Don't have a profile? Sign up here!</a
+          >
+        </p>
+      </form>
+    </section>
+  </main>
 </template>
 
-<style>
-@media (min-width: 1024px) {
-  .about {
-    min-height: 100vh;
-    display: flex;
-    align-items: center;
-  }
-}
-</style>
+<script setup lang="ts">
+import { ref } from "vue";
+import LoginFormInput from "@/components/sign/LoginFormInput.vue";
+import LoginFormButton from "@/components/sign/LoginFormButton.vue";
+import LoginFormDivider from "@/components/sign/LoginFormDivider.vue";
+import GoogleIcon from "@/components/icons/GoogleIcon.vue";
+
+// Form state
+const email = ref("");
+const password = ref("");
+
+// Form handlers
+const handleSubmit = () => {
+  // Here you would typically handle form validation and submission
+  console.log("Sign in with:", {
+    email: email.value,
+    password: password.value,
+  });
+};
+
+const handleGoogleSignIn = () => {
+  console.log("Sign in with Google");
+  // Implement Google authentication logic
+};
+
+const handleGuestMode = () => {
+  console.log("Continue as guest");
+  // Implement guest mode logic
+};
+
+const handleSignUp = () => {
+  console.log("Navigate to sign up page");
+  // Navigate to sign up page or show sign up form
+};
+</script>
