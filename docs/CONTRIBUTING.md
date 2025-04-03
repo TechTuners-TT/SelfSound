@@ -57,7 +57,7 @@ All feature development and bug fixes should be done in separate branches and me
 
 To keep our repository structured and easy to navigate, follow this naming convention for branches:
 ```bash
-git checkout -b "develop/<Jira-task-code>/<short-description>"
+git checkout -b "develop-<Jira-task-code>/<short-description>"
 ```
 
 **Example:**
@@ -121,14 +121,14 @@ git pull origin develop
 After pull all latest changes:
 
 ```bash
-git checkout develop/<Jira-task-code>/<short-description>
+git checkout develop-<Jira-task-code>/<short-description>
 
 !!! Make sure git does not see any sensitive data !!!
 git status
 
 git add <nessesary-files>
 git commit -m "<type>(Jira task code): <short description>"
-git ush origin develop/<Jira-task-code>/<short-description>
+git ush origin develop-<Jira-task-code>/<short-description>
 ```
 
 #### 3️⃣ Create a Pull Request
