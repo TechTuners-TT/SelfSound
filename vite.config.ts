@@ -22,6 +22,6 @@ export default defineConfig({
     },
   },
   
-  base: '/', // or simply remove this line (defaults to '/')
+  base: 'frontend', // or simply remove this line (defaults to '/')
 
 })
