@@ -2,7 +2,11 @@
 
 ![Banner](https://github.com/TechTuners-TT/frontend/blob/main/docs/img/GitHub%20banner.png?raw=true)
 
+<<<<<<< HEAD
+Frontend development for a social network for musicians, combining the best features of Twitter and SoundCloud.
+=======
 Frontend development for a social network for musicians combines Threads and SoundCloud's best features.
+>>>>>>> main
 
 ---
 <div align="center">
@@ -25,6 +29,9 @@ Frontend development for a social network for musicians combines Threads and Sou
    - [Linting & Fixes](#lints-and-fixes-files)  
    - [Deploying to GitHub Pages](#final-stage-of-deploying-to-github-pages)  
 5. [How to Access GitHub Pages?](#how-to-access-github-pages)  
+6. [Testing](#testing)  
+   - [Unit Tests](#run-unit-tests)  
+   - [End-to-End Tests](#run-end-to-end-tests)  
 
 ---
 
@@ -42,21 +49,22 @@ Before you can run this project locally or contribute to it, ensure you have the
 2. Get your **Supabase URL** and **API Key** from the Supabase dashboard.
 3. Paste those keys in your *locally saved* `.env` file in `root directory` of the project.
 
-```
+```sh
 VUE_DATABASEUR=your_database_url
 VUE_APP_SUPABASEURL=your_supabase_url
 VUE_APP_SUPABASEKEY=your_supabase_API_key
 ```
 
-‼️It's HIGHLY important not to share those sensitive data.
+‼️ It's HIGHLY important not to share these sensitive data.
 
+---
 
 ## How to start working?
 
 ### Project setup
 To install the project dependencies, run:
 
-```bash
+```sh
 npm install
 ```
 
@@ -64,11 +72,11 @@ npm install
 
 To start the development server, run:
 
-```bash
-npm run serve
+```sh
+npm run dev
 ```
 
-Visit http://localhost:8080 to see the application in action.
+Visit http://localhost:5173 to see the application in action.
 
 ---
 
@@ -79,21 +87,20 @@ We welcome contributions! Please check out our [Contribution Guidelines](docs/CO
 
 ## How to deploy manually?
 
-After you successfully commit a stable version of the project to the `main` branch
+After successfully committing a stable version of the project to the `main` branch,
 To build the project for production, run:
 
-```bash
+```sh
 npm run build
 ```
 
 This will create an optimized version of your application for deployment.
 
-
 ### Lints and Fixes Files
 
 To lint and fix your files, run:
 
-```bash
+```sh
 npm run lint
 ```
 
@@ -101,7 +108,7 @@ npm run lint
 
 From `main` branch where your stable version of code, run:
 
-```bash
+```sh
 npm run deploy
 ```
 
@@ -112,14 +119,39 @@ npm run deploy
 To enable GitHub Pages for your repository, follow these steps:
 
 1. Go to your GitHub repository.
-
 2. Navigate to the Settings tab.
-
 3. Scroll down to the GitHub Pages section.
-
-4. In the Source dropdown, select the gh-pages branch.
-
+4. In the Source dropdown, select the `gh-pages` branch.
 
 After a few moments, your app should be live at:
 
 https://techtuners-tt.github.io/frontend/
+
+---
+
+## Testing
+
+### Run Unit Tests
+
+To run unit tests with [Vitest](https://vitest.dev/), execute:
+
+```sh
+npm run test:unit
+```
+
+### Run End-to-End Tests
+
+To run end-to-end tests with [Cypress](https://www.cypress.io/), execute:
+
+```sh
+npm run test:e2e:dev
+```
+
+This runs the tests against the Vite development server, which is faster than testing the production build.
+
+For CI environments, it's recommended to test the production build:
+
+```sh
+npm run build
+npm run test:e2e
+
