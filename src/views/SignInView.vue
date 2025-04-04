@@ -1,6 +1,6 @@
 <template>
   <main
-  class="flex flex-col justify-center items-center px-5 w-full  min-h-screen"
+  class="flex flex-col justify-center items-center px-5 w-full  w-screen h-screen"
   style="background-color: rgba(6, 3, 16, 1);">
     <section class="w-full max-w-sm">
       <header class="mb-6.5 text-2xl font-bold text-center text-white">
@@ -47,12 +47,12 @@
 
         <p class="text-base font-semibold text-center text-white">
           
-          <a
-            href="#"
+          <router-link to="/sign-up"
             @click.prevent="handleSignUp"
             class=" hover:text-gray-300"
-            >Don't have a profile? Sign up here!</a
-          >
+            >Don't have a profile? Sign up here!</router-link>
+          
+           
         </p>
       </form>
     </section>
@@ -61,9 +61,9 @@
 
 <script setup lang="ts">
 import { ref } from "vue";
-import LoginFormInput from "@/components/sign/LoginFormInput.vue";
-import LoginFormButton from "@/components/sign/LoginFormButton.vue";
-import LoginFormDivider from "@/components/sign/LoginFormDivider.vue";
+import LoginFormInput from "@/components/Authentication/LoginFormInput.vue";
+import LoginFormButton from "@/components/Authentication/LoginFormButton.vue";
+import LoginFormDivider from "@/components/Authentication/LoginFormDivider.vue";
 import GoogleIcon from "@/components/icons/GoogleIcon.vue";
 
 // Form state
