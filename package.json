@@ -37,6 +37,7 @@
     "@vue/tsconfig": "^0.7.0",
     "cypress": "^14.2.1",
     "eslint": "^9.24.0",
+    "eslint-config-prettier": "^10.1.1",
     "eslint-plugin-cypress": "^4.2.0",
     "eslint-plugin-vue": "~10.0.0",
     "globals": "^16.0.0",
@@ -58,15 +59,6 @@
     "*.js": "eslint --cache --fix",
     "*.ts": "eslint --cache --fix",
     "*.vue": "eslint --cache --fix",
-    "*.css": "prettier --write",
-    "*.scss": "prettier --write",
-    "*.html": "prettier --write",
-    "*.md": "prettier --write",
-    "*.yaml": "prettier --write",
-    "*.yml": "prettier --write",
-    "*.txt": "prettier --write",
-    "*.graphql": "prettier --write",
-    "*.gql": "prettier --write",
-    "*.log": "prettier --write"
+    "**/*": "prettier --write --ignore-unknown"
   }
 }
