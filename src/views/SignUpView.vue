@@ -1,5 +1,5 @@
 <template>
-  <main class="flex flex-col justify-center items-center px-5 w-full  min-h-screen"
+  <main  class="flex flex-col justify-center items-center px-5 w-screen h-screen"
   style="background-color: rgba(6, 3, 16, 1);">
     <form @submit.prevent="handleSubmit" class="w-full max-w-sm">
       <h1 class="mb-12.5 text-2xl font-bold text-center text-white">
@@ -53,7 +53,7 @@
       </button>
 
       <p class="text-base font-bold text-center text-white">
-         <a href="#" class="hover:text-gray-300 transition-colors">Already have a profile? Log in here!</a>
+        <router-link to="/sign-in" class="hover:text-gray-300 transition-colors">Already have a profile? Log in here!</router-link>
       </p>
     </form>
   </main>
@@ -61,9 +61,9 @@
 
 <script lang="ts">
 import { defineComponent, ref, reactive } from 'vue';
-import SignUpInput from '@/components/sign/SignUpInput.vue';
-import SignUpButton from '@/components/sign/SignUpButton.vue';
-import SignUpDivider from '@/components/sign/SignUpDivider.vue';
+import SignUpInput from '@/components/Authentication/SignUpInput.vue';
+import SignUpButton from '@/components/Authentication/SignUpButton.vue';
+import SignUpDivider from '@/components/Authentication/SignUpDivider.vue';
 
 interface FormData {
   name: string;
