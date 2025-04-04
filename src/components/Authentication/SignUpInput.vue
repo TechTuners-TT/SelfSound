@@ -8,6 +8,7 @@
         @input="updateValue"
         class="px-3 w-full h-9 bg-white rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-slate-500"
         :class="{ 'border-red-500': error }"
+        :placeholder="placeholder"
       />
       <p v-if="error" class="text-sm text-red-500 -mt-2 max-h-[10px]">{{ error }}</p>  
     </div>
@@ -32,6 +33,10 @@
         default: ''
       },
       error: {
+        type: String,
+        default: ''
+      },
+      placeholder: {
         type: String,
         default: ''
       }

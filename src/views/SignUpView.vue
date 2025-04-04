@@ -1,6 +1,8 @@
 <template>
-  <main  class="flex flex-col justify-center items-center px-5 w-screen h-screen"
+  <main class="flex flex-col justify-center items-center px-5 w-full min-h-screen overflow-hidden"
   style="background-color: rgba(6, 3, 16, 1);">
+
+
     <form @submit.prevent="handleSubmit" class="w-full max-w-sm">
       <h1 class="mb-12.5 text-2xl font-bold text-center text-white">
         Sign up your Profile
@@ -11,6 +13,7 @@
         type="text"
         v-model="formData.name"
         :error="errors.name"
+        placeholder="enter name"
       />
 
       <SignUpInput
@@ -18,6 +21,7 @@
         type="email"
         v-model="formData.email"
         :error="errors.email"
+        placeholder="enter email"
       />
 
       <SignUpInput
@@ -26,6 +30,7 @@
         v-model="formData.password"
         :error="errors.password"
         class="mb-7.5"
+        placeholder="enter passwordl"
       />
 
       <button
@@ -163,7 +168,11 @@ export default defineComponent({
   }
 });
 </script>
-<style scoped>button:hover {
+<style scoped>
+
+button:hover {
   background-color: rgba(10, 20, 120, 1); 
-}</style>
+}
+
+</style>
 
