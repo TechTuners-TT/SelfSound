@@ -9,15 +9,15 @@ import { RouterLink, RouterView } from "vue-router";
 
 
 <template>
-  <!--  <div class="min-h-screen flex flex-col"> -->
+  <div class="min-h-screen flex flex-col"> 
     <!-- Main Content Area -->
     <main class="flex-grow container mx-auto p-0">
       <router-view />
-        <!-- </main> -->
+    </main>
 
     <!-- Footer
     <footer class="bg-gray-800 text-white text-center p-4">
       &copy; 2025 My Website
     </footer> -->
-    <!--  </div> -->
+  </div>
 </template>
