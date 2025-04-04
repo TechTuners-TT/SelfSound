@@ -1,9 +1,15 @@
 <template>
-  <div class="about">
-    <h1>This is an about page</h1>
-  </div>
+  <!-- Я не знаю, чи краще header чи main -->
+  <header>
+    <NavBar />
+  </header>
 </template>
 
+
+<script setup lang="ts">
+import { ref } from "vue";
+import NavBar from "../components/NavBar.vue";
+</script>
 <style>
 @media (min-width: 1024px) {
   .about {
