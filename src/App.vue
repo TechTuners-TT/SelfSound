@@ -13,7 +13,7 @@ import { RouterLink, RouterView } from "vue-router";
     <!-- Main Content Area -->
     <main class="flex-grow container mx-auto p-0">
       <router-view />
-    </main>
+        <!-- </main> -->
 
     <!-- Footer
     <footer class="bg-gray-800 text-white text-center p-4">
