@@ -1,12 +1,14 @@
 <template>
+  <!-- test prettier -->
   <nav
-    class="fixed left-0 flex justify-center px-6 py-7.5 h-screen  w-[50px] max-md:px-4 max-md:py-5 max-md:w-20 max-sm:px-2.5 max-sm:py-4 max-sm:w-[40px]"
-    style="background-color: rgba(6, 3, 16, 1);">
+    class="fixed left-0 flex justify-center px-6 py-7.5 h-screen w-[50px] max-md:px-4 max-md:py-5 max-md:w-20 max-sm:px-2.5 max-sm:py-4 max-sm:w-[40px]"
+    style="background-color: rgba(6, 3, 16, 1)"
+  >
     <div
       class="flex flex-col justify-between h-full items-center w-[50px] max-md:w-10 max-sm:w-full"
-      >
+    >
       <header
-        class="self-stretch text-5xl text-center text-white capitalize h-[34px] max-md:text-4xl max-sm:text-3xl "
+        class="self-stretch text-5xl text-center text-white capitalize h-[34px] max-md:text-4xl max-sm:text-3xl"
       >
         S
       </header>
@@ -27,7 +29,6 @@
 
 <script setup lang="ts">
 import NavIcon from "@/components/Navigation/NavIcon.vue";
-
 
 // SVG icons as strings
 const searchIcon = `<svg width="30" height="30" viewBox="0 0 50 50" fill="none" xmlns="http://www.w3.org/2000/svg" class="nav-icon" style="width: 30px; height: 30px; cursor: pointer">
