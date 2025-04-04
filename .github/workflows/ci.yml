@@ -33,7 +33,7 @@ jobs:
         run: npm ci
       - name: Build
         run: npm run build
-      - name: Check code style issues
-        run: npx prettier . --check
       - name: Solve code style issues
         run: npx lint-staged
+      - name: Check code style issues
+        run: npx prettier . --check
