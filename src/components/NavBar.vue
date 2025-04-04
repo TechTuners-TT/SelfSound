@@ -1,16 +1,10 @@
 <template>
-  <main class="flex flex-col justify-center items-center px-5 w-full min-h-screen overflow-hidden"
-  style="background-color: rgba(6, 3, 16, 1);">
-  <div style="color: blue; margin-left: 30px;">Lorem ipsum dolor sit amet consectetur, adipisicing elit. Inventore sunt magni 
-    assumenda qui dolore optio quas dolorem distinctio earum, quaerat illo ut eos
-     reprehenderit explicabo
-     officiis aliquam repellat in beatae.</div>
   <nav
     class="fixed left-0 flex justify-center px-6 py-7.5 h-screen  w-[50px] max-md:px-4 max-md:py-5 max-md:w-20 max-sm:px-2.5 max-sm:py-4 max-sm:w-[40px]"
     style="background-color: rgba(6, 3, 16, 1);">
     <div
       class="flex flex-col justify-between h-full items-center w-[50px] max-md:w-10 max-sm:w-full"
-    >
+      >
       <header
         class="self-stretch text-5xl text-center text-white capitalize h-[34px] max-md:text-4xl max-sm:text-3xl "
       >
@@ -29,12 +23,11 @@
       </div>
     </div>
   </nav>
-  </main>
 </template>
 
 <script setup lang="ts">
-import { ref } from "vue";
 import NavIcon from "@/components/Navigation/NavIcon.vue";
+
 
 // SVG icons as strings
 const searchIcon = `<svg width="30" height="30" viewBox="0 0 50 50" fill="none" xmlns="http://www.w3.org/2000/svg" class="nav-icon" style="width: 30px; height: 30px; cursor: pointer">
