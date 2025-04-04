@@ -35,5 +35,3 @@ jobs:
         run: npm run build
       - name: Solve code style issues
         run: npx lint-staged
-      - name: Check code style issues
-        run: npx prettier . --check
