@@ -8,7 +8,7 @@
     "build": "run-p type-check \"build-only {@}\" --",
     "preview": "vite preview",
     "test:unit": "vitest",
-    "prepare": "cypress install",
+    "prepare": "husky && cypress install",
     "test:e2e": "start-server-and-test preview http://localhost:4173 'cypress run --e2e'",
     "test:e2e:dev": "start-server-and-test 'vite dev --port 4173' http://localhost:4173 'cypress open --e2e'",
     "build-only": "vite build",
@@ -38,8 +38,10 @@
     "eslint": "^9.22.0",
     "eslint-plugin-cypress": "^4.2.0",
     "eslint-plugin-vue": "~10.0.0",
+    "husky": "^9.1.7",
     "jiti": "^2.4.2",
     "jsdom": "^26.0.0",
+    "lint-staged": "^15.5.0",
     "npm-run-all2": "^7.0.2",
     "prettier": "3.5.3",
     "start-server-and-test": "^2.0.11",
@@ -48,5 +50,20 @@
     "vite-plugin-vue-devtools": "^7.7.2",
     "vitest": "^3.1.1",
     "vue-tsc": "^2.2.8"
+  },
+  "lint-staged": {
+    "*.js": "eslint --cache --fix", 
+    "*.ts": "eslint --cache --fix", 
+    "*.vue": "eslint --cache --fix",
+    "*.css": "prettier --write", 
+    "*.scss": "prettier --write",
+    "*.html": "prettier --write",
+    "*.md": "prettier --write",  
+    "*.yaml": "prettier --write",
+    "*.yml": "prettier --write",
+    "*.txt": "prettier --write",
+    "*.graphql": "prettier --write",
+    "*.gql": "prettier --write",
+    "*.log": "prettier --write"
   }
 }
