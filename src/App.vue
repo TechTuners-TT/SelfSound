@@ -9,7 +9,7 @@ import { RouterLink, RouterView } from "vue-router";
 
 
 <template>
-  <div class="min-h-screen flex flex-col">
+  <!--  <div class="min-h-screen flex flex-col"> -->
     <!-- Main Content Area -->
     <main class="flex-grow container mx-auto p-0">
       <router-view />
