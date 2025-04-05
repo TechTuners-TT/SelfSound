@@ -32,4 +32,3 @@ import AboutFooter from "@/components/About_Components/AboutFooter.vue";
   }
 }
 </style>
-

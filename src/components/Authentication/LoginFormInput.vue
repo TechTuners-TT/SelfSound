@@ -33,7 +33,6 @@ const props = defineProps<{
   error?: string;
   placeholder?: string;
 }>();
- 
 
 defineEmits<{
   (e: "update:modelValue", value: string): void;
