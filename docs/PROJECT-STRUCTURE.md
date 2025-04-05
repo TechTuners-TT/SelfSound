@@ -31,6 +31,7 @@ src/
     ├── SignUp.vue
     └── UnauthorizedView.vue
 ```
+
 # Project Directory Structure (src/)
 
 The `src/` directory contains all the source code and assets for this project. Below is a breakdown of each directory and its purpose:
@@ -40,6 +41,7 @@ The `src/` directory contains all the source code and assets for this project. B
 ## `src/`
 
 ### `api/`
+
 Contains files that define the API interactions for the project. It is used to manage communication between the frontend and backend, including authentication and other API calls.
 
 - **Example**: `auth.js` handles authentication-related API calls (e.g., login, sign-up, token refresh).
@@ -47,6 +49,7 @@ Contains files that define the API interactions for the project. It is used to m
 ---
 
 ### `assets/`
+
 Holds static assets for the project, such as images, fonts, and icons. These are resources that are not dynamically generated but are used throughout the application.
 
 - **Example**: `logo.png` is the project's logo, which can be displayed in the UI.
@@ -54,6 +57,7 @@ Holds static assets for the project, such as images, fonts, and icons. These are
 ---
 
 ### `clients/`
+
 Contains files related to connecting and interacting with external services or databases. For this project, it includes the Supabase client setup to handle backend tasks like user authentication and data storage.
 
 - **Example**: `supabase.js` configures and exports the Supabase client for API interactions with the Supabase backend.
@@ -61,6 +65,7 @@ Contains files related to connecting and interacting with external services or d
 ---
 
 ### `components/`
+
 This directory contains reusable Vue components that can be used across multiple views in the application. These components are typically smaller, self-contained UI elements that represent parts of a page (like buttons, forms, etc.).
 
 - **Example**: `HelloWorld.vue` is a basic example of a reusable component.
@@ -68,11 +73,13 @@ This directory contains reusable Vue components that can be used across multiple
 ---
 
 ### `main.js`
+
 The entry point of the application. This file is responsible for initializing the Vue app, registering components, and mounting the app to the DOM. It also configures Vue Router and Vuex if used.
 
 ---
 
 ### `router/`
+
 Contains the Vue Router configuration, which defines the routes for different views in the application. It handles the logic for navigating between pages or views (e.g., Home, Login, About).
 
 - **Example**: `index.js` defines the route paths and which components to load for each route.
@@ -80,6 +87,7 @@ Contains the Vue Router configuration, which defines the routes for different vi
 ---
 
 ### `store/`
+
 This directory holds the Vuex store for state management. Vuex is used to store shared data and state that needs to be accessible across multiple components. It helps centralize state management for predictable behavior in the app.
 
 - **Example**: `index.js` contains the Vuex store setup, including state, mutations, actions, and getters.
@@ -87,6 +95,7 @@ This directory holds the Vuex store for state management. Vuex is used to store 
 ---
 
 ### `views/`
+
 This directory contains the Vue components that represent the views or pages of the application. Views are typically larger components that combine smaller components and contain the page-specific logic.
 
 - **Example**:
@@ -98,6 +107,7 @@ This directory contains the Vue components that represent the views or pages of 
 ---
 
 ### `App.vue`
+
 The root component of the Vue app. It serves as the container for all other components and is the starting point for rendering the application.
 
 ---
@@ -127,15 +137,18 @@ By organizing the project this way, we separate concerns logically, making the c
 
 The project is built with the following technologies:
 
-- **Frontend Framework**:  
+- **Frontend Framework**:
+
   - **Vue.js** - A progressive JavaScript framework for building user interfaces.
   - **Vue Router** - The official router for Vue.js, handling page navigation.
   - **Vuex** - A state management library for Vue.js to manage app state.
 
-- **Styling**:  
+- **Styling**:
+
   - **Tailwind CSS** - A utility-first CSS framework for rapid UI development.
 
-- **Authentication & Backend**:  
+- **Authentication & Backend**:
+
   - **Supabase** - An open-source Firebase alternative that provides backend-as-a-service, including authentication, database, and storage. We use the Supabase client for interacting with the backend API.
 
 - **Build & Development Tools**:
@@ -149,7 +162,6 @@ The project is built with the following technologies:
 
 1. **API Integration**:  
    The `src/api/auth.js` file handles authentication tasks (sign up, login, etc.) using the Supabase API.
-   
 2. **Routing**:  
    The `src/router/index.js` file contains all the routes for different views, such as `Home`, `Login`, `About`, and `Secret` views. The routing logic ensures the user is redirected to the appropriate page based on authentication status.
 
@@ -163,4 +175,3 @@ The project is built with the following technologies:
    The `views` folder contains various view components for different pages of the application (e.g., `HomeView.vue`, `LoginView.vue`, etc.).
 
 ---
-

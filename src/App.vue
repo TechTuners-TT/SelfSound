@@ -1,15 +1,14 @@
 <!--App.vue-->
 
 <script setup lang="ts">
-import { RouterLink, RouterView } from "vue-router";
+// import { RouterLink, RouterView } from "vue-router";
 
 // exapmle how to import components:
 // import HelloWorld from "./components/HelloWorld.vue";
 </script>
 
-
 <template>
-  <div class="min-h-screen flex flex-col"> 
+  <div class="min-h-screen flex flex-col">
     <!-- Main Content Area -->
     <main class="flex-grow w-full">
       <router-view />

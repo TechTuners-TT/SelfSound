@@ -16,13 +16,16 @@
       :aria-invalid="!!error"
       :placeholder="placeholder"
     />
-    <p v-if="error" class="text-sm text-red-500 -mt-2 max-h-[10px]">{{ error }}</p>
+    <p v-if="error" class="text-sm text-red-500 -mt-2 max-h-[10px]">
+      {{ error }}
+    </p>
   </div>
 </template>
 
 <script setup lang="ts">
-import { defineProps, defineEmits } from "vue";
+// import { defineProps, defineEmits } from "vue";
 
+/*
 const props = defineProps<{
   label: string;
   type: string;
@@ -31,6 +34,7 @@ const props = defineProps<{
   error?: string;
   placeholder?: string;
 }>();
+*/ 
 
 defineEmits<{
   (e: "update:modelValue", value: string): void;

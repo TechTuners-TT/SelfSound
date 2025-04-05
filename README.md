@@ -5,6 +5,7 @@
 Frontend development for a social network for musicians combines Threads and SoundCloud's best features.
 
 ---
+
 <div align="center">
   <a href="docs/PROJECT-STRUCTURE.md">🔭 Frontend structure </a> -
   <a href="https://www.example.com">💻 About project</a> - 
@@ -14,20 +15,20 @@ Frontend development for a social network for musicians combines Threads and Sou
 ---
 
 # Table of Contents
- 
-1. [Requirements](#requirements)  
-   - [Setup Environment Variables](#setup-environment-variables)  
-2. [How to Start Working?](#how-to-start-working)  
-   - [Project Setup](#project-setup)  
-   - [Compiling & Running](#compiles-and-hot-reloads-for-development)  
-3. [How to Contribute?](#how-to-contribute)  
-4. [How to Deploy Manually?](#how-to-deploy-manually)   
-   - [Linting & Fixes](#lints-and-fixes-files)  
-   - [Deploying to GitHub Pages](#final-stage-of-deploying-to-github-pages)  
-5. [How to Access GitHub Pages?](#how-to-access-github-pages)  
-6. [Testing](#testing)  
-   - [Unit Tests](#run-unit-tests)  
-   - [End-to-End Tests](#run-end-to-end-tests)  
+
+1. [Requirements](#requirements)
+   - [Setup Environment Variables](#setup-environment-variables)
+2. [How to Start Working?](#how-to-start-working)
+   - [Project Setup](#project-setup)
+   - [Compiling & Running](#compiles-and-hot-reloads-for-development)
+3. [How to Contribute?](#how-to-contribute)
+4. [How to Deploy Manually?](#how-to-deploy-manually)
+   - [Linting & Fixes](#lints-and-fixes-files)
+   - [Deploying to GitHub Pages](#final-stage-of-deploying-to-github-pages)
+5. [How to Access GitHub Pages?](#how-to-access-github-pages)
+6. [Testing](#testing)
+   - [Unit Tests](#run-unit-tests)
+   - [End-to-End Tests](#run-end-to-end-tests)
 
 ---
 
@@ -43,7 +44,7 @@ Before you can run this project locally or contribute to it, ensure you have the
 
 1. Ask the DevOps engineer to get access to the project [Supabase](https://supabase.io/).
 2. Get your **Supabase URL** and **API Key** from the Supabase dashboard.
-3. Paste those keys in your *locally saved* `.env` file in `root directory` of the project.
+3. Paste those keys in your _locally saved_ `.env` file in `root directory` of the project.
 
 ```sh
 VUE_DATABASEUR=your_database_url
@@ -58,6 +59,7 @@ VUE_APP_SUPABASEKEY=your_supabase_API_key
 ## How to start working?
 
 ### Project setup
+
 To install the project dependencies, run:
 
 ```sh
@@ -77,6 +79,7 @@ Visit http://localhost:5173 to see the application in action.
 ---
 
 ## How to contribute?
+
 We welcome contributions! Please check out our [Contribution Guidelines](docs/CONTRIBUTING.md) before making a pull request.
 
 ---
@@ -151,3 +154,4 @@ For CI environments, it's recommended to test the production build:
 npm run build
 npm run test:e2e
 
+```

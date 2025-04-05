@@ -1,7 +1,6 @@
 <template>
   <button
-    class="nav-button flex items-center justify-center w-full
-       hover:scale-110 "
+    class="nav-button flex items-center justify-center w-full hover:scale-110"
     @click="handleClick"
   >
     <span v-html="svg"></span>
@@ -15,7 +14,7 @@ interface Props {
   svg: string;
 }
 
-const props = defineProps<Props>();
+// const props = defineProps<Props>();
 const emit = defineEmits(["click"]);
 
 const handleClick = () => {
@@ -34,5 +33,4 @@ const handleClick = () => {
   justify-content: center;
   margin: 0 auto;
 }
-
 </style>
