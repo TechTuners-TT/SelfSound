@@ -14,7 +14,7 @@ interface Props {
   svg: string;
 }
 
-// const props = defineProps<Props>();
+const props = defineProps<Props>();
 const emit = defineEmits(["click"]);
 
 const handleClick = () => {

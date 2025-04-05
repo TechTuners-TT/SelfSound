@@ -23,9 +23,8 @@
 </template>
 
 <script setup lang="ts">
-// import { defineProps, defineEmits } from "vue";
+import { defineProps, defineEmits } from "vue";
 
-/*
 const props = defineProps<{
   label: string;
   type: string;
@@ -34,7 +33,7 @@ const props = defineProps<{
   error?: string;
   placeholder?: string;
 }>();
-*/ 
+ 
 
 defineEmits<{
   (e: "update:modelValue", value: string): void;
