@@ -13,8 +13,8 @@
         S
       </header>
 
-      <section class="flex flex-col gap-7.5 items-center self-stretch">
-        <NavIcon :svg="searchIcon" />
+                <section class="flex flex-col gap-7.5 items-center self-stretch">
+                    <NavIcon :svg="searchIcon" />
         <NavIcon :svg="homeIcon" />
         <NavIcon :svg="addPostIcon" />
         <NavIcon :svg="notificationsIcon" />

@@ -10,14 +10,14 @@ import AboutFooter from "@/components/About_Components/AboutFooter.vue";
 
 <template>
   <main>
-    <AboutHeader />
-    <AboutHero />
+<AboutHeader />
+                        <AboutHero />
     <AboutBenefits />
     <AboutWhyChoose />
     <AboutFooter />
 
     <!-- Main Content Area -->
-    <div class="container mx-auto p-0">
+                <div class="container mx-auto p-0">
       <router-view />
     </div>
   </main>
