@@ -1,3 +1,4 @@
 npx lint-staged
-npx prettier . --check 
 npx prettier . --write --ignore-unknown
+npx prettier . --check 
+
