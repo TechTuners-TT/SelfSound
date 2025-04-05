@@ -22,13 +22,11 @@ const router = createRouter({
       name: "sign up",
       component: SignUpView,
     },
-    
-
     {
-    path:     "/home",
-    name: "home",
-    component:     HomeView,
-},
+      path: "/home",
+      name: "home",
+      component: HomeView,
+    },
 
     //{
     //  path: "/about",
