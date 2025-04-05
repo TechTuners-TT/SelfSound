@@ -1,6 +1,5 @@
 <script lang="ts" setup>
 import BenefitCard from "./BenefitCard.vue";
-import About_Profile_Icon from "./SVG/About_Profile_Icon.vue";
 </script>
 
 <template>
@@ -40,8 +39,8 @@ import About_Profile_Icon from "./SVG/About_Profile_Icon.vue";
 
           <BenefitCard
             title="Role Tagging"
-            iconSrc="https://cdn.builder.io/api/v1/image/assets/0e5cd4cd4ea342f79af0ee55b490f863/a6da71df190d2922f0b8de8642d4843e882ab834?placeholderIfAbsent=true"
-            bgColor="bg-blue-900"
+            iconSrc=""
+             bgColor="bg-blue-900"
           >
             <template #content>
               <span>You can choose a</span>
@@ -62,7 +61,7 @@ import About_Profile_Icon from "./SVG/About_Profile_Icon.vue";
 
           <BenefitCard
             title="Post Creation"
-            iconSrc="https://cdn.builder.io/api/v1/image/assets/0e5cd4cd4ea342f79af0ee55b490f863/af37c51dd401e01fe30af40717fbbcb0e635e39a?placeholderIfAbsent=true"
+            iconSrc=""
             bgColor="bg-blue-900"
           >
             <template #content>
