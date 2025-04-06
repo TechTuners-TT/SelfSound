@@ -8,7 +8,7 @@
     "build": "run-p type-check \"build-only {@}\" --",
     "preview": "vite preview",
     "test:unit": "vitest",
-    "prepare": "husky && cypress install",
+    "prepare": "husky",
     "test:e2e": "start-server-and-test preview http://localhost:4173 'cypress run --e2e'",
     "test:e2e:dev": "start-server-and-test 'vite dev --port 4173' http://localhost:4173 'cypress open --e2e'",
     "build-only": "vite build",
@@ -50,15 +50,15 @@
     "start-server-and-test": "^2.0.11",
     "typescript": "~5.8.0",
     "typescript-eslint": "^8.29.0",
-    "vite": "^6.2.4",
+    "vite": "^6.2.5",
     "vite-plugin-vue-devtools": "^7.7.2",
     "vitest": "^3.1.1",
     "vue-tsc": "^2.2.8"
   },
   "lint-staged": {
-    "*.js": "eslint --cache --fix",
-    "*.ts": "eslint --cache --fix",
-    "*.vue": "eslint --cache --fix",
+    "*.js": "eslint --fix",
+    "*.ts": "eslint --fix",
+    "*.vue": "eslint --fix",
     ".": "prettier --write --ignore-unknown"
   }
 }
