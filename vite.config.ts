@@ -17,6 +17,6 @@ export default defineConfig({
       "@components": path.resolve(__dirname, "./src/components"),
     },
   },
-
+  
   base: "/frontend/", // or simply remove this line (defaults to '/')
 });
