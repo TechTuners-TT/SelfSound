@@ -1,12 +1,12 @@
 <template>
   <main
-class="overflow-hidden pb-16 bg-gray-950"
+    class="overflow-hidden pb-16 bg-gray-950"
     :style="{
       backgroundColor: '#060310',
       minHeight: '100vh',
       width: '100%',
     }"
->
+  >
     <AboutHeader />
     <AboutHero />
     <AboutBenefits />

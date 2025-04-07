@@ -21,7 +21,6 @@ const props = defineProps<{
   marginClass?: string;
   hasIcon?: boolean;
 }>();
- 
 
 defineEmits<{
   (e: "click"): void;
