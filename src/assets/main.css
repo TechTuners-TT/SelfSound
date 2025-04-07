@@ -17,6 +17,21 @@ body {
   height: 100%;
 }
 
+
+@font-face {
+  font-family: 'Horizon';
+  src: url('@/assets/fonts/horizon.otf') format('opentype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+.horizon-font {
+  font-family: 'Horizon', sans-serif;
+}
+.bebas_neue-font {
+  font-family: 'Bebas Neue', sans-serif;
+}
+
 /*@import "./base.css";*/
 /**/
 /*#app {*/
