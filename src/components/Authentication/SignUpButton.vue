@@ -29,7 +29,7 @@ export default defineComponent({
     },
   },
   emits: ["click"],
-setup(props) {
+  setup(props) {
     const googleSvg = computed(
       () => `<svg id="148:2164" layer-name="google logo" width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" class="w-[16px] h-[16px]">
   <g clip-path="url(#clip0_148_2164)">

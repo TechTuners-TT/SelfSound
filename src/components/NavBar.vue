@@ -32,7 +32,8 @@
       <span class="hidden max-md:block"></span>
       <span class="max-md:hidden">S</span>
       </header>
-      
+
+    
 
       <!-- Центр: кнопки по центру знизу (тільки для мобільних) -->
       <section
@@ -40,13 +41,13 @@
         max-sm:gap-6"
       >
         <NavIcon :svg="searchIcon" />
+
         <NavIcon :svg="homeIcon" />
         <NavIcon :svg="addPostIcon" />
         <NavIcon :svg="notificationsIcon" />
         <NavIcon :svg="profileIcon" />
       </section>
-
-      <!-- Праворуч знизу -->
+      
       <div
         class="mb-0 max-md:order-3 max-md:absolute max-md:bottom-3 max-md:right-4 "
       >
