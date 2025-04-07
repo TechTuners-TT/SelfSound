@@ -18,7 +18,7 @@ html, body {
 
 @font-face {
   font-family: 'Horizon';
-  src: url('@/assets/fonts/Horizon.otf') format('opentype');
+  src: url('@/assets/fonts/horizon.otf') format('opentype');
   font-weight: normal;
   font-style: normal;
 }
