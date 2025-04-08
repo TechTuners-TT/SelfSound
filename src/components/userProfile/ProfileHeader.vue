@@ -1,54 +1,45 @@
 <template>
-    <header
-      class="flex flex-col sm:flex-row gap-6 sm:gap-10 md:gap-14 lg:gap-16 xl:gap-20 items-center sm:items-start"
-    >
-      <div
-        class="relative h-[70px] w-[70px] sm:h-[75px] sm:w-[75px] md:h-[80px] md:w-[80px] lg:h-[84px] lg:w-[84px]"
-      >
+  <section class="flex flex-col gap-1">
+    <div class="flex flex-col sm:flex-row gap-19 items-center sm:items-start">
+      <div class="relative h-[84px] w-[84px]">
         <img
-          :src="profileData.avatarUrl"
-          :alt="profileData.name + ' profile'"
-          class="w-full h-full rounded-full"
+          :src="user.avatarUrl"
+          :alt="user.name"
+          class="w-[84px] h-[84px] rounded-full"
         />
         <div
-          class="absolute inset-0 rounded-full border border-solid border-white border-opacity-50"
+          class="absolute inset-0 rounded-full border border-white border-opacity-50"
         ></div>
       </div>
-      <div class="flex flex-col gap-1 text-center sm:text-left">
-        <h1
-          class="text-2xl sm:text-2xl md:text-2xl lg:text-3xl font-bold text-white"
-        >
-          {{ profileData.name }}
+      <div class="flex flex-col gap-2.5 text-center sm:text-left ">
+        <h1 class="text-2xl sm:text-3xl font-bold text-white">
+          {{ user.name }}
         </h1>
-        <p class="text-sm sm:text-base font-medium text-white">
-          {{ profileData.username }}
-        </p>
+        <p class="text-base font-medium text-white">{{ user.username }}</p>
       </div>
-    </header>
-  </template>
-  
-  <script lang="ts">
-  import { defineComponent, type PropType } from "vue";
-  
-  // Define the type directly in this component to avoid import issues
-  interface ProfileData {
+    </div>
+    <div   
+      class="flex gap-4 sm:gap-16 items-center justify-center sm:justify-start gap-15"
+    >
+      <button
+        class=" h-8 text-sm sm:text-base text-white rounded-xl border bg-slate-900 border-white border-opacity-50 w-[100px]" style="background-color:rgba(2, 3, 61, 1)"
+      >
+        Add tag  
+      </button>
+      <p class="grow shrink self-stretch my-auto w-[380px] text-white">
+      Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod
+      tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim
+      veniam, quis.
+    </p> </div>
+  </section>
+</template>
+
+<script setup lang="ts">
+defineProps<{
+  user: {
     name: string;
     username: string;
     avatarUrl: string;
-    postsCount: number;
-    listenersCount: number;
-    listenedToCount: number;
-    aboutMe: string;
-  }
-  
-  export default defineComponent({
-    name: "ProfileHeader",
-    props: {
-      profileData: {
-        type: Object as PropType<ProfileData>,
-        required: true,
-      },
-    },
-  });
-  </script>
-  
+  };
+}>();
+</script>
