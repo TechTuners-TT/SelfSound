@@ -1,9 +1,9 @@
 <template>
-    <div v-html="googleSvg"></div>
-  </template>
-  
-  <script setup lang="ts">
-  const googleSvg = `<svg id="google-logo" width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" class="w-[16px] h-[16px]">
+  <div v-html="googleSvg"></div>
+</template>
+
+<script setup lang="ts">
+const googleSvg = `<svg id="google-logo" width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" class="w-[16px] h-[16px]">
   <g clip-path="url(#clip0_419_149)">
   <path d="M7.99996 3.33333C9.0778 3.33333 10.0675 3.70235 10.8575 4.31604L13.2823 2.00273C11.8725 0.759969 10.0271 0 7.99996 0C4.92822 0 2.2644 1.73328 0.923828 4.27323L3.62012 6.40186C4.27327 4.61292 5.98494 3.33333 7.99996 3.33333Z" fill="#F44336"></path>
   <path d="M15.9307 9.00138C15.9724 8.67362 16 8.33927 16 8.00016C16 7.42826 15.9375 6.87138 15.8235 6.3335H8V9.66683H12.3241C11.9743 10.576 11.3515 11.3453 10.5587 11.8798L13.265 14.0164C14.6996 12.7571 15.6813 10.9937 15.9307 9.00138Z" fill="#2196F3"></path>
@@ -27,5 +27,4 @@
   </clipPath>
   </defs>
   </svg>`;
-  </script>
-  
+</script>

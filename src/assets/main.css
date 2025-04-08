@@ -9,13 +9,28 @@
   --breakpoint-sm: 30rem;
 }
 
-html, body {
+html,
+body {
   background-color: #060310; /* Встановлюємо фон для всього сайту */
   margin: 0;
   padding: 0;
   height: 100%;
 }
 
+
+@font-face {
+  font-family: 'Horizon';
+  src: url('@/assets/fonts/horizon.otf') format('opentype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+.horizon-font {
+  font-family: 'Horizon', sans-serif;
+}
+.bebas_neue-font {
+  font-family: 'Bebas Neue', sans-serif;
+}
 
 /*@import "./base.css";*/
 /**/

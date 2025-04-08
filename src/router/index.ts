@@ -2,8 +2,8 @@ import { createRouter, createWebHashHistory } from "vue-router";
 import AboutView from "../views/AboutView.vue";
 import SignInView from "../views/SignInView.vue";
 import SignUpView from "../views/SignUpView.vue";
-import HomeView from "@/views/HomeView.vue";
-import Navigation_bar from "@/views/Navigation_bar.vue";
+import HomeView from "../views/HomeView.vue";
+import UserProfile from "@/views/UserProfile.vue";
 
 const router = createRouter({
   history: createWebHashHistory(import.meta.env.BASE_URL),
@@ -15,19 +15,25 @@ const router = createRouter({
     },
     {
       path: "/sign-in",
-      name: "sign in",
+            name: "sign in",
       component: SignInView,
     },
     {
       path: "/sign-up",
-      name: "sign up",
+          name: "sign up",
       component: SignUpView,
+     },
+    {
+      path: "/home",
+          name: "home",
+      component: HomeView,
     },
     {
-      path: "/Navigation_bar",
-      name: "Navigation_bar",
-      component: Navigation_bar,
+      path: "/profile",
+          name: "profile",
+      component: UserProfile,
     },
+
     //{
     //  path: "/about",
     //  name: "about",

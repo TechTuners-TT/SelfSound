@@ -1,6 +1,8 @@
 <template>
-  <main  class="flex flex-col justify-center items-center px-5 w-screen h-screen"
-  style="background-color: rgba(6, 3, 16, 1);">
+  <main
+    class="flex flex-col justify-center items-center px-5 w-full min-h-screen overflow-hidden"
+    style="background-color: rgba(6, 3, 16, 1)"
+  >
     <form @submit.prevent="handleSubmit" class="w-full max-w-sm">
       <h1 class="mb-12.5 text-2xl font-bold text-center text-white">
         Sign up your Profile
@@ -11,6 +13,7 @@
         type="text"
         v-model="formData.name"
         :error="errors.name"
+        placeholder="enter name"
       />
 
       <SignUpInput
@@ -18,6 +21,7 @@
         type="email"
         v-model="formData.email"
         :error="errors.email"
+        placeholder="enter email"
       />
 
       <SignUpInput
@@ -26,11 +30,13 @@
         v-model="formData.password"
         :error="errors.password"
         class="mb-7.5"
+        placeholder="enter passwordl"
+        
       />
 
       <button
         type="submit"
-        class="mb-4.5  w-full h-9 text-base font-bold text-white rounded-md bg-[rgba(2,3,61,1)] hover: rgba(10, 20, 120, 1) transition duration-300 ease-in-out"
+        class="mb-4.5 w-full h-9 text-base font-bold text-white rounded-md bg-[rgba(2,3,61,1)] hover: rgba(10, 20, 120, 1) transition duration-300 ease-in-out"
       >
         Sign up
       </button>
@@ -53,17 +59,19 @@
       </button>
 
       <p class="text-base font-bold text-center text-white">
-        <router-link to="/sign-in" class="hover:text-gray-300 transition-colors">Already have a profile? Log in here!</router-link>
+        <router-link to="/sign-in" class="hover:text-gray-300 transition-colors"
+          >Already have a profile? Log in here!</router-link
+        >
       </p>
     </form>
   </main>
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, reactive } from 'vue';
-import SignUpInput from '@/components/Authentication/SignUpInput.vue';
-import SignUpButton from '@/components/Authentication/SignUpButton.vue';
-import SignUpDivider from '@/components/Authentication/SignUpDivider.vue';
+import { defineComponent, ref, reactive } from "vue";
+import SignUpInput from "@/components/Authentication/SignUpInput.vue";
+import SignUpButton from "@/components/Authentication/SignUpButton.vue";
+import SignUpDivider from "@/components/Authentication/SignUpDivider.vue";
 
 interface FormData {
   name: string;
@@ -78,54 +86,54 @@ interface FormErrors {
 }
 
 export default defineComponent({
-  name: 'SignUpForm',
+  name: "SignUpForm",
   components: {
     SignUpInput,
     SignUpButton,
-    SignUpDivider
+    SignUpDivider,
   },
   setup() {
     const formData = reactive<FormData>({
-      name: '',
-      email: '',
-      password: ''
+      name: "",
+      email: "",
+      password: "",
     });
 
     const errors = reactive<FormErrors>({
-      name: '',
-      email: '',
-      password: ''
+      name: "",
+      email: "",
+      password: "",
     });
 
     const validateForm = (): boolean => {
       let isValid = true;
 
       // Reset errors
-      errors.name = '';
-      errors.email = '';
-      errors.password = '';
+      errors.name = "";
+      errors.email = "";
+      errors.password = "";
 
       // Validate name
       if (!formData.name.trim()) {
-        errors.name = 'Name is required';
+        errors.name = "Name is required";
         isValid = false;
       }
 
       // Validate email
       if (!formData.email.trim()) {
-        errors.email = 'Email is required';
+        errors.email = "Email is required";
         isValid = false;
       } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
-        errors.email = 'Please enter a valid email address';
+        errors.email = "Please enter a valid email address";
         isValid = false;
       }
 
       // Validate password
       if (!formData.password) {
-        errors.password = 'Password is required';
+        errors.password = "Password is required";
         isValid = false;
       } else if (formData.password.length < 6) {
-        errors.password = 'Password must be at least 6 characters';
+        errors.password = "Password must be at least 6 characters";
         isValid = false;
       }
 
@@ -135,21 +143,21 @@ export default defineComponent({
     const handleSubmit = () => {
       if (validateForm()) {
         // Here you would typically send the data to your API
-        console.log('Form submitted:', formData);
+        console.log("Form submitted:", formData);
         // Reset form after successful submission
-        formData.name = '';
-        formData.email = '';
-        formData.password = '';
+        formData.name = "";
+        formData.email = "";
+        formData.password = "";
       }
     };
 
     const handleGoogleSignIn = () => {
-      console.log('Google sign in clicked');
+      console.log("Google sign in clicked");
       // Implement Google sign-in logic here
     };
 
     const handleGuestMode = () => {
-      console.log('Guest mode clicked');
+      console.log("Guest mode clicked");
       // Implement guest mode logic here
     };
 
@@ -158,12 +166,13 @@ export default defineComponent({
       errors,
       handleSubmit,
       handleGoogleSignIn,
-      handleGuestMode
+      handleGuestMode,
     };
-  }
+  },
 });
 </script>
-<style scoped>button:hover {
-  background-color: rgba(10, 20, 120, 1); 
-}</style>
-
+<style scoped>
+button:hover {
+  background-color: rgba(10, 20, 120, 1);
+}
+</style>

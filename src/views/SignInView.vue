@@ -1,7 +1,8 @@
 <template>
   <main
-  class="flex flex-col justify-center items-center px-5 w-full  w-screen h-screen"
-  style="background-color: rgba(6, 3, 16, 1);">
+    class="flex flex-col justify-center items-center px-5 w-full min-h-screen overflow-hidden"
+    style="background-color: rgba(6, 3, 16, 1)"
+  >
     <section class="w-full max-w-sm">
       <header class="mb-6.5 text-2xl font-bold text-center text-white">
         <h1>Log in to your Profile</h1>
@@ -13,7 +14,8 @@
           label="Email address"
           type="email"
           v-model="email"
-         
+          :error="errors.email"
+          placeholder="enter email"
         />
 
         <LoginFormInput
@@ -21,17 +23,19 @@
           label="Password"
           type="password"
           v-model="password"
-         
+          :error="errors.password"
+          placeholder="enter password"
+          
         />
 
         <LoginFormButton type="submit" marginClass="mb-4.5 , mt-7.5">
           Sign In
         </LoginFormButton>
 
-        <LoginFormDivider text="or continue with"  />
+        <LoginFormDivider text="or continue with" />
 
         <LoginFormButton
-          @click="handleGoogleSignIn"
+          @click="handleGoogleLogin"
           marginClass="mb-4.5"
           :hasIcon="true"
         >
@@ -41,56 +45,110 @@
           Google
         </LoginFormButton>
 
-        <LoginFormButton @click="handleGuestMode" marginClass="mb-4.5">
+        <LoginFormButton @click="handleGuestLogin" marginClass="mb-4.5">
           Guest mode
         </LoginFormButton>
 
         <p class="text-base font-semibold text-center text-white">
-          
-          <router-link to="/sign-up"
+          <router-link
+            to="/sign-up"
             @click.prevent="handleSignUp"
-            class=" hover:text-gray-300"
-            >Don't have a profile? Sign up here!</router-link>
-          
-           
+            class="hover:text-gray-300"
+            >Don't have a profile? Sign up here!</router-link
+          >
         </p>
       </form>
     </section>
   </main>
 </template>
 
-<script setup lang="ts">
-import { ref } from "vue";
+<script lang="ts">
+import { defineComponent, ref, reactive } from "vue";
 import LoginFormInput from "@/components/Authentication/LoginFormInput.vue";
 import LoginFormButton from "@/components/Authentication/LoginFormButton.vue";
 import LoginFormDivider from "@/components/Authentication/LoginFormDivider.vue";
 import GoogleIcon from "@/components/icons/GoogleIcon.vue";
 
-// Form state
-const email = ref("");
-const password = ref("");
+export default defineComponent({
+  name: "LoginForm",
+  components: {
+    LoginFormInput,
+    LoginFormButton,
+    LoginFormDivider,
+    GoogleIcon,
+  },
+  setup() {
+    const email = ref("");
+    const password = ref("");
 
-// Form handlers
-const handleSubmit = () => {
-  // Here you would typically handle form validation and submission
-  console.log("Sign in with:", {
-    email: email.value,
-    password: password.value,
-  });
-};
+    // Changed from Email/Password to lowercase email/password to match the field names
+    const errors = reactive({
+      email: "",
+      password: "",
+    });
 
-const handleGoogleSignIn = () => {
-  console.log("Sign in with Google");
-  // Implement Google authentication logic
-};
+    const validateForm = (): boolean => {
+      let isValid = true;
 
-const handleGuestMode = () => {
-  console.log("Continue as guest");
-  // Implement guest mode logic
-};
+      // Reset errors
+      errors.email = "";
+      errors.password = "";
 
-const handleSignUp = () => {
-  console.log("Navigate to sign up page");
-  // Navigate to sign up page or show sign up form
-};
+      // Validate email
+      if (!email.value) {
+        errors.email = "Email is required";
+        isValid = false;
+      } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.value)) {
+        errors.email = "Please enter a valid email address";
+        isValid = false;
+      }
+
+      // Validate password
+      if (!password.value) {
+        errors.password = "Password is required";
+        isValid = false;
+      } else if (password.value.length < 6) {
+        errors.password = "Password must be at least 6 characters";
+        isValid = false;
+      }
+
+      return isValid;
+    };
+
+    const handleSubmit = () => {
+      if (validateForm()) {
+        console.log("Login submitted with:", {
+          email: email.value,
+          password: password.value,
+        });
+        // Here you would typically call an authentication service
+      }
+    };
+
+    const handleGoogleLogin = () => {
+      console.log("Google login clicked");
+      // Implement Google OAuth login
+    };
+
+    const handleGuestLogin = () => {
+      console.log("Guest login clicked");
+      // Implement guest login logic
+    };
+
+    const handleSignUp = () => {
+      console.log("Sign up clicked");
+      // Navigate to sign up page or show sign up modal
+    };
+
+    return {
+      email,
+      password,
+      errors,
+      handleSubmit,
+      handleGoogleLogin,
+      handleGuestLogin,
+      handleSignUp,
+    };
+  },
+});
 </script>
