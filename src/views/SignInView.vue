@@ -53,7 +53,7 @@
           <router-link
             to="/sign-up"
             @click.prevent="handleSignUp"
-            class="hover:text-gray-300"
+            class=""
             >Don't have a profile? Sign up here!</router-link
           >
         </p>

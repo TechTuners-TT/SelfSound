@@ -19,7 +19,7 @@
       </div>
     </div>
     <div   
-      class="flex gap-4 sm:gap-16 items-center justify-center sm:justify-start gap-15"
+      class="flex gap-4  items-center justify-center sm:justify-start gap-15"
     >
       <button
         class=" h-8 text-sm sm:text-base text-white rounded-xl border bg-slate-900 border-white border-opacity-50 w-[100px]" style="background-color:rgba(2, 3, 61, 1)"
@@ -27,10 +27,8 @@
         Add tag  
       </button>
       <p class="grow shrink self-stretch my-auto w-[380px] text-white">
-      Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod
-      tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim
-      veniam, quis.
-    </p> </div>
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis.
+    </p> </div> 
   </section>
 </template>
 
@@ -43,3 +41,114 @@ defineProps<{
   };
 }>();
 </script>
+<style scoped>
+
+@media (max-width: 768px) {
+  section {
+    padding-left: 5px;
+    padding-right: 5px;
+  }
+
+  .gap-20 {
+    gap: 2rem;
+  }
+
+  .gap-15 {
+    gap: 2rem;
+  }
+ 
+}
+
+@media (min-width: 479.5px) and (max-width: 640px) {
+  .gap-20 {
+    gap: 1.25rem;
+  }
+
+  .gap-15 {
+    gap: 1rem;
+  }
+
+ 
+
+  .text-3xl {
+    font-size: 1.5rem;
+  }
+
+  section {
+    padding-left: 2px;
+    padding-right: 2px;
+  }
+
+  .max-w-\[\400px\] {
+    max-width: 300px;
+  }
+}
+
+@media (max-width: 479.5px) {
+  .gap-19 {
+    gap: 0.75rem; 
+  }
+
+  .w-\[84px\] {
+    width: 70px;
+  }
+
+  .h-\[84px\] {
+    height: 70px;
+  }
+  .text-3xl {
+    font-size: 1.25rem;
+  }
+  .gap-15 {
+    gap: 1rem;
+  }
+
+  .text-base {
+    font-size: 0.875rem;
+  }
+
+  .max-w-\[\400px\] {
+    max-width: 250px;
+  }
+}
+
+@media (max-width: 420px) {
+  .flex {
+    flex-direction: column; 
+    align-items: center; 
+  }
+  .gap-19 {
+    gap: 0.75rem; 
+  }
+  .gap-15 {
+    gap: 0.25rem;
+  }
+  .w-\[84px\] {
+    width: 70px;
+  }
+
+  .h-\[84px\] {
+    height: 70px;
+  }
+  .text-3xl {
+    font-size: 1.25rem;
+  }
+
+  .text-base {
+    font-size: 0.875rem;
+  }
+
+  .max-w-\[\400px\] {
+    max-width: 250px;
+  }
+  .w-\[380px\] {
+    width: 100%; /* Текст займає всю ширину контейнера */
+    word-wrap: break-word; /* Ламаємо слова, якщо вони занадто довгі */
+  }
+
+  .text-white {
+    font-size: 0.875rem; /* Зменшуємо шрифт на малих екранах */
+  }
+}
+
+</style>
