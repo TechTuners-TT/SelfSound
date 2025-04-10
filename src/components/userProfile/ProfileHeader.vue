@@ -44,6 +44,10 @@ defineProps<{
 </script>
 <style scoped>
 
+
+.inter-font {
+  font-family: 'Inter', sans-serif;
+}
 @media (max-width: 768px) {
   section {
     padding-left: 5px;
