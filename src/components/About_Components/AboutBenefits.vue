@@ -20,7 +20,7 @@ import BenefitCard from "./BenefitCard.vue";
         >
           <BenefitCard
             title="Profile Feature"
-            iconSrc= ""
+            iconSrc=""
             bgColor="bg-slate-900"
           >
             <template #content>
@@ -37,11 +37,7 @@ import BenefitCard from "./BenefitCard.vue";
             </template>
           </BenefitCard>
 
-          <BenefitCard
-            title="Role Tagging"
-            iconSrc=""
-             bgColor="bg-blue-900"
-          >
+          <BenefitCard title="Role Tagging" iconSrc="" bgColor="bg-blue-900">
             <template #content>
               <span>You can choose a</span>
               <span class="font-bold"> role tag </span>
@@ -59,11 +55,7 @@ import BenefitCard from "./BenefitCard.vue";
             </template>
           </BenefitCard>
 
-          <BenefitCard
-            title="Post Creation"
-            iconSrc=""
-            bgColor="bg-blue-900"
-          >
+          <BenefitCard title="Post Creation" iconSrc="" bgColor="bg-blue-900">
             <template #content>
               <span> SelfSound lets you share your music through </span>
               <span class="font-medium italic">four post types </span>
@@ -106,4 +98,3 @@ import BenefitCard from "./BenefitCard.vue";
     </div>
   </section>
 </template>
-

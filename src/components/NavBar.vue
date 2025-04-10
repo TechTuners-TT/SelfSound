@@ -1,27 +1,62 @@
 <template>
   <!-- test prettier -->
+
+  <!-- Mobile top navigation - only visible on mobile -->
+  <span class="hidden max-md:block">
+    <nav
+      class="fixed top-0 left-0 w-full h-[50px] px-6 py-7.5 flex justify-between items-center bg-[#060310] z-30"
+      style="background-color: rgba(6, 3, 16, 1)"
+    >
+      <!-- Centered Header containing the 'S' -->
+      <header
+        class="text-5xl text-center text-white capitalize max-md:text-4xl max-sm:text-4xl w-full flex justify-center items-center"
+      >
+        <span class="hidden max-md:block">S</span>
+      </header>
+
+      <!-- Right-aligned NavIcon -->
+      <div
+        class="max-md:order-3 max-md:absolute max-md:bottom-3 max-md:right-4"
+      >
+        <span class="hidden max-md:block"><NavIcon :svg="settingsIcon" /></span>
+      </div>
+    </nav>
+  </span>
+
+  <span class="max-md:hidden"></span>
+
+  <!-- Main navigation - sidebar on desktop, bottom bar on mobile -->
   <nav
-    class="fixed left-0 flex justify-center px-6 py-7.5 h-screen w-[50px] max-md:px-4 max-md:py-5 max-md:w-20 max-sm:px-2.5 max-sm:py-4 max-sm:w-[40px]"
+    class="fixed left-0 h-screen w-[50px] px-6 py-7.5 flex justify-center max-md:w-full max-md:h-auto max-md:bottom-0 max-md:left-0 max-md:px-3 max-md:py-3 max-md:z-50"
     style="background-color: rgba(6, 3, 16, 1)"
   >
     <div
-      class="flex flex-col justify-between h-full items-center w-[50px] max-md:w-10 max-sm:w-full"
+      class="flex flex-col justify-between items-center h-full w-[50px] min-h-full max-md:w-full max-md:h-auto max-md:flex-row max-md:items-center max-md:justify-between"
     >
+      <!-- Logo: Hidden on small screens but panel maintains height -->
       <header
-        class="self-stretch text-5xl text-center text-white capitalize h-[34px] max-md:text-4xl max-sm:text-3xl"
+        class="text-5xl text-center text-white capitalize h-[34px] max-md:text-3xl max-sm:text-3xl"
       >
-        S
+        <span class="hidden max-md:block"></span>
+        <span class="max-md:hidden">S</span>
       </header>
-      
-      <section class="flex flex-col gap-7.5 items-center self-stretch">
+
+      <!-- Center: buttons centered at bottom (only for mobile) -->
+      <section
+        class="flex flex-col gap-7.5 items-center max-md:flex-row max-md:gap-5 max-md:absolute max-md:bottom-3 max-md:left-1/2 max-md:-translate-x-1/2 max-md:order-2 max-sm:gap-6"
+      >
         <NavIcon :svg="searchIcon" />
         <NavIcon :svg="homeIcon" />
         <NavIcon :svg="addPostIcon" />
         <NavIcon :svg="notificationsIcon" />
         <NavIcon :svg="profileIcon" />
       </section>
-      <div class="mb-0">
-        <NavIcon :svg="settingsIcon" />
+
+      <div
+        class="mb-0 max-md:order-3 max-md:absolute max-md:bottom-3 max-md:right-4"
+      >
+        <span class="hidden max-md:block"></span>
+        <span class="max-md:hidden"><NavIcon :svg="settingsIcon" /></span>
       </div>
     </div>
   </nav>
@@ -39,11 +74,11 @@ const homeIcon = `<svg width="30" height="30" viewBox="0 0 50 50" fill="none" xm
 <path d="M40.1111 18.2284L28.7778 9.29713C27.7389 8.46181 26.3939 8 25.0001 8C23.6062 8 22.2612 8.46181 21.2223 9.29713L9.88905 18.2284C9.28909 18.7108 8.81032 19.3025 8.48462 19.9642C8.15893 20.6259 7.99378 21.3423 8.00018 22.0659V36.9061C8.00018 38.2571 8.5972 39.5527 9.6599 40.508C10.7226 41.4633 12.1639 42 13.6668 42H36.3333C37.8362 42 39.2775 41.4633 40.3402 40.508C41.4029 39.5527 41.9999 38.2571 41.9999 36.9061V22.0489C42.0037 21.3282 41.8372 20.615 41.5116 19.9564C41.186 19.2979 40.7086 18.7089 40.1111 18.2284ZM28.7778 38.6041H21.2223V30.1142C21.2223 29.6639 21.4213 29.232 21.7755 28.9136C22.1298 28.5951 22.6102 28.4163 23.1112 28.4163H26.8889C27.3899 28.4163 27.8703 28.5951 28.2246 28.9136C28.5788 29.232 28.7778 29.6639 28.7778 30.1142V38.6041ZM38.2222 36.9061C38.2222 37.3564 38.0232 37.7883 37.6689 38.1067C37.3147 38.4252 36.8343 38.6041 36.3333 38.6041H32.5556V30.1142C32.5556 28.7632 31.9585 27.4676 30.8958 26.5123C29.8331 25.557 28.3918 25.0203 26.8889 25.0203H23.1112C21.6083 25.0203 20.167 25.557 19.1043 26.5123C18.0416 27.4676 17.4446 28.7632 17.4446 30.1142V38.6041H13.6668C13.1658 38.6041 12.6854 38.4252 12.3312 38.1067C11.9769 37.7883 11.7779 37.3564 11.7779 36.9061V22.0489C11.7783 21.8078 11.8357 21.5695 11.9465 21.35C12.0572 21.1304 12.2187 20.9345 12.4201 20.7754L23.7534 11.8611C24.0981 11.5888 24.5412 11.4387 25.0001 11.4387C25.4589 11.4387 25.902 11.5888 26.2467 11.8611L37.58 20.7754C37.7815 20.9345 37.9429 21.1304 38.0537 21.35C38.1644 21.5695 38.2218 21.8078 38.2222 22.0489V36.9061Z" fill="white"></path>
 </svg>`;
 
-const addPostIcon = `<svg width="30" height="30" viewBox="0 0 50 50" fill="none" xmlns="http://www.w3.org/2000/svg" class="nav-icon" style="width: 30px; height: 30px; cursor: pointer">
+const addPostIcon = `<svg width="30" height="30" viewBox="0 0 50 50" fill="#000C9C" xmlns="http://www.w3.org/2000/svg" class="nav-icon" style="width: 30px; height: 30px; cursor: pointer; background-color: #000C9C; border-radius: 5px;">
 <path d="M39.875 22.875H27.125V10.125C27.125 9.56141 26.9011 9.02091 26.5026 8.6224C26.1041 8.22388 25.5636 8 25 8C24.4364 8 23.8959 8.22388 23.4974 8.6224C23.0989 9.02091 22.875 9.56141 22.875 10.125V22.875H10.125C9.56141 22.875 9.02091 23.0989 8.6224 23.4974C8.22388 23.8959 8 24.4364 8 25C8 25.5636 8.22388 26.1041 8.6224 26.5026C9.02091 26.9011 9.56141 27.125 10.125 27.125H22.875V39.875C22.875 40.4386 23.0989 40.9791 23.4974 41.3776C23.8959 41.7761 24.4364 42 25 42C25.5636 42 26.1041 41.7761 26.5026 41.3776C26.9011 40.9791 27.125 40.4386 27.125 39.875V27.125H39.875C40.4386 27.125 40.9791 26.9011 41.3776 26.5026C41.7761 26.1041 42 25.5636 42 25C42 24.4364 41.7761 23.8959 41.3776 23.4974C40.9791 23.0989 40.4386 22.875 39.875 22.875Z" fill="white"></path>
 </svg>`;
 
-const notificationsIcon = `<svg width="30" height="30" viewBox="0 0 50 50" fill="none" xmlns="http://www.w3.org/2000/svg" class="nav-icon" style="width: 30px; height: 30px; cursor: pointer">
+const notificationsIcon = `<svg width="30" height="30" viewBox="0 0 50 50" fill="none" xmlns="http://www.w3.org/2000/svg" class="nav-icon" style="width: 30px; height: 30px; cursor: pointer ">
 <path d="M41.405 8.40989C41.2197 8.25088 41.0023 8.13365 40.7676 8.06618C40.5329 7.99871 40.2865 7.98259 40.045 8.01891L17.945 11.4187C17.5425 11.4798 17.1754 11.6832 16.9102 11.992C16.645 12.3009 16.4995 12.6946 16.5 13.1016V30.6956C15.7057 30.3077 14.834 30.1043 13.95 30.1007C12.7732 30.1007 11.6228 30.4496 10.6444 31.1034C9.66589 31.7571 8.90326 32.6863 8.45292 33.7735C8.00258 34.8607 7.88475 36.0569 8.11433 37.2111C8.34391 38.3652 8.91059 39.4253 9.74272 40.2574C10.5748 41.0895 11.635 41.6561 12.7892 41.8857C13.9434 42.1152 15.1397 41.9974 16.227 41.5471C17.3142 41.0968 18.2435 40.3342 18.8972 39.3558C19.551 38.3774 19.9 37.2271 19.9 36.0503V23.0631L38.6 20.1902V27.2958C37.8057 26.9079 36.934 26.7045 36.05 26.7009C34.8732 26.7009 33.7228 27.0498 32.7444 27.7036C31.7659 28.3573 31.0033 29.2865 30.5529 30.3737C30.1026 31.4608 29.9847 32.6571 30.2143 33.8112C30.4439 34.9654 31.0106 36.0255 31.8427 36.8576C32.6748 37.6896 33.735 38.2563 34.8892 38.4859C36.0434 38.7154 37.2397 38.5976 38.327 38.1473C39.4142 37.697 40.3434 36.9344 40.9972 35.956C41.651 34.9776 42 33.8273 42 32.6505V9.70182C42 9.45628 41.9468 9.21366 41.8441 8.99064C41.7414 8.76762 41.5916 8.56949 41.405 8.40989ZM13.95 38.6002C13.4457 38.6002 12.9526 38.4506 12.5333 38.1705C12.114 37.8903 11.7871 37.492 11.5941 37.0261C11.4011 36.5602 11.3506 36.0475 11.449 35.5529C11.5474 35.0583 11.7903 34.6039 12.1469 34.2473C12.5035 33.8907 12.9579 33.6479 13.4525 33.5495C13.9472 33.4511 14.4599 33.5016 14.9258 33.6946C15.3918 33.8876 15.7901 34.2144 16.0702 34.6337C16.3504 35.053 16.5 35.546 16.5 36.0503C16.5 36.7266 16.2313 37.3752 15.7531 37.8534C15.2749 38.3315 14.6263 38.6002 13.95 38.6002ZM36.05 35.2004C35.5457 35.2004 35.0526 35.0508 34.6333 34.7707C34.214 34.4905 33.8871 34.0922 33.6941 33.6263C33.5011 33.1604 33.4506 32.6477 33.549 32.1531C33.6474 31.6585 33.8903 31.2041 34.2469 30.8475C34.6035 30.4909 35.0579 30.2481 35.5525 30.1497C36.0472 30.0513 36.5599 30.1018 37.0258 30.2948C37.4918 30.4878 37.89 30.8146 38.1702 31.2339C38.4504 31.6532 38.6 32.1462 38.6 32.6505C38.6 33.3268 38.3313 33.9754 37.8531 34.4535C37.3749 34.9317 36.7263 35.2004 36.05 35.2004ZM38.6 16.7394L19.9 19.6123V14.5125L38.6 11.6907V16.7394Z" fill="white"></path>
 </svg>`;
 
