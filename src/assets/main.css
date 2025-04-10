@@ -30,6 +30,10 @@ html, body {
   font-family: 'Bebas Neue', sans-serif;
 }
 
+.oswald-font {
+  font-family: 'Oswald', sans-serif;
+}
+
 /*@import "./base.css";*/
 /**/
 /*#app {*/
