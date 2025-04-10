@@ -1,18 +1,21 @@
 <template>
-  <div class="relative w-full h-screen">
-  <main class="flex w-full h-screen overflow-x-hidden"
-  style="background-color: rgba(6, 3, 16, 1);">
+  <div class="relative w-full h-screen" style="background-color: rgba(30, 30, 30, 1)">
+  <main class="flex w-full h-screen overflow-x-hidden "  style="background-color: rgba(30, 30, 30, 1)"
+  >
     <NavBar />
     <section
-      class="flex relative flex-col flex-1   max-md:pt-[65px] max-md:pb-[70px] mx-15 h-screen" style="background-color: rgba(6, 3, 16, 1)"
+      class="flex relative flex-col flex-1   max-md:pt-[50px] max-md:pb-[34px]  [@media(min-width:1550px)]:mx-25  xl:mx-[60px]   lg:mx-[60px] md:mx-[50px]  sm:mx-[0px] h-screen" style="background-color: rgba(30, 30, 30, 1)"
     >
       <div
-        class=" items-center justify-center   flex flex-col gap-6 py-4 md:py-10.25 mx-auto w-full max-w-[640px]"
+        class=" items-center justify-center gap-10  flex flex-col h-full [@media(min-width:1550px)]:pt-16.25 xl:pt-10.25 lg:pt-8.25 md:pt-5.25 mx-auto w-full max-w-[640px]" style="background-color: rgba(6, 3, 16, 1)"
       >
-        <ProfileHeader :user="user" />
-       <div class="profile-stats-container"><ProfileStats :stats="stats"  /></div> 
-        <ProfileContent :user="user"/>
-      </div>
+
+        <ProfileHeader  :user="user" />
+       
+       <ProfileStats   :stats="stats"  />
+        <ProfileContent  :user="user" @update:user="updateUser" />
+     
+    </div>
     </section>
   </main>
 
@@ -21,30 +24,89 @@
 </template>
 
 <script setup lang="ts">
-import { reactive } from "vue";
+import { reactive, ref, watch } from "vue";
 import NavBar from "@/components/Navigation/NavBar.vue";
 import ProfileHeader from "@/components/userProfile/ProfileHeader.vue";
 import ProfileStats from "@/components/userProfile/ProfileStats.vue";
 import ProfileContent from "@/components/userProfile/ProfileContent.vue";
 
-// Define user data with inline types
-const user = reactive({
+
+
+interface User {
+  name: string;
+  login: string;
+  avatarUrl: string;
+  biography: string;
+  tag?: string | null;
+}
+
+interface Stats {
+  posts: number;
+  listeners: number;
+  listenedTo: number;
+}
+
+const user = reactive<User>({
   name: "User Name",
-  username: "user login",
-  avatarUrl: "https://cdn.builder.io/api/v1/image/assets/TEMP/3922534bd59dfe0deae8bd149c0b3cba46e3eb47?placeholderIfAbsent=true&apiKey=04fef95365634cc5973c2029f1fc78f5",
+  login: "user login",
+  avatarUrl:
+    "https://cdn.builder.io/api/v1/image/assets/TEMP/3922534bd59dfe0deae8bd149c0b3cba46e3eb47?placeholderIfAbsent=true&apiKey=04fef95365634cc5973c2029f1fc78f5",
+  biography: "Lorem ipsum dolor sit amet,consectetur adipiscing",
 });
 
-// Define stats data with inline types
-const stats = reactive({
+const stats = reactive<Stats>({
   posts: 0,
   listeners: 0,
   listenedTo: 0,
 });
 
-function rgba(arg0: number, arg1: string, arg2: string, arg3: boolean, arg4: string, arg5: boolean, arg6: string, arg7: string, arg8: string, arg9: boolean): unknown {
-  throw new Error("Function not implemented.");
-}
+const formData = reactive({
+  name: user.name,
+  login: user.login,
+  biography: user.biography,
+  selectedTag: user.tag || null,
+});
+
+const emit = defineEmits(["update:user"]);
+
+const updateUser = (updatedUser: User) => {
+  user.name = updatedUser.name;
+  user.login = updatedUser.login;
+  user.biography = updatedUser.biography;
+  user.tag = updatedUser.tag;
+};
+
+const isModalOpen = ref(false);
+
+const selectTag = (tag: string) => {
+  formData.selectedTag = formData.selectedTag === tag ? null : tag;
+};
+
+const saveChanges = () => {
+  emit("update:user", {
+    ...user,
+    name: formData.name,
+    login: formData.login,
+    biography: formData.biography,
+    tag: formData.selectedTag,
+  });
+  isModalOpen.value = false;
+};
+
+watch(
+  () => user,
+  (newUser) => {
+    formData.name = newUser.name || "";
+    formData.login = newUser.login || "";
+    formData.biography = newUser.biography || "";
+    formData.selectedTag = newUser.tag || null;
+  },
+  { deep: true }
+);
 </script>
+
+
+
 
 <style scoped>
 /* Ensure content is centered with equal margins */
@@ -62,14 +124,6 @@ main {
   justify-content: center;
 }
 
-@media (max-width: 768px) {
-  .profile-stats-container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 100%;
-  }
-}
 
 
 @media (max-width: 640px) {

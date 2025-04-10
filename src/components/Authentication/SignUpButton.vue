@@ -4,8 +4,8 @@
     @click="$emit('click')"
     class="flex gap-1.5 justify-center items-center w-full h-9 text-base font-bold text-white rounded-md bg-[rgba(2,3,61,1)] transition duration-300 ease-in-out"
   >
-    <div v-if="icon === 'google'">
-      <div v-html="googleSvg"></div>
+  <div v-if="icon">
+      <component :is="iconComponent" />
     </div>
     <span>{{ text }}</span>
   </button>
@@ -13,6 +13,7 @@
 
 <script lang="ts">
 import { defineComponent, computed } from "vue";
+import GoogleIcon from "../SVG/Authentication/Sign_Up_In_If_button_Google.vue";
 
 export default defineComponent({
   name: "SocialButton",
@@ -21,7 +22,7 @@ export default defineComponent({
       type: String,
       required: true,
       validator: (value: string) =>
-        ["google", "facebook", "twitter", "github"].includes(value),
+        ["google"].includes(value),
     },
     text: {
       type: String,
@@ -29,37 +30,16 @@ export default defineComponent({
     },
   },
   emits: ["click"],
-  setup(props) {
-    const googleSvg = computed(
-      () => `<svg id="148:2164" layer-name="google logo" width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" class="w-[16px] h-[16px]">
-  <g clip-path="url(#clip0_148_2164)">
-  <path d="M7.99996 3.33333C9.0778 3.33333 10.0675 3.70235 10.8575 4.31604L13.2823 2.00273C11.8725 0.759969 10.0271 0 7.99996 0C4.92822 0 2.2644 1.73328 0.923828 4.27323L3.62012 6.40186C4.27327 4.61292 5.98494 3.33333 7.99996 3.33333Z" fill="#F44336"></path>
-  <path d="M15.9307 9.00138C15.9724 8.67362 16 8.33927 16 8.00016C16 7.42826 15.9375 6.87138 15.8235 6.3335H8V9.66683H12.3241C11.9743 10.576 11.3515 11.3453 10.5587 11.8798L13.265 14.0164C14.6996 12.7571 15.6813 10.9937 15.9307 9.00138Z" fill="#2196F3"></path>
-  <path d="M3.33333 8.0002C3.33333 7.43791 3.43791 6.90129 3.62016 6.40206L0.923869 4.27344C0.336222 5.38688 0 6.65365 0 8.0002C0 9.33171 0.330037 10.5844 0.905477 11.6888L3.60518 9.5575C3.43229 9.06982 3.33333 8.54716 3.33333 8.0002Z" fill="#FFC107"></path>
-  <path d="M7.9998 12.6665C5.96944 12.6665 4.24674 11.3675 3.60498 9.55713L0.905273 11.6885C2.2393 14.2488 4.913 15.9998 7.9998 15.9998C10.0183 15.9998 11.859 15.25 13.2648 14.016L10.5585 11.8795C9.82727 12.3724 8.95207 12.6665 7.9998 12.6665Z" fill="#00B060"></path>
-  <path opacity="0.1" d="M8.00004 15.8336C5.64559 15.8336 3.52852 14.8621 2.03174 13.3145C3.49695 14.9588 5.62435 16.0002 8.00004 16.0002C10.3538 16.0002 12.4635 14.9793 13.9255 13.3608C12.4331 14.8833 10.3321 15.8336 8.00004 15.8336Z" fill="black"></path>
-  <path opacity="0.1" d="M8 9.5V9.66667H12.3241L12.3917 9.5H8Z" fill="black"></path>
-  <path d="M15.9961 8.09782C15.9967 8.06498 15.9998 8.03271 15.9998 7.9998C15.9998 7.99048 15.9984 7.98149 15.9983 7.97217C15.9979 8.01416 15.9958 8.05566 15.9961 8.09782Z" fill="#E6E6E6"></path>
-  <path opacity="0.2" d="M8 6.3335V6.50016H15.857C15.8465 6.44515 15.8351 6.3881 15.8235 6.3335H8Z" fill="white"></path>
-  <path d="M15.8235 6.33333H8V9.66667H12.3241C11.6517 11.4144 9.98478 12.6667 8 12.6667C5.42269 12.6667 3.33333 10.5773 3.33333 8C3.33333 5.42265 5.42269 3.33333 8 3.33333C8.93457 3.33333 9.79594 3.62044 10.5257 4.09379C10.6374 4.16638 10.7526 4.23454 10.8575 4.31604L13.2823 2.00273L13.2276 1.96065C11.8246 0.74471 10.0024 0 8 0C3.58171 0 0 3.58171 0 8C0 12.4183 3.58171 16 8 16C12.0785 16 15.437 12.9458 15.9307 9.00122C15.9724 8.67346 16 8.33911 16 8C16 7.4281 15.9375 6.87122 15.8235 6.33333Z" fill="url(#paint0_linear_148_2164)"></path>
-  <path opacity="0.1" d="M10.5258 3.92733C9.7961 3.45398 8.93473 3.16687 8.00016 3.16687C5.42285 3.16687 3.3335 5.25618 3.3335 7.83354C3.3335 7.86165 3.33387 7.88363 3.33436 7.91166C3.37933 5.37321 5.45097 3.33354 8.00016 3.33354C8.93473 3.33354 9.7961 3.62065 10.5258 4.09399C10.6375 4.16658 10.7528 4.23474 10.8577 4.31624L13.2825 2.00293L10.8577 4.14958C10.7528 4.06807 10.6375 3.99992 10.5258 3.92733Z" fill="black"></path>
-  <path opacity="0.2" d="M8 0.166667C9.98336 0.166667 11.7886 0.898926 13.1862 2.0944L13.2823 2.00273L13.209 1.93885C11.806 0.722906 10.0024 0 8 0C3.58171 0 0 3.58171 0 8C0 8.02812 0.00390627 8.05526 0.00419107 8.08333C0.0493571 3.7039 3.60982 0.166667 8 0.166667Z" fill="white"></path>
-  </g>
-  <defs>
-  <linearGradient id="paint0_linear_148_2164" x1="0" y1="8" x2="16" y2="8" gradientUnits="userSpaceOnUse">
-  <stop stop-color="white" stop-opacity="0.2"></stop>
-  <stop offset="1" stop-color="white" stop-opacity="0"></stop>
-  </linearGradient>
-  <clipPath id="clip0_148_2164">
-  <rect width="16" height="16" fill="white"></rect>
-  </clipPath>
-  </defs>
-  </svg>`,
-    );
-
-    return {
-      googleSvg,
-    };
+  computed: {
+    iconComponent(): any {
+      switch (this.icon) {
+        case "google":
+          return GoogleIcon;
+        default:
+          return null;
+      }
+    },
   },
 });
 </script>
+

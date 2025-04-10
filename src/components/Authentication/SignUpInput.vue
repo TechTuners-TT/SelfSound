@@ -29,8 +29,8 @@
 
 <script lang="ts">
 import { defineComponent, computed, ref } from 'vue';
-import EyeIcon from '../SVG/Authentication/EyeIcon.vue';
-import EyeOffIcon from '../SVG/Authentication/EyeOffIcon.vue';
+import EyeIcon from '../SVG/Authentication/Sign_Up_In_Show_password_button.vue';
+import EyeOffIcon from '../SVG/Authentication/Sign_Up_In_Not_show_password_button.vue.vue';
 
 export default defineComponent({
   name: 'InputField',
