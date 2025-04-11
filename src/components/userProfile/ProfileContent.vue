@@ -1,13 +1,13 @@
 <template>
   <section class="flex flex-col gap-15 max-w w-full mx-auto">
     <button  
-      class=" cursor-pointer  max-w-[560px] w-full h-8 text-sm sm:text-base text-white rounded-xl border shadow-sm border-white border-opacity-50 mx-auto block"
-      style="background-color:rgba(2, 3, 61, 1)"
+      class=" cursor-pointer  max-w-[560px] w-full h-8 text-sm sm:text-base text-white rounded-xl border shadow-sm border-white border-opacity-50 mx-auto block inter-font"  
+      style="background-color:rgba(2, 3, 61, 1) ;font-weight: 500;"
       @click="isModalOpen = true">
       Edit profile
     </button>
     <div class="w-full h-px bg-white bg-opacity-50"></div>
-    <p class="mt-10 sm:mt-47.5 text-sm sm:text-base text-white text-center">
+    <p class="mt-10 sm:mt-47.5 text-sm sm:text-base text-white text-center inter-font" style="font-weight: 400; ">
       There's nothing here yet, add your first post!
     </p>
 <!--  -->
@@ -20,37 +20,37 @@
       
        <!-- Name -->
        <div class="flex items-center gap-15 font-medium mb-5 max-md:gap-15 max-md:mb-4 justify-end">
-            <div class="text-white text-[16px] h-[20px] w-[80px] max-md:text-sm max-md:w-[70px]">Name:</div>
+            <div class="text-white text-[16px] h-[20px] w-[80px] max-md:text-sm max-md:w-[70px] inter-font" style="font-weight: 500; ">Name:</div>
             <div class="h-[20px]  w-full rounded-md border border-white border-opacity-20 bg-zinc-950 flex items-center">
-              <input v-model="formData.name" class="w-full text-[12px]  h-full bg-transparent border-none outline-none text-white px-2 max-md:text-sm" type="text" />
+              <input v-model="formData.name" class="w-full text-[12px]  h-full bg-transparent border-none outline-none text-white px-2 max-md:text-sm inter-font" style="font-weight: 500; " type="text" />
             </div>
           </div>
 
           <!-- Login -->
           <div class="flex items-center gap-15 font-medium mb-5 max-md:gap-15 max-md:mb-4 justify-end">
-            <div class="text-white text-[16px] h-[20px] w-[80px] max-md:text-sm max-md:w-[70px]">Login:</div>
+            <div class="text-white text-[16px] h-[20px] w-[80px] max-md:text-sm max-md:w-[70px] inter-font" style="font-weight: 500; ">Login:</div>
             <div class="h-[20px] w-full rounded-md border border-white border-opacity-20 bg-zinc-950 flex items-center">
-              <input v-model="formData.login" class="w-full text-[12px]  h-full bg-transparent border-none outline-none text-white px-2 max-md:text-sm" type="text" />
+              <input v-model="formData.login" class="w-full text-[12px]  h-full bg-transparent border-none outline-none text-white px-2 max-md:text-sm inter-font" style="font-weight: 500; " type="text" />
             </div>
           </div>
 <!-- Biography -->
 <div class="flex items-center gap-11 font-medium max-md:gap-11 max-md:mb-4 justify-end  ">
-  <div class="text-white text-[16px] h-[20px] w-[82px] max-md:text-sm max-md:w-[70px]">Biography:</div>
+  <div class="text-white text-[16px] h-[20px] w-[82px] max-md:text-sm max-md:w-[70px] inter-font" style="font-weight: 500; ">Biography:</div>
   <div class="flex-1 h-[54px] rounded-md border border-white border-opacity-20 bg-zinc-950 max-md:h-[38px]  flex items-center ">
-    <input v-model="formData.biography" class="w-full h-full text-[12px]  bg-transparent border-none outline-none text-white px-2 max-md:text-sm" />
+    <input v-model="formData.biography" class="w-full h-full text-[12px]  bg-transparent border-none outline-none text-white px-2 max-md:text-sm inter-font" style="font-weight: 500; " />
   </div>
 </div>
 
       <!-- Tags -->
     
 <div class="flex items-center gap-15 font-medium mt-7.5 mb-16.25 max-md:flex-row max-md:gap-2">
-  <div class="text-white text-[16px] h-[16px] w-[80px] max-md:text-sm">Tag:</div>
+  <div class="text-white text-[16px] h-[16px] w-[80px] max-md:text-sm inter-font" style="font-weight: 500; ">Tag:</div>
   <div class="flex gap-[20px] w-[400px] max-md:w-full flex-nowrap max-md:gap-2">
     <div
-      :class="[
-        'w-[100px] h-[32px] leading-[32px] py-0 px-0 rounded-xl border border-white border-opacity-50 cursor-pointer text-center',
+      :class="[  
+        'w-[100px] h-[32px] leading-[32px] py-0 px-0 rounded-xl border border-white inter-font border-opacity-50 cursor-pointer text-center'  ,
         formData.selectedTag === 'listener' ? 'text-black bg-[#FFFFFF]' : 'text-white bg-transparent',
-        'max-md:w-[80px] max-md:h-[30px] max-md:text-xs'
+        'max-md:w-[80px] max-md:h-[30px] max-md:text-xs' 
       ]"
       @click="selectTag('listener')"
     >
@@ -58,7 +58,7 @@
     </div>
     <div
       :class="[
-        'w-[100px] h-[32px] leading-[32px] py-0 px-0 rounded-xl border border-white border-opacity-50 cursor-pointer text-center',
+        'w-[100px] h-[32px] leading-[32px] py-0 px-0 rounded-xl border inter-font border-white border-opacity-50 cursor-pointer text-center',
         formData.selectedTag === 'musician' ? 'bg-[#6D01D0] text-white' : 'text-white bg-transparent',
         'max-md:w-[80px] max-md:h-[30px] max-md:text-xs'
       ]"
@@ -68,7 +68,7 @@
     </div>
     <div
       :class="[
-        'w-[100px] h-[32px] leading-[32px] py-0 px-0 rounded-xl border border-white border-opacity-50 cursor-pointer text-center',
+        'w-[100px] h-[32px] leading-[32px] py-0 px-0 rounded-xl border inter-font border-white border-opacity-50 cursor-pointer text-center',
         formData.selectedTag === 'learner' ? 'bg-[#000C9C] text-white' : 'text-white bg-transparent',
         'max-md:w-[80px] max-md:h-[30px] max-md:text-xs'
       ]"

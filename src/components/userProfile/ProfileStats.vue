@@ -3,11 +3,11 @@
     class="flex gap-12.5 items-center  mb-1.25   text-[12px] inter-font font-medium w-[500px] h-[12px] "
   >
   
-    <p class=" font-medium text-white ">  {{ stats.posts }} posts </p>
-    <p class=" font-medium text-white ">
+    <p class=" font-medium text-white inter-font" style="font-weight: 500; ">  {{ stats.posts }} posts </p>
+    <p class=" font-medium text-white inter-font" style="font-weight: 500; ">
       Listeners: {{ stats.listeners }}
     </p>
-    <p class=" font-medium text-white ">
+    <p class=" font-medium text-white inter-font" style="font-weight: 500; ">
       Listened to: {{ stats.listenedTo }}
     </p>
   </section>
