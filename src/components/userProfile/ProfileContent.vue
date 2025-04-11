@@ -1,7 +1,7 @@
 <template>
   <section class="flex flex-col gap-15 max-w w-full mx-auto">
     <button  
-      class="max-w-[560px] w-full h-8 text-sm sm:text-base text-white rounded-xl border shadow-sm border-white border-opacity-50 mx-auto block"
+      class=" cursor-pointer  max-w-[560px] w-full h-8 text-sm sm:text-base text-white rounded-xl border shadow-sm border-white border-opacity-50 mx-auto block"
       style="background-color:rgba(2, 3, 61, 1)"
       @click="isModalOpen = true">
       Edit profile
@@ -10,44 +10,82 @@
     <p class="mt-10 sm:mt-47.5 text-sm sm:text-base text-white text-center">
       There's nothing here yet, add your first post!
     </p>
+<!--  -->
+    <div v-if="isModalOpen" class="absolute inset-0 flex justify-center items-center z-50 pointer-events-none " @click.self="isModalOpen = false" >
+  <div class="rounded-xl relative pointer-events-auto shadow-xl w-[640px] bg-[#060310] max-md:w-[95%] border-1 border-white rounded-xl  max-md:px-4 " @click.stop >
+   
+    <img :src="user.avatarUrl" :alt="user.name" class="object-contain self-center max-w-full aspect-square w-[100px] h-[100px] rounded-full mx-auto mt-11.25 max-md:w-[80px] max-md:h-[80px] max-md:mt-6" />
 
-    <div v-if="isModalOpen" class="absolute inset-0 flex justify-center items-center z-50 pointer-events-none">
-      <div class="rounded-xl p-6 relative pointer-events-auto shadow-xl" style="width: 640px; height: auto; background-color: #060310;">
-        <button class="absolute top-2 right-3 text-white text-xl" @click="isModalOpen = false">&times;</button>
-        <img :src="user.avatarUrl" :alt="user.name" class="object-contain self-center max-w-full aspect-square w-[100px] h-[100px] rounded-full mx-auto mt-11.25" />
-        <div class="flex flex-col px-12 mt-9 w-full max-md:px-5 max-md:max-w-full">
-          <div class="flex flex-wrap gap-10 items-center font-medium whitespace-nowrap max-md:max-w-full">
-            <div class="self-stretch my-auto text-white">Name:</div>
-            <div class="flex grow shrink self-stretch my-auto h-5 rounded-md border border-solid bg-zinc-950 border-white border-opacity-20 min-w-60 w-[390px]">
-              <input v-model="formData.name" class="w-full h-full bg-transparent border-none outline-none px-2 text-white" type="text" />
+    <div class="flex flex-col px-12.5 mt-9.25 w-full max-md:px-4 max-md:mt-6">
+      
+       <!-- Name -->
+       <div class="flex items-center gap-15 font-medium mb-5 max-md:gap-15 max-md:mb-4 justify-end">
+            <div class="text-white text-[16px] h-[20px] w-[80px] max-md:text-sm max-md:w-[70px]">Name:</div>
+            <div class="h-[20px] w-full rounded-md border border-white border-opacity-20 bg-zinc-950">
+              <input v-model="formData.name" class="w-full h-full bg-transparent border-none outline-none text-white px-2 max-md:text-sm" type="text" />
             </div>
           </div>
-          <div class="flex flex-wrap gap-10 items-center mt-5 font-medium whitespace-nowrap max-md:max-w-full">
-            <div class="grow shrink self-stretch my-auto w-[38px] text-white">Login: </div>
-            <div class="flex grow shrink self-stretch my-auto h-5 rounded-md border border-solid bg-zinc-950 border-white border-opacity-20 min-w-60 w-[391px]">
-              <input v-model="formData.login" class="w-full h-full bg-transparent border-none outline-none px-2 text-white" type="text" />
+
+          <!-- Login -->
+          <div class="flex items-center gap-15 font-medium mb-5 max-md:gap-15 max-md:mb-4 justify-end">
+            <div class="text-white text-[16px] h-[20px] w-[80px] max-md:text-sm max-md:w-[70px]">Login:</div>
+            <div class="h-[20px] w-full rounded-md border border-white border-opacity-20 bg-zinc-950">
+              <input v-model="formData.login" class="w-full h-full bg-transparent border-none outline-none text-white px-2 max-md:text-sm" type="text" />
             </div>
           </div>
-          <div class="flex flex-wrap gap-10 items-start mt-5 font-medium whitespace-nowrap max-md:max-w-full">
-            <div class="text-white">Biography:</div>
-            <div class="flex grow shrink w-96 rounded-md border border-solid bg-zinc-950 border-white border-opacity-20 h-[54px] min-w-60">
-              <input v-model="formData.biography" class="w-full h-full bg-transparent border-none outline-none text-white resize-none"></input>
-            </div>
-          </div>
-          <div class="flex flex-wrap gap-10 items-center self-start mt-8 whitespace-nowrap max-md:max-w-full">
-            <div class="self-stretch my-auto font-medium">Tag:</div>
-            <div class="flex gap-5 items-center self-stretch my-auto min-w-60 max-md:flex-wrap max-md:justify-center">
-              <div :class="['gap-2.5 self-stretch py-2.5 px-5 my-auto rounded-xl border border-solid border-white border-opacity-50 min-h-8 w-[100px] cursor-pointer text-center', formData.selectedTag === 'listener' ? 'text-black bg-white' : 'text-white bg-transparent']" @click="selectTag('listener')">Listener</div>
-              <div :class="['gap-2.5 self-stretch py-2.5 px-4 my-auto rounded-xl border border-solid border-white border-opacity-50 min-h-8 w-[100px] cursor-pointer text-center', formData.selectedTag === 'musician' ? 'bg-purple-700' : 'text-white bg-transparent']" @click="selectTag('musician')">Musician</div>
-              <div :class="['gap-2.5 self-stretch py-2.5 px-5 my-auto rounded-xl border border-solid border-white border-opacity-50 min-h-8 w-[100px] cursor-pointer text-center', formData.selectedTag === 'learner' ? 'bg-blue-900' : 'text-white bg-transparent']" @click="selectTag('learner')">Learner</div>
-            </div>
-          </div>
-          <div class="self-end mt-16 font-bold max-md:mt-10 cursor-pointer text-white hover:underline" @click="saveChanges">
-            Save changes
-          </div>
-        </div>
+<!-- Biography -->
+<div class="flex items-center gap-11 font-medium max-md:gap-11,5 max-md:mb-4 justify-end">
+  <div class="text-white text-[16px] h-[20px] w-[80px] max-md:text-sm max-md:w-[70px]">Biography:</div>
+  <div class="flex-1 h-[54px] rounded-md border border-white border-opacity-20 bg-zinc-950 max-md:h-[38px]">
+    <input v-model="formData.biography" class="w-full h-full bg-transparent border-none outline-none text-white px-2 max-md:text-sm" />
+  </div>
+</div>
+
+      <!-- Tags -->
+    
+<div class="flex items-center gap-15 font-medium mt-7.5 mb-16.25 max-md:flex-row max-md:gap-2">
+  <div class="text-white text-[16px] h-[16px] w-[80px] max-md:text-sm">Tag:</div>
+  <div class="flex gap-[20px] w-[400px] max-md:w-full flex-nowrap max-md:gap-2">
+    <div
+      :class="[
+        'w-[100px] h-[32px] leading-[32px] py-0 px-0 rounded-xl border border-white border-opacity-50 cursor-pointer text-center',
+        formData.selectedTag === 'listener' ? 'text-black bg-[#FFFFFF]' : 'text-white bg-transparent',
+        'max-md:w-[80px] max-md:h-[30px] max-md:text-xs'
+      ]"
+      @click="selectTag('listener')"
+    >
+      Listener
+    </div>
+    <div
+      :class="[
+        'w-[100px] h-[32px] leading-[32px] py-0 px-0 rounded-xl border border-white border-opacity-50 cursor-pointer text-center',
+        formData.selectedTag === 'musician' ? 'bg-[#6D01D0] text-white' : 'text-white bg-transparent',
+        'max-md:w-[80px] max-md:h-[30px] max-md:text-xs'
+      ]"
+      @click="selectTag('musician')"
+    >
+      Musician
+    </div>
+    <div
+      :class="[
+        'w-[100px] h-[32px] leading-[32px] py-0 px-0 rounded-xl border border-white border-opacity-50 cursor-pointer text-center',
+        formData.selectedTag === 'learner' ? 'bg-[#000C9C] text-white' : 'text-white bg-transparent',
+        'max-md:w-[80px] max-md:h-[30px] max-md:text-xs'
+      ]"
+      @click="selectTag('learner')"
+    >
+      Learner
+    </div>
+  </div>
+</div>
+
+      <!-- Save Button -->
+      <div class="self-end mb-11.25 font-bold cursor-pointer text-white hover:text-[#6D01D0] max-md:self-center max-md:mb-8" @click="saveChanges">
+        Save changes
       </div>
     </div>
+  </div>
+</div>
   </section>
 </template>
 
@@ -78,12 +116,16 @@ export default defineComponent({
     const formData = reactive<FormData>({
       name: props.user.name,
       login: props.user.login,
-      biography: props.user.biography,  // Змінив 'Biography' на 'biography'
+      biography: props.user.biography,  
       selectedTag: null,
     });
 
     const selectTag = (tag: string) => {
-      formData.selectedTag = formData.selectedTag === tag ? null : tag;
+      if (formData.selectedTag === tag) {
+    formData.selectedTag = null; 
+  } else {
+    formData.selectedTag = tag; 
+  }
     };
 
     const saveChanges = () => {
@@ -97,7 +139,7 @@ export default defineComponent({
       (newUser) => {
         formData.name = newUser.name;
         formData.login = newUser.login;
-        formData.biography = newUser.biography;  // Змінив 'Biography' на 'biography'
+        formData.biography = newUser.biography;
       },
       { deep: true }
     );
@@ -114,6 +156,9 @@ section {
 section .max-w {
   max-width: 640px;
 }
+
+
+
 
 
 

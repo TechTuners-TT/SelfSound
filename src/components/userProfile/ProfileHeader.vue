@@ -22,7 +22,7 @@
       class="flex gap-4  items-center justify-center sm:justify-start gap-15 w-[560px]  h-[54px]"
     >
       <button
-        class=" h-8 text-sm sm:text-base text-white rounded-xl border bg-slate-900 border-white border-opacity-50 w-[100px] text-[16px] inter-font" style="font-weight: 400; background-color:rgba(2, 3, 61, 1)"
+        class="cursor-pointer h-8 text-sm sm:text-base text-white rounded-xl border bg-slate-900 border-white border-opacity-50 w-[100px] text-[16px] inter-font" style="font-weight: 400; background-color:rgba(2, 3, 61, 1)"
       >
         Add tag  
       </button>
