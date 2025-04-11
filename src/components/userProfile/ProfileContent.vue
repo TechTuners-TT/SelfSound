@@ -12,32 +12,32 @@
     </p>
 <!--  -->
     <div v-if="isModalOpen" class="absolute inset-0 flex justify-center items-center z-50 pointer-events-none " @click.self="isModalOpen = false" >
-  <div class="rounded-xl relative pointer-events-auto shadow-xl w-[640px] bg-[#060310] max-md:w-[95%] border-1 border-white rounded-xl  max-md:px-4 " @click.stop >
+  <div class="rounded-xl relative pointer-events-auto shadow-xl w-[640px] bg-[#060310] max-md:w-[95%] border-1 border-white rounded-xl  max-md:px-4  max-sm:px-2" @click.stop >
    
     <img :src="user.avatarUrl" :alt="user.name" class="object-contain self-center max-w-full aspect-square w-[100px] h-[100px] rounded-full mx-auto mt-11.25 max-md:w-[80px] max-md:h-[80px] max-md:mt-6" />
 
-    <div class="flex flex-col px-12.5 mt-9.25 w-full max-md:px-4 max-md:mt-6">
+    <div class="flex flex-col px-12.5 mt-9.25 w-full max-md:px-4 max-sm:px-1 max-md:mt-6">
       
        <!-- Name -->
        <div class="flex items-center gap-15 font-medium mb-5 max-md:gap-15 max-md:mb-4 justify-end">
             <div class="text-white text-[16px] h-[20px] w-[80px] max-md:text-sm max-md:w-[70px]">Name:</div>
-            <div class="h-[20px] w-full rounded-md border border-white border-opacity-20 bg-zinc-950">
-              <input v-model="formData.name" class="w-full h-full bg-transparent border-none outline-none text-white px-2 max-md:text-sm" type="text" />
+            <div class="h-[20px]  w-full rounded-md border border-white border-opacity-20 bg-zinc-950 flex items-center">
+              <input v-model="formData.name" class="w-full text-[12px]  h-full bg-transparent border-none outline-none text-white px-2 max-md:text-sm" type="text" />
             </div>
           </div>
 
           <!-- Login -->
           <div class="flex items-center gap-15 font-medium mb-5 max-md:gap-15 max-md:mb-4 justify-end">
             <div class="text-white text-[16px] h-[20px] w-[80px] max-md:text-sm max-md:w-[70px]">Login:</div>
-            <div class="h-[20px] w-full rounded-md border border-white border-opacity-20 bg-zinc-950">
-              <input v-model="formData.login" class="w-full h-full bg-transparent border-none outline-none text-white px-2 max-md:text-sm" type="text" />
+            <div class="h-[20px] w-full rounded-md border border-white border-opacity-20 bg-zinc-950 flex items-center">
+              <input v-model="formData.login" class="w-full text-[12px]  h-full bg-transparent border-none outline-none text-white px-2 max-md:text-sm" type="text" />
             </div>
           </div>
 <!-- Biography -->
-<div class="flex items-center gap-11 font-medium max-md:gap-11,5 max-md:mb-4 justify-end">
-  <div class="text-white text-[16px] h-[20px] w-[80px] max-md:text-sm max-md:w-[70px]">Biography:</div>
-  <div class="flex-1 h-[54px] rounded-md border border-white border-opacity-20 bg-zinc-950 max-md:h-[38px]">
-    <input v-model="formData.biography" class="w-full h-full bg-transparent border-none outline-none text-white px-2 max-md:text-sm" />
+<div class="flex items-center gap-11 font-medium max-md:gap-11 max-md:mb-4 justify-end  ">
+  <div class="text-white text-[16px] h-[20px] w-[82px] max-md:text-sm max-md:w-[70px]">Biography:</div>
+  <div class="flex-1 h-[54px] rounded-md border border-white border-opacity-20 bg-zinc-950 max-md:h-[38px]  flex items-center ">
+    <input v-model="formData.biography" class="w-full h-full text-[12px]  bg-transparent border-none outline-none text-white px-2 max-md:text-sm" />
   </div>
 </div>
 
