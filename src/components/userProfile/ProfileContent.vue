@@ -158,6 +158,9 @@ section .max-w {
 }
 
 
+.inter-font {
+  font-family: 'Inter', sans-serif;
+}
 
 
 

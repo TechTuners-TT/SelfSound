@@ -118,6 +118,11 @@ watch(
 }
 
 
+
+.inter-font {
+  font-family: 'Inter', sans-serif;
+}
+
 /* Center the content container */
 main {
   display: flex;

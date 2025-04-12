@@ -26,6 +26,11 @@ defineProps<{
 
 <style scoped>
 
+
+.inter-font {
+  font-family: 'Inter', sans-serif;
+}
+
 @media (min-width: 768px) {
   section {
     padding-left: 140px;
