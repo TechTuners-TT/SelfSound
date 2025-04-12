@@ -3,11 +3,12 @@
   <main class="flex w-full h-screen overflow-x-hidden "  style="background-color: rgba(30, 30, 30, 1)"
   >
     <NavBar />
-    <section
-      class="flex relative flex-col flex-1   max-md:pt-[50px] max-md:pb-[34px]  [@media(min-width:1550px)]:mx-25  xl:mx-[60px]   lg:mx-[60px] md:mx-[50px]  sm:mx-[0px] h-screen" style="background-color: rgba(30, 30, 30, 1)"
+     
+     <section 
+      class="flex relative flex-col flex-1   [@media(min-width:1536px)]:mx-25  xl:mx-[70px]   lg:mx-[60px] md:mx-[60px]  sm:mx-[0px] h-screen" style="background-color: rgba(30, 30, 30, 1)"
     >
       <div
-        class=" items-center justify-center gap-10  flex flex-col h-full [@media(min-width:1550px)]:pt-16.25 xl:pt-10.25 lg:pt-8.25 md:pt-5.25 mx-auto w-full max-w-[640px]" style="background-color: rgba(6, 3, 16, 1)"
+        class=" items-center  gap-10   flex flex-col h-full [@media(min-width:1536px)]:pt-16.25 xl:pt-14.25 lg:pt-12.25 md:pt-10.25 max-md:pt-22.25  mx-auto w-full max-w-[640px]" style="background-color: rgba(6, 3, 16, 1)"
       >
 
         <ProfileHeader  :user="user" />
@@ -129,6 +130,29 @@ main {
   justify-content: center;
 }
 
+@media (max-width: 1280px) {
+  
+  .gap-10 {
+    gap: 2.25rem;
+  }
+}
+
+
+@media (max-width: 1024px) {
+  
+  .gap-10 {
+    gap: 2rem;
+  }
+}
+
+
+@media (max-width: 768px) {
+  
+  .gap-10 {
+    gap: 1.8rem;
+  }
+}
+
 
 
 @media (max-width: 640px) {
@@ -140,6 +164,9 @@ main {
   .py-4 {
     padding-top: 20px;
     padding-bottom: 20px;
+  }
+  .gap-10 {
+    gap: 1.5rem;
   }
 }
 
@@ -153,8 +180,8 @@ main {
     padding-bottom: 15px;
   }
 
-  .gap-6 {
-    gap: 1rem;
+  .gap-10 {
+    gap: 1.5rem;
   }
 }
 

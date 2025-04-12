@@ -4,7 +4,7 @@
   <!-- Mobile top navigation - only visible on mobile -->
   <span class="hidden max-md:block">
     <nav
-      class="fixed top-0 left-0 w-full h-[50px] px-2 py-3 flex justify-between items-center bg-[#060310] z-30"
+      class="fixed top-0 left-0 w-full h-[80px] px-2 flex justify-between items-center bg-[#060310] z-30    "
       style="background-color: rgba(6, 3, 16, 1)"
     >
       <!-- Centered Header containing the 'S' -->
@@ -15,11 +15,11 @@
       </header>
 
       <!-- Right-aligned NavIcon -->
-      <div
-        class="max-md:order-3 max-md:absolute max-md:bottom-3 max-md:right-4"
-      >
-        <span class="hidden max-md:block"><NavIcon :svg="settingsIcon" /></span>
-      </div>
+      <div class="max-md:order-3 max-md:absolute max-md:top-1/2 max-md:right-4 transform max-md:-translate-y-1/2">
+    <span class="hidden max-md:block">
+      <NavIcon :svg="settingsIcon" />
+    </span>
+  </div>
     </nav>
   </span>
 
@@ -27,7 +27,7 @@
 
   <!-- Main navigation - sidebar on desktop, bottom bar on mobile -->
   <nav      
-    class="fixed left-0 h-screen [@media(min-width:1550px)]:w-[100px]  [@media(min-width:1550px)]:px-6.25 [@media(min-width:1550px)]:py-7.75  xl:w-[60px] xl:px-2.5 xl:py-5  lg:w-[60px] lg:px-2 lg:py-4    flex justify-center max-md:w-full max-md:h-auto md:w-[50px]  max-md:bottom-0 max-md:left-0 md:px-2 md:py-3 md:py-3 max-md:z-50 
+    class="fixed left-0 h-screen [@media(min-width:1536px)]:w-[100px]  [@media(min-width:1536px)]:px-6.25 [@media(min-width:1536px)]:py-7.75  xl:w-[70px] xl:px-3.5 xl:py-5  lg:w-[60px] lg:px-3 lg:py-4    flex justify-center max-md:w-full max-md:h-auto md:w-[60px]  max-md:bottom-0 max-md:left-0 md:px-3 md:py-3 md:py-3 max-md:z-50 [@media(max-width:768px)]:h-[80px]
          "
     style="background-color: rgba(6, 3, 16, 1);"
   >
@@ -43,7 +43,7 @@
 
       <!-- Center: buttons centered at bottom (only for mobile) -->
       <section
-        class="flex flex-col gap-7.5 items-center max-md:flex-row max-md:gap-5 max-md:absolute max-md:bottom-3 max-md:left-1/2 max-md:-translate-x-1/2 max-md:order-2 max-sm:gap-5"
+        class="flex flex-col gap-7.5 items-center max-md:flex-row max-md:gap-7.5 max-md:absolute max-md:bottom-3 max-md:left-1/2 max-md:-translate-x-1/2 max-md:order-2 max-sm:gap-7.5"
       >
         <NavIcon :svg="searchIcon" />
         <NavIcon :svg="homeIcon" />
@@ -74,7 +74,6 @@ import {
 } from "@/components/SVG/Authentication/NavBarIcon";
 </script>
 <style scoped>
-
 
 
 </style>

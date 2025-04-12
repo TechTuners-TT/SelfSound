@@ -1,5 +1,5 @@
 <template>
-  <section class="flex flex-col gap-15 max-w w-full mx-auto">
+  <section class="flex flex-col gap-15 max-w w-full mx-auto  section_1">
     <button  
       class=" cursor-pointer  max-w-[560px] w-full h-8 text-sm sm:text-base text-white rounded-xl border shadow-sm border-white border-opacity-50 mx-auto block inter-font"  
       style="background-color:rgba(2, 3, 61, 1) ;font-weight: 500;"
@@ -10,6 +10,7 @@
     <p class="mt-10 sm:mt-47.5 text-sm sm:text-base text-white text-center inter-font" style="font-weight: 400; ">
       There's nothing here yet, add your first post!
     </p>
+  </section>
 <!--  -->
     <div v-if="isModalOpen" class="absolute inset-0 flex justify-center items-center z-50 pointer-events-none " @click.self="isModalOpen = false" >
   <div class="rounded-xl relative pointer-events-auto shadow-xl w-[640px] bg-[#060310] max-md:w-[95%] border-1 border-white rounded-xl  max-md:px-4  max-sm:px-2" @click.stop >
@@ -19,31 +20,31 @@
     <div class="flex flex-col px-12.5 mt-9.25 w-full max-md:px-4 max-sm:px-1 max-md:mt-6">
       
        <!-- Name -->
-       <div class="flex items-center gap-15 font-medium mb-5 max-md:gap-15 max-md:mb-4 justify-end">
-            <div class="text-white text-[16px] h-[20px] w-[80px] max-md:text-sm max-md:w-[70px] inter-font" style="font-weight: 500; ">Name:</div>
-            <div class="h-[20px]  w-full rounded-md border border-white border-opacity-20 bg-zinc-950 flex items-center">
-              <input v-model="formData.name" class="w-full text-[12px]  h-full bg-transparent border-none outline-none text-white px-2 max-md:text-sm inter-font" style="font-weight: 500; " type="text" />
+       <div class="flex items-center gap-22.75 font-medium mb-5 max-md:gap-15 max-md:mb-4 justify-end w-[540px] h-[20px] ">
+            <div class="text-white text-[16px] h-[12px] w-[50px] max-md:text-sm max-md:w-[70px] inter-font" style="font-weight: 500; ">Name:</div>
+            <div class="h-[20px]  w-[400px] rounded-md border border-white border-opacity-20 bg-zinc-950 flex items-center">
+              <input v-model="formData.name" class=" w-full text-[12px]  h-full bg-[#04020B] border-none outline-none text-white px-2 max-md:text-sm inter-font  rounded-md" style="font-weight: 500; " type="text" />
             </div>
           </div>
 
           <!-- Login -->
-          <div class="flex items-center gap-15 font-medium mb-5 max-md:gap-15 max-md:mb-4 justify-end">
-            <div class="text-white text-[16px] h-[20px] w-[80px] max-md:text-sm max-md:w-[70px] inter-font" style="font-weight: 500; ">Login:</div>
-            <div class="h-[20px] w-full rounded-md border border-white border-opacity-20 bg-zinc-950 flex items-center">
-              <input v-model="formData.login" class="w-full text-[12px]  h-full bg-transparent border-none outline-none text-white px-2 max-md:text-sm inter-font" style="font-weight: 500; " type="text" />
+          <div class="flex items-center gap-23.5 font-medium mb-5 max-md:gap-15 max-md:mb-4 justify-end w-[540px] h-[20px]">
+            <div class="text-white text-[16px] h-[12px] w-[47px] max-md:text-sm max-md:w-[70px] inter-font" style="font-weight: 500; ">Login:</div>
+            <div class="h-[20px] w-[400px] w-full rounded-md border border-white border-opacity-20 bg-zinc-950 flex items-center">
+              <input v-model="formData.login" class="w-full text-[12px]  h-full bg-[#04020B] border-none outline-none text-white px-2 max-md:text-sm inter-font  rounded-md" style="font-weight: 500; " type="text" />
             </div>
           </div>
 <!-- Biography -->
-<div class="flex items-center gap-11 font-medium max-md:gap-11 max-md:mb-4 justify-end  ">
-  <div class="text-white text-[16px] h-[20px] w-[82px] max-md:text-sm max-md:w-[70px] inter-font" style="font-weight: 500; ">Biography:</div>
-  <div class="flex-1 h-[54px] rounded-md border border-white border-opacity-20 bg-zinc-950 max-md:h-[38px]  flex items-center ">
-    <input v-model="formData.biography" class="w-full h-full text-[12px]  bg-transparent border-none outline-none text-white px-2 max-md:text-sm inter-font" style="font-weight: 500; " />
+<div class="flex items-center gap-14.75 font-medium max-md:gap-11 max-md:mb-4 justify-end  w-[540px]">
+  <div class="text-white  text-[16px] h-[12px] w-[82px] max-md:text-sm max-md:w-[70px] inter-font" style="font-weight: 500; ">Biography:</div>
+  <div class="flex-1 h-[54px]  w-[400px] rounded-md border border-white border-opacity-20 bg-zinc-950 max-md:h-[38px]  flex items-center ">
+    <input v-model="formData.biography" class="w-full h-full text-[12px]  bg-[#04020B] border-none outline-none text-white px-2 max-md:text-sm inter-font  rounded-md" style="font-weight: 500; " />
   </div>
 </div>
 
       <!-- Tags -->
     
-<div class="flex items-center gap-15 font-medium mt-7.5 mb-16.25 max-md:flex-row max-md:gap-2">
+<div class="flex items-center gap-15.25 font-medium mt-7.5 mb-16.25 max-md:flex-row max-md:gap-2">
   <div class="text-white text-[16px] h-[16px] w-[80px] max-md:text-sm inter-font" style="font-weight: 500; ">Tag:</div>
   <div class="flex gap-[20px] w-[400px] max-md:w-full flex-nowrap max-md:gap-2">
     <div
@@ -86,7 +87,7 @@
     </div>
   </div>
 </div>
-  </section>
+  
 </template>
 
 <script lang="ts">
@@ -106,7 +107,7 @@ export default defineComponent({
         name: string;
         login: string;
         avatarUrl: string;
-        biography: string;  // Змінив 'Biography' на 'biography'
+        biography: string; 
       },
       required: true,
     },
@@ -165,6 +166,33 @@ section .max-w {
 
 
 
+@media (max-width: 1536px) {
+  .mt-10 {
+    margin-top: 38px;
+  }
+  .section_1{
+    gap:56px;
+  }
+}
+
+@media (max-width: 1280px) {
+  .mt-10 {
+    margin-top: 36px;
+  }
+  .section_1{
+    gap:52px;
+  }
+}
+
+
+@media (max-width: 1024px) {
+  .mt-10 {
+    margin-top: 32px;
+  }
+  .section_1{
+    gap:48px;
+  }
+}
 
 @media (max-width: 768px) {
   .mt-11 {
@@ -176,12 +204,15 @@ section .max-w {
   }
 
   .mt-10 {
-    margin-top: 2rem;
+    margin-top: 28px;
   }
   button {
     
     max-width: 520px;
   
+  }
+  .section_1{
+    gap:44px;
   }
 }
 
@@ -197,7 +228,7 @@ section .max-w {
   }
 
   .mt-10 {
-    margin-top: 1.5rem;
+    margin-top: 25px;
   }
 
   .text-base {
@@ -208,7 +239,9 @@ section .max-w {
     height: 2rem;
     max-width: 500px;
   }
-  
+  .section_1{
+    gap:40px;
+  }
 }
 
 
@@ -229,7 +262,7 @@ section .max-w {
   }
 
   .mt-10 {
-    margin-top: 1rem;
+    margin-top: 20px;
   }
 
   .text-base {
@@ -241,6 +274,9 @@ section .max-w {
     font-size: 0.75rem;
     max-width: 300px;
   
+  }
+  .section_1{
+    gap:35px;
   }
 }
 
