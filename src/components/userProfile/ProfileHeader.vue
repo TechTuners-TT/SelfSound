@@ -5,7 +5,7 @@
         <img
           :src="user.avatarUrl"
           :alt="user.name"
-          class="w-[84px] h-[84px]  rounded-full  "
+          class="w-[84px] h-[84px]  rounded-full   "
         />
         <div
           class="absolute inset-0 rounded-full border border-white border-opacity-50"
@@ -22,7 +22,7 @@
       class="flex gap-4  items-center justify-center sm:justify-start gap-15 w-[560px]  h-[54px]"
     >
       <button
-        class="cursor-pointer h-8 text-sm sm:text-base text-white rounded-xl border bg-slate-900 border-white border-opacity-50 w-[100px] text-[16px] inter-font" style="font-weight: 400; background-color:rgba(2, 3, 61, 1)"
+        class="cursor-pointer h-8 text-sm sm:text-base text-white rounded-xl border bg-slate-900 border border-[rgba(255,255,255,0.5)] w-[100px] text-[16px] inter-font" style="font-weight: 400; background-color:rgba(2, 3, 61, 1)"
       >
         Add tag  
       </button>
