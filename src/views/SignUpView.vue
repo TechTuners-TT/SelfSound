@@ -58,8 +58,8 @@
         Guest mode
       </button>
 
-      <p class="text-base font-bold text-center text-white">
-        <router-link to="/sign-in" class=""
+      <p class="text-base font-bold text-center text-white ">
+        <router-link to="/sign-in" class="hover:#6D01D0;"
           >Already have a profile? Log in here!</router-link
         >
       </p>

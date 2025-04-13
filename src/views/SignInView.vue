@@ -49,11 +49,11 @@
           Guest mode
         </LoginFormButton>
 
-        <p class="text-base font-semibold text-center text-white">
+        <p class="text-base font-semibold text-center text-white ">
           <router-link
             to="/sign-up"
             @click.prevent="handleSignUp"
-            class=""
+            class="hover:#6D01D0;"
             >Don't have a profile? Sign up here!</router-link
           >
         </p>
@@ -67,7 +67,7 @@ import { defineComponent, ref, reactive } from "vue";
 import LoginFormInput from "@/components/Authentication/LoginFormInput.vue";
 import LoginFormButton from "@/components/Authentication/LoginFormButton.vue";
 import LoginFormDivider from "@/components/Authentication/LoginFormDivider.vue";
-import GoogleIcon from "@/components/icons/GoogleIcon.vue";
+import GoogleIcon from "@/components/SVG/Authentication/Sign_Up_In_If_button_Google.vue";
 
 export default defineComponent({
   name: "LoginForm",

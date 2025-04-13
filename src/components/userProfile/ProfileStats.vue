@@ -1,13 +1,13 @@
 <template>
   <section
-    class="flex gap-10 items-center self-end mb-1.25 mr-29.25 text-base font-medium max-md:mr-10 "
+    class="flex gap-[50px] items-center  mb-1.25   text-[12px] inter-font font-medium w-[500px] h-[12px] "
   >
   
-    <p class="text-base font-medium text-white">  {{ stats.posts }} posts </p>
-    <p class="text-base font-medium text-white">
+    <p class=" font-medium text-white inter-font" style="font-weight: 500; ">  {{ stats.posts }} posts </p>
+    <p class=" font-medium text-white inter-font" style="font-weight: 500; ">
       Listeners: {{ stats.listeners }}
     </p>
-    <p class="text-base font-medium text-white">
+    <p class=" font-medium text-white inter-font" style="font-weight: 500; ">
       Listened to: {{ stats.listenedTo }}
     </p>
   </section>
@@ -26,91 +26,71 @@ defineProps<{
 
 <style scoped>
 
+
+.inter-font {
+  font-family: 'Inter', sans-serif;
+}
 @media (min-width: 768px) {
   section {
-    padding-left: 208px;
+    padding-left: 140px;
     padding-right: 0px;
   }
-
-
+}
+@media (max-width: 768px) {
+  section {
+    justify-content: center; 
+  }
+}
+@media (max-width: 640px) {
+  section { 
+    justify-content: center;  
+  }
 }
 
 
-
-@media (max-width: 768px) {
-  section {
-    padding-left: 103px;
-    padding-right: 0px;
-    
+@media (max-width: 1536px) {
+  .gap-\[50px\]{
+    gap: 48px;
   }
+ 
+}
 
-  .gap-12 {
-    gap: 2rem;
+@media (max-width: 1280px) {
+  
+  .gap-\[50px\]{
+    gap: 46px;
   }
+}
 
-  .mt-10 {
-    margin-top: 2rem;
+
+@media (max-width: 1024px) {
+  .gap-\[50px\]{
+    gap: 42px;
+  }
+  
+}
+  
+  @media (max-width: 768px) {
+    .gap-\[50px\]{
+    gap: 38px;
   }
 }
 
 @media (max-width: 640px) {
-  section {
-    padding-left: 19px;
-    padding-right: 0px;
-    justify-content: center;
-    
-  }
-
-  .gap-12 {
-    gap: 1rem;
-  }
-
-  .mt-10 {
-    margin-top: 1.5rem;
-  }
-
-  .text-base {
-    font-size: 0.875rem;
-  }
-}
-
-
-@media (max-width: 500px) {
-  section {
-    padding-left: 5px;
-    padding-right: 5px;
-    justify-content: center;
+  .gap-\[50px\]{
+    gap: 36px;
   }
 }
 
 @media (max-width: 450px) {
-  section {
-    padding-left: 5px;
-    padding-right: 5px;
-    justify-content: center;
-  }
-
-  .gap-12 {
-    gap: 0.75rem;
-  }
-
-  .mt-10 {
-    margin-top: 1rem;
-  }
-
-  .text-base {
-    font-size: 0.75rem;
+  .gap-\[50px\]{
+    gap: 32px;
   }
 }
 
 
-@media (max-width: 420px) {
-  section {
-    padding-left: 10px;
-    padding-right: 10px;
-    justify-content: center;
-  }
-}
+
+
 
 
 </style>

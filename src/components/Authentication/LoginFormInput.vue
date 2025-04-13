@@ -36,8 +36,8 @@
 
 <script setup lang="ts">
 import { defineProps, defineEmits, ref, computed } from "vue";
-import EyeOffIcon from "../SVG/Authentication/EyeOffIcon.vue";
-import EyeIcon from "../SVG/Authentication/EyeIcon.vue";
+import EyeOffIcon from "../SVG/Authentication/Sign_Up_In_Not_show_password_button.vue.vue";
+import EyeIcon from "../SVG/Authentication/Sign_Up_In_Show_password_button.vue";
 const props = defineProps<{
   label: string;
   type: string;
