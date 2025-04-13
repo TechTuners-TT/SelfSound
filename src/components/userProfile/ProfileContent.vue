@@ -81,7 +81,7 @@
 </div>
 
       <!-- Save Button -->
-      <div class="self-end mb-11.25 font-bold cursor-pointer text-white hover:text-[#6D01D0] max-md:self-center max-md:mb-8" @click="saveChanges">
+      <div class="self-end mb-11.25 font-bold cursor-pointer text-white hover:text-[#6D01D0] max-md:self-center" @click="saveChanges">
         Save changes
       </div>
     </div>

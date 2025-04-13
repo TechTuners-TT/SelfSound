@@ -5,10 +5,10 @@
     <NavBar />
      
      <section 
-      class="flex relative flex-col flex-1   [@media(min-width:1536px)]:mx-25  xl:mx-[70px]   lg:mx-[60px] md:mx-[60px]  sm:mx-[0px] h-screen" style="background-color: rgba(30, 30, 30, 1)"
+      class="flex relative flex-col flex-1   [@media(min-width:1537px)]:mx-25  xl:mx-[70px]   lg:mx-[60px] md:mx-[60px]  sm:mx-[0px] h-screen" style="background-color: rgba(30, 30, 30, 1)"
     >
       <div
-        class=" items-center  gap-10   flex flex-col h-full [@media(min-width:1536px)]:pt-16.25 xl:pt-14.25 lg:pt-12.25 md:pt-10.25 max-md:pt-22.25  mx-auto w-full max-w-[640px]" style="background-color: rgba(6, 3, 16, 1)"
+        class=" items-center  gap-10   flex flex-col h-full [@media(min-width:1537px)]:pt-16.25 xl:pt-14.25 lg:pt-12.25 md:pt-10.25 max-md:pt-22.25  mx-auto w-full max-w-[640px]" style="background-color: rgba(6, 3, 16, 1)"
       >
 
         <ProfileHeader  :user="user" />
@@ -23,7 +23,7 @@
   
 </div>
 </template>
-
+<!-- 1E1E1E -->
 <script setup lang="ts">
 import { reactive, ref, watch } from "vue";
 import NavBar from "@/components/Navigation/NavBar.vue";

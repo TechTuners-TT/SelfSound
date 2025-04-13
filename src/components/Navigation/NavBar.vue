@@ -27,7 +27,7 @@
 
   <!-- Main navigation - sidebar on desktop, bottom bar on mobile -->
   <nav      
-    class="fixed left-0 h-screen [@media(min-width:1536px)]:w-[100px]  [@media(min-width:1536px)]:px-6.25 [@media(min-width:1536px)]:py-7.75  xl:w-[70px] xl:px-3.5 xl:py-5  lg:w-[60px] lg:px-3 lg:py-4    flex justify-center max-md:w-full max-md:h-auto md:w-[60px]  max-md:bottom-0 max-md:left-0 md:px-3 md:py-3 md:py-3 max-md:z-50 [@media(max-width:768px)]:h-[80px]
+    class="fixed left-0 h-screen [@media(min-width:1537px)]:w-[100px]  [@media(min-width:1537px)]:px-6.25 [@media(min-width:1537px)]:py-7.75  xl:w-[70px] xl:px-3.5 xl:py-5  lg:w-[60px] lg:px-3 lg:py-4    flex justify-center max-md:w-full max-md:h-auto md:w-[60px]  max-md:bottom-0 max-md:left-0 md:px-3 md:py-3 md:py-3 max-md:z-50 [@media(max-width:767.5px)]:h-[80px] 
          "
     style="background-color: rgba(6, 3, 16, 1);"
   >
@@ -43,7 +43,7 @@
 
       <!-- Center: buttons centered at bottom (only for mobile) -->
       <section
-        class="flex flex-col gap-7.5 items-center max-md:flex-row max-md:gap-7.5 max-md:absolute max-md:bottom-3 max-md:left-1/2 max-md:-translate-x-1/2 max-md:order-2 max-sm:gap-7.5"
+        class="flex flex-col gap-[30px] items-center max-md:flex-row  max-md:absolute max-md:bottom-3 max-md:left-1/2 max-md:-translate-x-1/2 max-md:order-2 "
       >
         <NavIcon :svg="searchIcon" />
         <NavIcon :svg="homeIcon" />
@@ -74,6 +74,41 @@ import {
 } from "@/components/SVG/Authentication/NavBarIcon";
 </script>
 <style scoped>
+
+@media (max-width: 1536px) {
+.gap-\[30px\]{
+  gap:28px;
+}
+}
+
+@media (max-width: 1280px) {
+  .gap-\[30px\]{
+  gap:26px;
+}
+}
+
+
+@media (max-width: 1024px) {
+  .gap-\[30px\]{
+  gap:24px;
+}
+}
+
+
+@media (max-width: 768px) {
+  .gap-\[30px\]{
+  gap:32px;
+}
+  
+}
+
+
+
+@media (max-width: 640px) {
+  .gap-\[30px\]{
+  gap:30.2px;
+}
+}
 
 
 </style>
