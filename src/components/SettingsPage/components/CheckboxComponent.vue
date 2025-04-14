@@ -1,7 +1,7 @@
 <template>
   <!-- From Uiverse.io by catraco -->
   <label class="container">
-    <input checked="checked" type="checkbox" />
+    <input v-model="isChecked" type="checkbox" />
     <svg
       viewBox="0 0 512 512"
       height="1em"
@@ -14,6 +14,13 @@
     </svg>
   </label>
 </template>
+
+<script setup lang="ts">
+import { ref } from "vue";
+
+// Створюємо реактивну змінну для стану чекбоксу
+const isChecked = ref(true); // або false
+</script>
 
 <style scoped>
 /* From Uiverse.io by catraco */
