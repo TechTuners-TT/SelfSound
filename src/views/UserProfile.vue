@@ -23,7 +23,7 @@
   
 </div>
 </template>
-<!-- 1E1E1E -->
+
 <script setup lang="ts">
 import { reactive, ref, watch } from "vue";
 import NavBar from "@/components/Navigation/NavBar.vue";

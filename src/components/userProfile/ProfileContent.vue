@@ -12,12 +12,12 @@
     </p>
   </section>
 <!--  -->
-    <div v-if="isModalOpen" class="absolute inset-0 flex justify-center items-center z-50 pointer-events-none " @click.self="isModalOpen = false" >
-  <div class="rounded-xl relative pointer-events-auto shadow-xl w-[640px] bg-[#060310]  border border-[rgba(255,255,255,0.5)]  rounded-xl  max-md:px-4  max-sm:px-2"  >
+    <div v-if="isModalOpen" class="absolute inset-0 flex justify-center items-center z-50 "  @click.self="isModalOpen = false" >
+  <div class="rounded-xl relative pointer-events-auto shadow-xl w-[640px] bg-[#060310]  border border-[rgba(255,255,255,0.5)]  rounded-xl  max-md:px-4  max-sm:px-2" >
    
     <img :src="user.avatarUrl" :alt="user.name" class="object-contain self-center max-w-full aspect-square w-[100px] h-[100px] rounded-full mx-auto [@media(min-width:1536px)]:mt-11.25 max-md:w-[80px] max-md:h-[80px] max-sm:w-[64px] max-sm:h-[64px]  max-2xl:mt-10 max-xl:mt-8 max-lg:mt-7   max-md:mt-6" />
 
-    <div class="flex flex-col px-[50px] mt-9.25 w-full  max-md:mt-6">
+    <div class="flex flex-col px-[50px] mt-9.25 w-full  max-md:mt-6" >
       
        <!-- Name -->
        <div class="flex items-center gap-[91px] font-medium mb-5 max-md:gap-15 max-md:mb-4 justify-end w-[540px] h-[20px] ">
@@ -152,7 +152,7 @@ export default defineComponent({
       { deep: true }
     );
 
-    return { formData, isModalOpen, selectTag, saveChanges, closeModal };
+    return { formData, isModalOpen, selectTag, saveChanges };
   },
 });
 </script>
