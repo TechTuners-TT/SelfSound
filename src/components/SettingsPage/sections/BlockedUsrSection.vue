@@ -8,9 +8,12 @@
   </div>
 
   <!-- Checkbox -->
-  <div class=""></div>
+  <div class="">
+    <CheckboxComponent />
+  </div>
 </template>
 
 <script setup lang="ts">
 // будь-яка логіка або навіть порожньо — головне, щоб шаблон був
+import CheckboxComponent from "../components/CheckboxComponent.vue";
 </script>
