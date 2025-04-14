@@ -1,27 +1,30 @@
 <template>
-  <div class="relative w-full h-screen" style="background-color: rgba(6, 3, 16, 1)">
-  <main class="flex w-full h-screen overflow-x-hidden "  style="background-color: rgba(6, 3, 16, 1)"
+  <div
+    class="relative w-full h-screen"
+    style="background-color: rgba(6, 3, 16, 1)"
   >
-    <NavBar />
-     
-     <section 
-      class="flex relative flex-col flex-1   [@media(min-width:1537px)]:mx-25  xl:mx-[70px]   lg:mx-[60px] md:mx-[60px]  sm:mx-[0px] h-screen" style="background-color: rgba(6, 3, 16, 1)"
+    <main
+      class="flex w-full h-screen overflow-x-hidden"
+      style="background-color: rgba(6, 3, 16, 1)"
     >
-      <div
-        class=" items-center  gap-10   flex flex-col h-full [@media(min-width:1537px)]:pt-16.25 xl:pt-14.25 lg:pt-12.25 md:pt-10.25 max-md:pt-22.25  mx-auto w-full max-w-[640px]" style="background-color: rgba(0, 0, 0, 0.3)"
+      <NavBar />
+
+      <section
+        class="flex relative flex-col flex-1 [@media(min-width:1537px)]:mx-25 xl:mx-[70px] lg:mx-[60px] md:mx-[60px] sm:mx-[0px] h-screen"
+        style="background-color: rgba(6, 3, 16, 1)"
       >
+        <div
+          class="items-center gap-10 flex flex-col h-full [@media(min-width:1537px)]:pt-16.25 xl:pt-14.25 lg:pt-12.25 md:pt-10.25 max-md:pt-22.25 mx-auto w-full max-w-[640px]"
+          style="background-color: rgba(0, 0, 0, 0.3)"
+        >
+          <ProfileHeader :user="user" />
 
-        <ProfileHeader  :user="user" />
-       
-       <ProfileStats   :stats="stats"  />
-        <ProfileContent  :user="user" @update:user="updateUser" />
-     
-    </div>
-    </section>
-  </main>
-
-  
-</div>
+          <ProfileStats :stats="stats" />
+          <ProfileContent :user="user" @update:user="updateUser" />
+        </div>
+      </section>
+    </main>
+  </div>
 </template>
 
 <script setup lang="ts">
@@ -30,8 +33,6 @@ import NavBar from "@/components/Navigation/NavBar.vue";
 import ProfileHeader from "@/components/userProfile/ProfileHeader.vue";
 import ProfileStats from "@/components/userProfile/ProfileStats.vue";
 import ProfileContent from "@/components/userProfile/ProfileContent.vue";
-
-
 
 interface User {
   name: string;
@@ -102,26 +103,20 @@ watch(
     formData.biography = newUser.biography || "";
     formData.selectedTag = newUser.tag || null;
   },
-  { deep: true }
+  { deep: true },
 );
 </script>
-
-
-
 
 <style scoped>
 /* Ensure content is centered with equal margins */
 @media (min-width: 768px) {
   section {
-   
     max-width: calc(100% - 100px);
   }
 }
 
-
-
 .inter-font {
-  font-family: 'Inter', sans-serif;
+  font-family: "Inter", sans-serif;
 }
 
 /* Center the content container */
@@ -131,29 +126,22 @@ main {
 }
 
 @media (max-width: 1280px) {
-  
   .gap-10 {
     gap: 2.25rem;
   }
 }
 
-
 @media (max-width: 1024px) {
-  
   .gap-10 {
     gap: 2rem;
   }
 }
 
-
 @media (max-width: 768px) {
-  
   .gap-10 {
     gap: 1.8rem;
   }
 }
-
-
 
 @media (max-width: 640px) {
   section {
@@ -184,5 +172,4 @@ main {
     gap: 1.5rem;
   }
 }
-
 </style>

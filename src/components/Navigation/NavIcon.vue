@@ -22,15 +22,15 @@ const iconContainer = ref<HTMLElement | null>(null);
 const handleClick = () => emit("click");
 
 onMounted(() => {
-  const icon = iconContainer.value?.querySelector(".add-post-icon") as SVGElement | null;
+  const icon = iconContainer.value?.querySelector(
+    ".add-post-icon",
+  ) as SVGElement | null;
 
   if (icon) {
-   
     icon.style.backgroundColor = "#6D01D0";
     icon.style.borderRadius = "5px";
     icon.style.cursor = "pointer";
 
-    
     icon.addEventListener("mouseover", () => {
       icon.style.backgroundColor = "#000C9C";
     });
@@ -53,6 +53,4 @@ onMounted(() => {
   justify-content: center;
   margin: 0 auto;
 }
-
-
 </style>

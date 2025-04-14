@@ -28,12 +28,12 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, computed, ref } from 'vue';
-import EyeIcon from '../SVG/Authentication/Sign_Up_In_Show_password_button.vue';
-import EyeOffIcon from '../SVG/Authentication/Sign_Up_In_Not_show_password_button.vue.vue';
+import { defineComponent, computed, ref } from "vue";
+import EyeIcon from "../SVG/Authentication/Sign_Up_In_Show_password_button.vue";
+import EyeOffIcon from "../SVG/Authentication/Sign_Up_In_Not_show_password_button.vue.vue";
 
 export default defineComponent({
-  name: 'InputField',
+  name: "InputField",
   components: {
     EyeIcon,
     EyeOffIcon,
@@ -45,41 +45,42 @@ export default defineComponent({
     },
     type: {
       type: String,
-      default: 'text',
+      default: "text",
     },
     modelValue: {
       type: String,
-      default: '',
+      default: "",
     },
     error: {
       type: String,
-      default: '',
+      default: "",
     },
     placeholder: {
       type: String,
-      default: '',
+      default: "",
     },
   },
-  emits: ['update:modelValue'],
+  emits: ["update:modelValue"],
   setup(props, { emit }) {
     const passwordVisible = ref(false);
 
     const inputType = computed(() => {
-      if (props.type === 'password') {
-        return passwordVisible.value ? 'text' : 'password';
+      if (props.type === "password") {
+        return passwordVisible.value ? "text" : "password";
       }
       return props.type;
     });
 
-    const id = computed(() =>
-      `input-${props.label.toLowerCase().replace(/\s+/g, '-')}-${Math.random()
-        .toString(36)
-        .substring(2, 9)}`
+    const id = computed(
+      () =>
+        `input-${props.label.toLowerCase().replace(/\s+/g, "-")}-${Math.random()
+          .toString(36)
+          .substring(2, 9)}`,
     );
 
     const updateValue = (event: Event) => {
       const target = event.target as HTMLInputElement;
-      emit('update:modelValue', target.value);
+      emit("update:modelValue", target.value);
     };
 
     const togglePasswordVisibility = () => {

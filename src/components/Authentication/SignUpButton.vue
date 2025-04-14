@@ -4,7 +4,7 @@
     @click="$emit('click')"
     class="flex gap-1.5 justify-center items-center w-full h-9 text-base font-bold text-white rounded-md bg-[rgba(2,3,61,1)] transition duration-300 ease-in-out"
   >
-  <div v-if="icon">
+    <div v-if="icon">
       <component :is="iconComponent" />
     </div>
     <span>{{ text }}</span>
@@ -21,8 +21,7 @@ export default defineComponent({
     icon: {
       type: String,
       required: true,
-      validator: (value: string) =>
-        ["google"].includes(value),
+      validator: (value: string) => ["google"].includes(value),
     },
     text: {
       type: String,
@@ -42,4 +41,3 @@ export default defineComponent({
   },
 });
 </script>
-

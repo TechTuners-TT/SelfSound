@@ -25,7 +25,6 @@
           v-model="password"
           :error="errors.password"
           placeholder="enter password"
-          
         />
 
         <LoginFormButton type="submit" marginClass="mb-4.5 , mt-7.5">
@@ -49,7 +48,7 @@
           Guest mode
         </LoginFormButton>
 
-        <p class="text-base font-semibold text-center text-white ">
+        <p class="text-base font-semibold text-center text-white">
           <router-link
             to="/sign-up"
             @click.prevent="handleSignUp"

@@ -4,6 +4,7 @@ import SignInView from "../views/SignInView.vue";
 import SignUpView from "../views/SignUpView.vue";
 import HomeView from "../views/HomeView.vue";
 import UserProfile from "@/views/UserProfile.vue";
+import SettingsView from "@/views/SettingsView.vue";
 
 const router = createRouter({
   history: createWebHashHistory(import.meta.env.BASE_URL),
@@ -15,23 +16,28 @@ const router = createRouter({
     },
     {
       path: "/sign-in",
-            name: "sign in",
+      name: "sign in",
       component: SignInView,
     },
     {
       path: "/sign-up",
-          name: "sign up",
+      name: "sign up",
       component: SignUpView,
-     },
+    },
     {
       path: "/home",
-          name: "home",
+      name: "home",
       component: HomeView,
     },
     {
       path: "/profile",
-          name: "profile",
+      name: "profile",
       component: UserProfile,
+    },
+    {
+      path: "/settings",
+      name: "settings",
+      component: SettingsView,
     },
 
     //{
