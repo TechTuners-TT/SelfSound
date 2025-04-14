@@ -14,12 +14,19 @@
       <section class="">
         <SubscribtionSection />
       </section>
+
+      <!-- Section 3 -->
+      <!-- Blocked Users -->
+      <section class="">
+        <BlockedUsrSection />
+      </section>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { onMounted, ref, computed } from "vue";
-import TitleSection from "./TitleSection.vue";
-import SubscribtionSection from "./SubscribtionSection.vue";
+// import { onMounted, ref, computed } from "vue";
+import TitleSection from "./sections/TitleSection.vue";
+import SubscribtionSection from "./sections/SubscribtionSection.vue";
+import BlockedUsrSection from "./sections/BlockedUsrSection.vue";
 </script>
