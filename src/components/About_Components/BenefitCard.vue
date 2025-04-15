@@ -1,15 +1,14 @@
 <template>
   <article
-    class="flex flex-col grow shrink justify-center items-center p-8 rounded-2xl border-4 border-white border-solid min-h-[286px] min-w-60 w-[570px] max-md:px-5 max-md:max-w-full"
+    class="flex flex-col justify-center items-center p-8 rounded-2xl border-4 border-white min-h-[286px] min-w-60 w-[570px] max-md:px-5 max-md:max-w-full"
     :class="bgColor"
   >
     <div class="flex flex-col w-full max-w-[653px] max-md:max-w-full">
-      <div class="flex gap-10 items-center self-start text-4xl" v-if="hasIcon">
-        <img
-          v-if="iconSrc"
-          :src="iconSrc"
+      <div v-if="icon" class="flex gap-10 items-center self-start text-4xl">
+        <component
+          :is="icon"
+          class="w-[70px] h-[70px] object-contain shrink-0 my-auto"
           :alt="`${title} icon`"
-          class="object-contain overflow-hidden shrink-0 self-stretch my-auto aspect-square w-[70px]"
         />
         <h3 class="self-stretch my-auto">{{ title }}</h3>
       </div>
@@ -24,22 +23,11 @@
 </template>
 
 <script lang="ts" setup>
-defineProps({
-  title: {
-    type: String,
-    required: true,
-  },
-  iconSrc: {
-    type: String,
-    default: "",
-  },
-  bgColor: {
-    type: String,
-    default: "bg-slate-900",
-  },
-  hasIcon: {
-    type: Boolean,
-    default: true,
-  },
-});
+import { defineProps, type Component } from "vue";
+
+defineProps<{
+  title: string;
+  bgColor?: string;
+  icon?: Component; // Проп для іконки, яка тепер є компонентом
+}>();
 </script>

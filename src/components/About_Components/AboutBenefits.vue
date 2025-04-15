@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import BenefitCard from "./BenefitCard.vue";
+import sectionFunctionCardProfile_feature_Icon from "@/components/SVG/About_SVG/section-function-card-profile_feature_Icon.vue";
 </script>
 
 <template>
@@ -65,7 +66,7 @@ import BenefitCard from "./BenefitCard.vue";
               <span class="font-bold"> audio posts </span>
               <span>,</span>
               <span class="font-bold"> sheet music posts </span>
-              <span>(compositions), and</span>
+              <span>, and</span>
               <span class="font-bold"> lyric posts </span>
               <span>
                 . Each format helps you share your work in the most fitting way,

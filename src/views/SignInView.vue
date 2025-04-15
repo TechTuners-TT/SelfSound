@@ -25,7 +25,6 @@
           v-model="password"
           :error="errors.password"
           placeholder="enter password"
-          
         />
 
         <LoginFormButton type="submit" marginClass="mb-4.5 , mt-7.5">

@@ -31,7 +31,6 @@
         :error="errors.password"
         class="mb-7.5"
         placeholder="enter passwordl"
-        
       />
 
       <button
