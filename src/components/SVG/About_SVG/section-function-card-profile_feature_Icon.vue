@@ -31,39 +31,25 @@
   </svg>
 </template>
 
-<script>
-export default {
-  name: "SectionFunctionCardPostCreation",
+<script setup lang="ts">
+import { computed } from "vue";
+import { defineProps } from "vue";
 
-  props: {
-    width: {
-      type: String,
-      required: false,
-    },
+const props = defineProps<{
+  width?: string;
+  height?: string;
+  size?: string;
+}>();
 
-    height: {
-      type: String,
-      required: false,
-    },
+const widthAttr = computed(() => {
+  if (props.height) return undefined;
+  if (props.size) return props.size;
+  return props.width || "776px";
+});
 
-    size: {
-      type: String,
-      required: false,
-    },
-  },
-
-  computed: {
-    widthAttr() {
-      if (this.height) return undefined;
-      if (this.size) return this.size;
-      return this.width || "776px";
-    },
-
-    heightAttr() {
-      if (this.width) return undefined;
-      if (this.size) return this.size;
-      return this.height || "286px";
-    },
-  },
-};
+const heightAttr = computed(() => {
+  if (props.width) return undefined;
+  if (props.size) return props.size;
+  return props.height || "286px";
+});
 </script>

@@ -27,39 +27,29 @@
   </svg>
 </template>
 
-<script>
-export default {
-  name: "AboutGradientBackground",
+<script setup lang="ts">
+import { computed } from "vue";
 
-  props: {
-    width: {
-      type: String,
-      required: false,
-    },
+// Типізація пропсів через TypeScript
+interface Props {
+  width?: string;
+  height?: string;
+  size?: string;
+}
 
-    height: {
-      type: String,
-      required: false,
-    },
+// Отримуємо пропси
+const props = defineProps<Props>();
 
-    size: {
-      type: String,
-      required: false,
-    },
-  },
+// Обчислювані значення
+const widthAttr = computed(() => {
+  if (props.height) return undefined;
+  if (props.size) return props.size;
+  return props.width || "1920px";
+});
 
-  computed: {
-    widthAttr() {
-      if (this.height) return undefined;
-      if (this.size) return this.size;
-      return this.width || "1920px";
-    },
-
-    heightAttr() {
-      if (this.width) return undefined;
-      if (this.size) return this.size;
-      return this.height || "3300px";
-    },
-  },
-};
+const heightAttr = computed(() => {
+  if (props.width) return undefined;
+  if (props.size) return props.size;
+  return props.height || "3300px";
+});
 </script>
