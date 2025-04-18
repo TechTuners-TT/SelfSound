@@ -15,9 +15,11 @@
       <div
         class="max-md:order-3 max-md:absolute max-md:top-1/2 max-md:right-4 transform max-md:-translate-y-1/2"
       >
-        <span class="hidden max-md:block">
-          <NavIcon :svg="settingsIcon" />
-        </span>
+        <a href="#settings">
+          <span class="hidden max-md:block">
+            <NavIcon :svg="settingsIcon" />
+          </span>
+        </a>
       </div>
     </nav>
   </span>
@@ -44,10 +46,14 @@
         class="flex flex-col gap-[30px] items-center max-md:flex-row max-md:absolute max-md:bottom-3 max-md:left-1/2 max-md:-translate-x-1/2 max-md:order-2"
       >
         <NavIcon :svg="searchIcon" />
-        <NavIcon :svg="homeIcon" />
+        <a href="#home">
+          <NavIcon :svg="homeIcon" />
+        </a>
         <NavIcon :svg="addPostIcon" />
         <NavIcon :svg="notificationsIcon" />
-        <NavIcon :svg="profileIcon" />
+        <a href="#profile">
+          <NavIcon :svg="profileIcon" />
+        </a>
       </section>
 
       <div
