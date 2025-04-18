@@ -2,16 +2,30 @@
   <!-- From Uiverse.io by pajenri -->
   <div class="card">
     <div class="pricing-block-content">
-      <p class="pricing-plan">Starter</p>
-      <div data-currency-simple="USD" data-currency="$ USD" class="price-value">
+      <p
+        class="pricing-plan 2xl:text-[24px] xl:text-[24px] lg:text-[20px] text-[16px]"
+      >
+        Starter
+      </p>
+      <div
+        data-currency-simple="USD"
+        data-currency="$ USD"
+        class="price-value 2xl:text-[28px] xl:text-[28px] lg:text-[24px] text-[20px]"
+      >
         <p class="price-number">$ <span class="price-integer">0</span></p>
 
         <div id="priceDiscountCent">/mo</div>
       </div>
 
-      <div class="pricing-note">free forever</div>
+      <div
+        class="pricing-note 2xl:text-[20px] xl:text-[20px] lg:text-[16px] text-[14px]"
+      >
+        free forever
+      </div>
       <ul role="list" class="check-list">
-        <li class="check-list-item">
+        <li
+          class="check-list-item 2xl:text-[20px] xl:text-[20px] lg:text-[16px] text-[14px]"
+        >
           <svg
             style="color: rgb(102, 78, 255)"
             xmlns="http://www.w3.org/2000/svg"
@@ -42,7 +56,9 @@
             </g></svg
           >4 types of post
         </li>
-        <li class="check-list-item">
+        <li
+          class="check-list-item 2xl:text-[20px] xl:text-[20px] lg:text-[16px] text-[14px]"
+        >
           <svg
             style="color: rgb(102, 78, 255)"
             xmlns="http://www.w3.org/2000/svg"
@@ -73,7 +89,9 @@
             </g></svg
           >Tag role
         </li>
-        <li class="check-list-item">
+        <li
+          class="check-list-item 2xl:text-[20px] xl:text-[20px] lg:text-[16px] text-[14px]"
+        >
           <svg
             style="color: rgb(102, 78, 255)"
             xmlns="http://www.w3.org/2000/svg"
@@ -133,7 +151,7 @@
 
 .pricing-plan {
   color: #fcfcfd;
-  font-size: 20px;
+  /*font-size: 20px;*/
   line-height: 1.25;
   font-weight: 700;
 }
@@ -141,14 +159,14 @@
 .price-value {
   display: flex;
   color: #fefeff;
-  font-size: 28px;
+  /*font-size: 28px;*/
   line-height: 1.25;
   font-weight: 700;
 }
 
 .pricing-note {
   opacity: 0.8;
-  font-size: 16px;
+  /*font-size: 16px;*/
 }
 
 /*Checklist*/

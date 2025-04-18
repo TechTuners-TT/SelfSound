@@ -1,8 +1,9 @@
 <template>
   <!-- From Uiverse.io by catraco -->
-  <label class="container">
+  <label class="container size-var">
     <input v-model="isChecked" type="checkbox" />
     <svg
+      style="width: var(--size); height: var(--size); fill: var(--color)"
       viewBox="0 0 512 512"
       height="1em"
       xmlns="http://www.w3.org/2000/svg"
@@ -27,7 +28,7 @@ const isChecked = ref(true); // або false
 /*------ Settings ------*/
 .container {
   --color: #a5a5b0;
-  --size: 30px;
+  /*--size: 30px;*/
   display: flex;
   justify-content: center;
   align-items: center;
