@@ -5,9 +5,7 @@
       <!-- MAIN CONTENT -->
 
       <!-- Nav Bar -->
-      <div class="h-[0px]">
-        <NavBar />
-      </div>
+      <NavBar />
 
       <!-- Settings Content -->
       <div class="flex-grow max-h-full">
