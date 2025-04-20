@@ -9,11 +9,12 @@
     </button>
     <div class="w-full h-px border border-[rgba(255,255,255,0.5)]"></div>
     <p
-      class="mt-10 sm:mt-47.5 text-sm sm:text-base text-white text-center inter-font"
+      class="mt-10 sm:mt-47.5 text-sm sm:text-base text-white text-center inter-font "
       style="font-weight: 400"
     >
       There's nothing here yet, add your first post!
     </p>
+    
   </section>
   <!--  -->
   <div
@@ -46,6 +47,7 @@
           >
             <input
               v-model="formData.name"
+               maxlength="15"
               class="w-full text-[12px] h-full bg-[#04020B] border-none outline-none text-white px-2 max-md:text-sm inter-font rounded-md"
               style="font-weight: 500"
               type="text"
@@ -68,6 +70,8 @@
           >
             <input
               v-model="formData.login"
+              @input="onLoginInput"
+               maxlength="20"
               class="w-full text-[12px] h-full bg-[#04020B] border-none outline-none text-white px-2 max-md:text-sm inter-font rounded-md"
               style="font-weight: 500"
               type="text"
@@ -87,11 +91,13 @@
           <div
             class="flex-1 h-[54px] w-[400px] rounded-md border border-[rgba(255,255,255,0.2)] bg-[#04020B] max-md:h-[38px] flex items-center"
           >
-            <input
-              v-model="formData.biography"
-              class="w-full h-full text-[12px] bg-[#04020B] border-none outline-none text-white px-2 max-md:text-sm inter-font rounded-md"
-              style="font-weight: 500"
-            />
+          <textarea
+    v-model="formData.biography"
+    maxlength="50"
+    class="w-full h-full text-[12px] bg-[#04020B] border-none outline-none text-white px-2 py-2 max-md:text-sm inter-font rounded-md resize-none"
+    style="font-weight: 500"
+    placeholder="Enter your biography..."
+  ></textarea>
           </div>
         </div>
 
@@ -186,6 +192,7 @@ export default defineComponent({
     const closeModal = () => {
       isModalOpen.value = false;
     };
+ 
 
     const formData = reactive<FormData>({
       name: props.user.name,
@@ -193,6 +200,11 @@ export default defineComponent({
       biography: props.user.biography,
       selectedTag: props.user.tag || null,
     });
+    const onLoginInput = (event: Event) => {
+  const input = event.target as HTMLInputElement;
+  // Видаляє пробіли, крапки та @
+  formData.login = input.value.replace(/@/g, '');
+};
 
     const selectTag = (tag: string) => {
       formData.selectedTag = formData.selectedTag === tag ? null : tag;
@@ -220,7 +232,7 @@ export default defineComponent({
       { deep: true },
     );
 
-    return { formData, isModalOpen, selectTag, saveChanges };
+    return { formData, isModalOpen, selectTag, saveChanges, onLoginInput };
   },
 });
 </script>
@@ -291,6 +303,12 @@ section .max-w {
   .gap-\[62px\] {
     gap: 70.5px;
   }
+  .text-\[16px\]{
+    font-size: 15px;
+  }
+  .text-\[12px\]{
+    font-size: 11px;
+  }
 }
 
 @media (max-width: 1024px) {
@@ -318,6 +336,12 @@ section .max-w {
   }
   .gap-\[62px\] {
     gap: 73px;
+  }
+  .text-\[16px\]{
+    font-size: 14px;
+  }
+  .text-\[12px\]{
+    font-size: 10px;
   }
 }
 
@@ -370,6 +394,12 @@ section .max-w {
   .-top-\[20px\] {
     top: -10px;
   }
+  .text-\[16px\]{
+    font-size: 13px;
+  }
+  .text-\[12px\]{
+    font-size: 9.5px;
+  }
 }
 
 @media (max-width: 640px) {
@@ -421,6 +451,12 @@ section .max-w {
   .gap-\[62px\] {
     gap: 52.5px;
   }
+  .text-\[16px\]{
+    font-size: 12px;
+  }
+  .text-\[12px\]{
+    font-size: 9px;
+  }
 }
 
 @media (max-width: 580px) {
@@ -449,6 +485,7 @@ section .max-w {
   }
   .tag_type {
     width: 75px;
+    font-size: 12px;
   }
 }
 
@@ -468,6 +505,7 @@ section .max-w {
   }
   .tag_type {
     width: 75px;
+    font-size: 12px;
   }
 }
 
@@ -517,6 +555,7 @@ section .max-w {
   }
   .tag_type {
     width: 60px;
+    font-size: 11px;
   }
 }
 
@@ -547,6 +586,7 @@ section .max-w {
   }
   .tag_type {
     width: 60px;
+    font-size: 11px;
   }
 }
 </style>
