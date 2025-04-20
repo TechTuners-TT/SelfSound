@@ -10,21 +10,27 @@
       <NavBar />
 
       <section
-        class="flex relative flex-col flex-1 [@media(min-width:1537px)]:mx-25 xl:mx-[70px] lg:mx-[60px] md:mx-[60px] sm:mx-[0px] h-screen"
+        class="flex relative flex-col flex-1 [@media(min-width:1537px)]:mx-25 xl:mx-[70px] lg:mx-[60px] md:mx-[60px] sm:mx-[0px] h-screen "
         style="background-color: rgba(6, 3, 16, 1)"
       >
         <div
-          class="items-center gap-10 flex flex-col h-full [@media(min-width:1537px)]:pt-16.25 xl:pt-14.25 lg:pt-12.25 md:pt-10.25 max-md:pt-22.25 mx-auto w-full max-w-[640px]"
+          class="items-center gap-10 flex flex-col h-full [@media(min-width:1537px)]:pt-16.25 xl:pt-14.25 lg:pt-12.25 md:pt-10.25 max-md:pt-22.25  mx-auto   w-full max-w-[640px] 
+          sm:w-[320px] md:w-[400px] lg:w-[480px] xl:w-[560px] 2xl:w-[640px]"
           style="background-color: rgba(0, 0, 0, 0.3)"
         >
           <ProfileHeader :user="user" />
 
           <ProfileStats :stats="stats" />
           <ProfileContent :user="user" @update:user="updateUser" />
+          
         </div>
+        
       </section>
+      
     </main>
+    
   </div>
+  <div class="max-md:pb-20"></div>
 </template>
 
 <script setup lang="ts">
