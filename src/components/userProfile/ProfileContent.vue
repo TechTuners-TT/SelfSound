@@ -1,7 +1,7 @@
 <template>
   <section class="flex flex-col gap-15 max-w w-full mx-auto section_1">
     <button
-      class="cursor-pointer max-w-[560px] w-full h-8 text-sm sm:text-base text-white rounded-xl shadow-sm border border-[rgba(255,255,255,0.5)] mx-auto block inter-font"
+      class="cursor-pointer max-w-[540px] max-2xl:max-w-[460px] max-xl:max-w-[380px] max-lg:max-w-[300px] button_Edit  w-full h-8 text-sm sm:text-base text-white rounded-xl shadow-sm border border-[rgba(255,255,255,0.5)] mx-auto block inter-font"
       style="background-color: rgba(2, 3, 61, 1); font-weight: 500"
       @click="isModalOpen = true"
     >
@@ -9,7 +9,7 @@
     </button>
     <div class="w-full h-px border border-[rgba(255,255,255,0.5)]"></div>
     <p
-      class="mt-10 sm:mt-47.5 text-sm sm:text-base text-white text-center inter-font "
+      class="mt-10 sm:mt-47.5 text-sm sm:text-base text-white text-center inter-font text_size"
       style="font-weight: 400"
     >
       There's nothing here yet, add your first post!
@@ -93,8 +93,8 @@
           >
           <textarea
     v-model="formData.biography"
-    maxlength="50"
-    class="w-full h-full text-[12px] bg-[#04020B] border-none outline-none text-white px-2 py-2 max-md:text-sm inter-font rounded-md resize-none"
+    maxlength="130"
+    class="w-full h-full text-[12px] bg-[#04020B] border-none outline-none text-white px-2 py-2 max-md:text-sm inter-font rounded-md resize-none "
     style="font-weight: 500"
     placeholder="Enter your biography..."
   ></textarea>
@@ -249,6 +249,17 @@ section .max-w {
   font-family: "Inter", sans-serif;
 }
 
+textarea::-webkit-scrollbar-thumb {
+  background-color: rgba(255, 255, 255, 0.3); /* світло-сірий */
+  border-radius: 8px;
+}
+
+/* Для Firefox */
+textarea {
+  scrollbar-color: rgba(255, 255, 255, 0.3) transparent;
+}
+
+
 @media (max-width: 1536px) {
   .mt-10 {
     margin-top: 38px;
@@ -274,6 +285,10 @@ section .max-w {
   }
   .gap-\[62px\] {
     gap: 67px;
+  }
+  button {
+    height: 30px;
+    font-size: 15px;
   }
 }
 
@@ -309,6 +324,10 @@ section .max-w {
   .text-\[12px\]{
     font-size: 11px;
   }
+  button {
+    height: 28px;
+    font-size: 15px;
+  }
 }
 
 @media (max-width: 1024px) {
@@ -343,6 +362,13 @@ section .max-w {
   .text-\[12px\]{
     font-size: 10px;
   }
+  .text_size {
+    font-size: 14px;
+  }
+  button {
+    height: 28px;
+    font-size: 14px;
+  }
 }
 
 @media (max-width: 768px) {
@@ -358,7 +384,9 @@ section .max-w {
     margin-top: 28px;
   }
   button {
+    height: 28px;
     max-width: 520px;
+    font-size: 13px;
   }
   .section_1 {
     gap: 44px;
@@ -400,9 +428,13 @@ section .max-w {
   .text-\[12px\]{
     font-size: 9.5px;
   }
+  .button_Edit{
+    width: 310px;
+  }
 }
 
 @media (max-width: 640px) {
+
   .mt-11 {
     margin-top: 1.5rem;
   }
@@ -420,8 +452,10 @@ section .max-w {
   }
 
   button {
-    height: 2rem;
+    height: 28px;
     max-width: 500px;
+   
+    font-size: 12px;
   }
   .section_1 {
     gap: 40px;
@@ -457,12 +491,16 @@ section .max-w {
   .text-\[12px\]{
     font-size: 9px;
   }
+  .button_Edit{
+    width: 310px;
+  }
 }
 
 @media (max-width: 580px) {
   button {
-    height: 2rem;
+    height: 28px;
     max-width: 400px;
+    font-size: 11px;
   }
   .w-\[540px\] {
     width: 380px;
@@ -487,8 +525,23 @@ section .max-w {
     width: 75px;
     font-size: 12px;
   }
+  .button_Edit{
+    width: 320px;
+  }
+  .text_size {
+    font-size: 12px;
+  }
 }
-
+@media (max-width: 479.5px) {
+  .button_Edit {
+  width: 100%;
+  box-sizing: border-box;
+}
+.section_1 {
+  padding-left: 40px;
+  padding-right: 40px;
+}
+}
 @media (max-width: 480px) {
   .px-\[50px\] {
     padding-left: 16px;
@@ -507,6 +560,8 @@ section .max-w {
     width: 75px;
     font-size: 12px;
   }
+ 
+  
 }
 
 @media (max-width: 450px) {
@@ -527,8 +582,8 @@ section .max-w {
   }
 
   button {
-    height: 1.75rem;
-    font-size: 0.75rem;
+    height: 28px;
+    font-size: 10px;
     max-width: 300px;
   }
   .section_1 {
@@ -557,12 +612,60 @@ section .max-w {
     width: 60px;
     font-size: 11px;
   }
+  .button_Edit {
+  width: 100%;
+  max-width: 450px;        /* Не виходить за межі 450px */
+  margin: 0 auto;          /* Центрування по горизонталі */
+  box-sizing: border-box;  /* Враховує padding і border у width */
+  display: block;          /* Щоб margin: auto працював */
+  height: 1.75rem;
+  font-size: 0.75rem;
+ 
 }
+  .section_1 {
+  padding-left: 50px;
+  padding-right: 50px;
+}
+}
+
+@media (max-width: 400px) {
+  .button_Edit {
+  width: 100%;
+  max-width: 450px;        /* Не виходить за межі 450px */
+  margin: 0 auto;          /* Центрування по горизонталі */
+  box-sizing: border-box;  /* Враховує padding і border у width */
+  display: block;          /* Щоб margin: auto працював */
+  
+ 
+}
+  .section_1 {
+  padding-left: 40px;
+  padding-right: 40px;
+}
+}
+
+@media (max-width: 380px) {
+  .button_Edit {
+  width: 100%;
+  max-width: 450px;        /* Не виходить за межі 450px */
+  margin: 0 auto;          /* Центрування по горизонталі */
+  box-sizing: border-box;  /* Враховує padding і border у width */
+  display: block;          /* Щоб margin: auto працював */
+  
+ 
+}
+  .section_1 {
+  padding-left: 30px;
+  padding-right: 30px;
+}
+}
+
+
 
 @media (max-width: 350px) {
   button {
-    height: 1.75rem;
-    font-size: 0.75rem;
+    height: 1.5rem;
+    font-size: 10px;
     max-width: 260px;
   }
   .w-\[540px\] {
