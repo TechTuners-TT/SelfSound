@@ -88,7 +88,7 @@ defineProps<{
 
 @media (max-width: 1280px) {
   .gap-5 {
-    gap: 18px;
+    gap: 8px;
   }
   .gap-19 {
     gap: 41.5px;
@@ -114,7 +114,7 @@ defineProps<{
 
 @media (max-width: 1024px) {
   .gap-5 {
-    gap: 16px;
+    gap: 6px;
   }
 
   .w-\[560px\] {
@@ -143,6 +143,10 @@ defineProps<{
   .h-8 {
     height: 30px;
   }
+  .biographyinput{
+    font-size: 12px;
+  }
+
 }
 
 @media (max-width: 768px) {
@@ -191,7 +195,7 @@ defineProps<{
     font-size: 14px;
   }
   .gap-5 {
-    gap: 14px;
+    gap: 4px;
   }
   .h-8 {
     height: 28px;
@@ -225,7 +229,7 @@ defineProps<{
   }
 
   .gap-5 {
-    gap: 12px;
+    gap: 2px;
   }
 
   .gap-15 {
@@ -253,7 +257,7 @@ defineProps<{
 @media (max-width: 479.5px) {
   section {
     padding-left: 40px;
-    padding-right: 5px;
+    padding-right: 40px;
   }
   .w-\[100px\] {
     width: 64px;
@@ -262,7 +266,7 @@ defineProps<{
 
 @media (max-width: 450px) {
   .gap-5 {
-    gap: 10px;
+    gap: 1px;
   }
   .gap-19 {
     gap: 30px;
@@ -290,7 +294,7 @@ defineProps<{
   }
   section {
     padding-left: 50px;
-    padding-right: 5px;
+    padding-right: 50px;
   }
 }
 
@@ -298,13 +302,13 @@ defineProps<{
 @media (max-width: 400px) {
   section {
     padding-left: 40px;
-    padding-right: 5px;
+    padding-right: 40px;
   }
 }
 @media (max-width: 380px) {
   section {
     padding-left: 30px;
-    padding-right: 5px;
+    padding-right: 30px;
   }
 }
 

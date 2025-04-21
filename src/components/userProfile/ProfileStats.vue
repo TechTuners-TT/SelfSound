@@ -71,65 +71,170 @@ defineProps<{
 }
 
 @media (max-width: 1024px) {
-  .gap-\[50px\] {
-    gap: 42px;
-  }
+  .gap-\[50px\]{
+      gap:15px;
+    }
   .text-\[12px\]{
-    font-size: 10px;
+    font-size: 9px;
   }
   section {
-    padding-left: 52px;
+    padding-left: 120px;
     padding-right: 0px;
+    
   }
 }
 
 @media (max-width: 768px) {
   .gap-\[50px\] {
-    gap: 38px;
+    gap: 10px;
   }
   .text-\[12px\]{
     font-size: 10px;
   }
+  section {
+    padding-left: 203px;
+    padding-right: 95px;
+    text-align: left;
+  }
+  .w-\[58px\]{
+  width: 45px;
+  }
+  .w-\[90px\]{
+    width: 65px;
+}
+.w-\[105px\]{
+  width: 72px;
+}
+
 }
 
 @media (max-width: 640px) {
   .gap-\[50px\] {
-    gap: 36px;
+    gap: 10px;
+  }
+  .text-\[12px\]{
+    font-size: 9px;
+  }
+  section {
+    padding-left: 93px;
+    padding-right: 5px;
+    text-align: left;
+  }
+  .w-\[58px\]{
+  width: 45px;
+  }
+  .w-\[90px\]{
+    width: 65px;
+}
+.w-\[105px\]{
+  width: 72px;
+}
+ 
+}
+
+@media (max-width: 480px) {
+  .gap-\[50px\] {
+    gap: 10px;
+  }
+  .text-\[12px\]{
+    font-size: 9px;
+  }
+  section {
+    padding-left: 63px;
+    padding-right: 5px;
+    text-align: left;
+  }
+  .w-\[58px\]{
+  width: 45px;
+  }
+  .w-\[90px\]{
+    width: 65px;
+}
+.w-\[105px\]{
+  width: 72px;
+}
+}
+
+
+@media (max-width: 479.5px) {
+  section {
+    padding-left: 136.5px;
+    padding-right: 40px;
+    justify-content: left;
+    text-align: center;
+  }
+  .gap-\[50px\] {
+    gap: 10px;
   }
   .text-\[12px\]{
     font-size: 10px;
   }
- 
 }
+
 
 @media (max-width: 450px) {
   .gap-\[50px\] {
-    gap: 32px;
+    gap: 10px;
   }
   .text-\[12px\]{
     font-size: 10px;
   }
   section {
-    padding-left: 0px;
-    padding-right: 0px;
-    justify-content: center;
+    padding-left: 135px;
+    padding-right: 50px;
+    justify-content: left;
     text-align: center;
+  }
+}
+
+@media (max-width: 400px) {
+  section {
+    padding-left: 126.5px;
+    padding-right: 40px;
+    justify-content: left;
+    text-align: center;
+  }
+  .gap-\[50px\] {
+    gap: 10px;
+  }
+  .text-\[12px\]{
+    font-size: 10px;
+  }
+}
+
+
+@media (max-width: 380px) {
+  section {
+    padding-left: 115px;
+    padding-right: 30px;
+    justify-content: left;
+    text-align: center;
+  }
+  .gap-\[50px\] {
+    gap: 10px;
+  }
+  .text-\[12px\]{
+    font-size: 10px;
   }
 }
 
 @media (max-width: 350px) {
-  .gap-\[50px\] {
-    gap: 28px;
-  }
-  .text-\[12px\]{
-    font-size: 10px;
-  }
   section {
-    padding-left: 0px;
-    padding-right: 0px;
-    justify-content: center;
+    padding-left: 115px;
+    padding-right: 30px;
+    justify-content: left;
     text-align: center;
   }
+  .gap-\[50px\] {
+    gap: 9px;
+  }
+  .text-\[12px\]{
+    font-size: 9px;
+  }
 }
+
+
+
+
 
 </style>
