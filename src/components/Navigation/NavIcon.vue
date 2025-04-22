@@ -40,27 +40,25 @@ onMounted(() => {
     });
   }
 
-// Логіка для .nav-icon
-  document.querySelectorAll('.nav-icon').forEach(icon => {
-    icon.addEventListener('mousedown', () => {
-      icon.querySelector('path')?.setAttribute('fill', '#6D01D0');
-      
+  // Логіка для .nav-icon
+  document.querySelectorAll(".nav-icon").forEach((icon) => {
+    icon.addEventListener("mousedown", () => {
+      icon.querySelector("path")?.setAttribute("fill", "#6D01D0");
+
       // Змінюємо колір на фіолетовий на 1 секунди
       setTimeout(() => {
-        icon.querySelector('path')?.setAttribute('fill', 'white');
+        icon.querySelector("path")?.setAttribute("fill", "white");
       }, 1000);
     });
 
-    icon.addEventListener('mouseup', () => {
-      icon.querySelector('path')?.setAttribute('fill', 'white');
+    icon.addEventListener("mouseup", () => {
+      icon.querySelector("path")?.setAttribute("fill", "white");
     });
 
-    icon.addEventListener('mouseleave', () => {
-      icon.querySelector('path')?.setAttribute('fill', 'white');
+    icon.addEventListener("mouseleave", () => {
+      icon.querySelector("path")?.setAttribute("fill", "white");
     });
   });
-
-  
 });
 </script>
 
