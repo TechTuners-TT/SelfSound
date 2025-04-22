@@ -116,7 +116,8 @@
 
 <script setup lang="ts">
 import { ref, onMounted, watch, nextTick } from "vue";
-import mediumZoom, { Zoom } from "medium-zoom";
+import mediumZoom from "medium-zoom";
+import type { Zoom } from "medium-zoom";
 
 const fileInput = ref<HTMLInputElement | null>(null);
 const files = ref<{ preview: string; file: File; type: string }[]>([]);
