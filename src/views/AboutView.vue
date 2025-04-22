@@ -12,11 +12,9 @@ import AboutFooter from "@/components/About_Components/AboutFooter.vue";
     <AboutHeader />
     <AboutHero />
 
-    <!-- Секція з градієнтним фоном тільки під компонентами AboutBenefits і AboutWhyChoose -->
     <section class="relative w-full">
       <AboutGradientBackground />
-      <!-- Градієнтний фон -->
-      <div class="relative z-10 space-y-20 px-4 py-16">
+      <div class="relative z-10 px-[10vw] pt-[17.59vh] pb-[13.89vh] space-y-20">
         <AboutBenefits />
         <AboutWhyChoose />
       </div>
