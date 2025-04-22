@@ -18,9 +18,7 @@
           aria-label="Footer navigation"
         >
           <div>
-            <h3 class="oswald-font text-3xl font-semibold max-md:text-2xl">
-              Creators
-            </h3>
+            <h3 class="oswald-font text-3xl max-md:text-2xl">Creators</h3>
             <ul
               class="font-inter mt-8 space-y-4 text-xl max-md:mt-5 max-md:text-lg"
             >
@@ -28,9 +26,7 @@
             </ul>
           </div>
           <div>
-            <h3 class="oswald-font text-3xl font-semibold max-md:text-2xl">
-              Useful Links
-            </h3>
+            <h3 class="oswald-font text-3xl max-md:text-2xl">Useful Links</h3>
             <ul
               class="font-inter mt-8 space-y-4 text-xl max-md:mt-5 max-md:text-lg"
             >
@@ -40,9 +36,7 @@
             </ul>
           </div>
           <div>
-            <h3 class="oswald-font text-3xl font-semibold max-md:text-2xl">
-              Communities
-            </h3>
+            <h3 class="oswald-font text-3xl max-md:text-2xl">Communities</h3>
             <ul
               class="font-inter mt-8 space-y-4 text-xl max-md:mt-5 max-md:text-lg"
             >
@@ -53,16 +47,16 @@
 
         <!-- Соціальні -->
         <div class="flex gap-8 max-md:mt-8">
-          <a href="#social1" aria-label="Discord">
+          <a href="#social1" aria-label="Discord" class="social-btn">
             <img
-              src="https://cdn.builder.io/api/v1/image/assets/0e5cd4cd4ea342f79af0ee55b490f863/01c2d471500de5296ad6689abf42153b8edf20e0"
+              src="@/components/SVG/About_SVG/Socials_Discord.svg"
               alt="Discord"
               class="w-[72px] h-[72px] rounded-2xl max-md:w-[54px] max-md:h-[54px]"
             />
           </a>
-          <a href="#social2" aria-label="Instagram">
+          <a href="#social2" aria-label="Instagram" class="social-btn">
             <img
-              src="https://cdn.builder.io/api/v1/image/assets/0e5cd4cd4ea342f79af0ee55b490f863/4e5127dfb04b556af665fa36c15440854e13df55"
+              src="@/components/SVG/About_SVG/Socials_Instagram.svg"
               alt="Instagram"
               class="w-[72px] h-[72px] rounded-2xl max-md:w-[54px] max-md:h-[54px]"
             />
@@ -83,3 +77,26 @@
     </div>
   </footer>
 </template>
+
+<script lang="ts" setup>
+// Footer component
+</script>
+
+<style scoped>
+/* Hover color for all links */
+a:hover {
+  color: #6d01d0;
+}
+
+/* Social buttons animation */
+.social-btn {
+  display: inline-block;
+  transition:
+    transform 0.3s ease,
+    filter 0.3s ease;
+}
+.social-btn:hover {
+  transform: scale(1.1);
+  filter: brightness(1.2);
+}
+</style>

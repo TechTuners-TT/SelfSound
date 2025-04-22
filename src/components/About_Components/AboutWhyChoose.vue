@@ -39,7 +39,7 @@
           </div>
           <div class="w-full md:w-1/2 flex justify-center">
             <img
-              src="https://cdn.builder.io/api/v1/image/assets/0e5cd4cd4ea342f79af0ee55b490f863/0dd58aa659d4b80eb61308e6413ad4d3bdfe76e7?placeholderIfAbsent=true"
+              src="@components/SVG/About_SVG/dancing-man_Illustration.svg"
               alt="Musicians collaborating"
               class="w-full h-auto object-contain max-h-[500px]"
             />
@@ -63,7 +63,7 @@
           </div>
           <div class="w-full md:w-1/2 flex justify-center">
             <img
-              src="https://cdn.builder.io/api/v1/image/assets/0e5cd4cd4ea342f79af0ee55b490f863/e9c2f866d93945f4cf82c8a9d565e5418267ac9c?placeholderIfAbsent=true"
+              src="@components/SVG/About_SVG/meditating-woman_Illustration.svg"
               alt="Supportive community"
               class="w-full h-auto object-contain max-h-[500px]"
             />
@@ -87,7 +87,7 @@
           </div>
           <div class="w-full md:w-1/2 flex justify-center">
             <img
-              src="https://cdn.builder.io/api/v1/image/assets/0e5cd4cd4ea342f79af0ee55b490f863/466faf7f58be0cd1f32f7902ede022dafc02cc02?placeholderIfAbsent=true"
+              src="@/components/SVG/About_SVG/woman_Illustration.svg"
               alt="Join now"
               class="w-full h-auto object-contain max-h-[500px]"
             />
