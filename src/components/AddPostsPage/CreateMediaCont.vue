@@ -13,25 +13,20 @@
 
       <!-- Section 2 -->
       <section>
-        <SubscribtionSection />
+        <AtachMediaSection />
       </section>
 
       <!-- Section 3 -->
-      <section>
-        <BlockedUsrSection />
-      </section>
+      <section></section>
 
       <!-- Section 4 -->
-      <section>
-        <LogOutSection />
-      </section>
+      <section></section>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import TitleSection from "./sections/TitleSection.vue";
-import SubscribtionSection from "./sections/SubscribtionSection.vue";
-import BlockedUsrSection from "./sections/BlockedUsrSection.vue";
-import LogOutSection from "./sections/LogOutSection.vue";
+import TitleSection from "./sections/CreateMedia/TitleSection.vue";
+import AtachMediaSection from "./sections/CreateMedia/AttachMediaSection.vue";
+// import PublishSection from "./sections/CreateMedia/PublishSection.vue";
 </script>

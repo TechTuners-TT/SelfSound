@@ -2,13 +2,22 @@
   <section
     class="flex gap-[50px] items-center mb-1.25 text-[12px] inter-font font-medium w-[500px] h-[12px]"
   >
-    <p class="font-medium text-white inter-font text-[12px] w-[58px] h-[12px]" style="font-weight: 500">
+    <p
+      class="font-medium text-white inter-font text-[12px] w-[58px] h-[12px]"
+      style="font-weight: 500"
+    >
       {{ stats.posts }} posts
     </p>
-    <p class="font-medium text-white inter-font text-[12px] w-[90px] h-[12px]" style="font-weight: 500">
+    <p
+      class="font-medium text-white inter-font text-[12px] w-[90px] h-[12px]"
+      style="font-weight: 500"
+    >
       Listeners: {{ stats.listeners }}
     </p>
-    <p class="font-medium text-white inter-font text-[12px] w-[105px] h-[12px]" style="font-weight: 500">
+    <p
+      class="font-medium text-white inter-font text-[12px] w-[105px] h-[12px]"
+      style="font-weight: 500"
+    >
       Listened to: {{ stats.listenedTo }}
     </p>
   </section>
@@ -61,7 +70,7 @@ defineProps<{
   .gap-\[50px\] {
     gap: 46px;
   }
-  .text-\[12px\]{
+  .text-\[12px\] {
     font-size: 11px;
   }
   section {
@@ -71,16 +80,15 @@ defineProps<{
 }
 
 @media (max-width: 1024px) {
-  .gap-\[50px\]{
-      gap:15px;
-    }
-  .text-\[12px\]{
+  .gap-\[50px\] {
+    gap: 15px;
+  }
+  .text-\[12px\] {
     font-size: 9px;
   }
   section {
     padding-left: 120px;
     padding-right: 0px;
-    
   }
 }
 
@@ -88,7 +96,7 @@ defineProps<{
   .gap-\[50px\] {
     gap: 10px;
   }
-  .text-\[12px\]{
+  .text-\[12px\] {
     font-size: 10px;
   }
   section {
@@ -96,23 +104,22 @@ defineProps<{
     padding-right: 95px;
     text-align: left;
   }
-  .w-\[58px\]{
-  width: 45px;
+  .w-\[58px\] {
+    width: 45px;
   }
-  .w-\[90px\]{
+  .w-\[90px\] {
     width: 65px;
-}
-.w-\[105px\]{
-  width: 72px;
-}
-
+  }
+  .w-\[105px\] {
+    width: 72px;
+  }
 }
 
 @media (max-width: 640px) {
   .gap-\[50px\] {
     gap: 10px;
   }
-  .text-\[12px\]{
+  .text-\[12px\] {
     font-size: 9px;
   }
   section {
@@ -120,23 +127,22 @@ defineProps<{
     padding-right: 5px;
     text-align: left;
   }
-  .w-\[58px\]{
-  width: 45px;
+  .w-\[58px\] {
+    width: 45px;
   }
-  .w-\[90px\]{
+  .w-\[90px\] {
     width: 65px;
-}
-.w-\[105px\]{
-  width: 72px;
-}
- 
+  }
+  .w-\[105px\] {
+    width: 72px;
+  }
 }
 
 @media (max-width: 480px) {
   .gap-\[50px\] {
     gap: 10px;
   }
-  .text-\[12px\]{
+  .text-\[12px\] {
     font-size: 9px;
   }
   section {
@@ -144,17 +150,16 @@ defineProps<{
     padding-right: 5px;
     text-align: left;
   }
-  .w-\[58px\]{
-  width: 45px;
+  .w-\[58px\] {
+    width: 45px;
   }
-  .w-\[90px\]{
+  .w-\[90px\] {
     width: 65px;
+  }
+  .w-\[105px\] {
+    width: 72px;
+  }
 }
-.w-\[105px\]{
-  width: 72px;
-}
-}
-
 
 @media (max-width: 479.5px) {
   section {
@@ -166,17 +171,16 @@ defineProps<{
   .gap-\[50px\] {
     gap: 10px;
   }
-  .text-\[12px\]{
+  .text-\[12px\] {
     font-size: 10px;
   }
 }
-
 
 @media (max-width: 450px) {
   .gap-\[50px\] {
     gap: 10px;
   }
-  .text-\[12px\]{
+  .text-\[12px\] {
     font-size: 10px;
   }
   section {
@@ -197,11 +201,10 @@ defineProps<{
   .gap-\[50px\] {
     gap: 10px;
   }
-  .text-\[12px\]{
+  .text-\[12px\] {
     font-size: 10px;
   }
 }
-
 
 @media (max-width: 380px) {
   section {
@@ -213,7 +216,7 @@ defineProps<{
   .gap-\[50px\] {
     gap: 10px;
   }
-  .text-\[12px\]{
+  .text-\[12px\] {
     font-size: 10px;
   }
 }
@@ -228,13 +231,8 @@ defineProps<{
   .gap-\[50px\] {
     gap: 9px;
   }
-  .text-\[12px\]{
+  .text-\[12px\] {
     font-size: 9px;
   }
 }
-
-
-
-
-
 </style>

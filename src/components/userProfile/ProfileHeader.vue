@@ -1,14 +1,16 @@
 <template>
-  <section class="flex flex-col items-center gap-5 max-w-[560px] w-full ">
+  <section class="flex flex-col items-center gap-5 max-w-[560px] w-full">
     <div
-      class="flex flex-row gap-19 items-center sm:items-start w-full h-[84px] "
+      class="flex flex-row gap-19 items-center sm:items-start w-full h-[84px]"
     >
-    <div class="relative w-[84px] h-[84px] max-sm:w-[60px] max-sm:h-[60px] sm:w-[64px] sm:h-[64px] md:w-[68px] md:h-[68px] lg:w-[72px] lg:h-[72px] xl:w-[84px] xl:h-[84px]">
-  <img
-    :src="user.avatarUrl"
-    :alt="user.name"
-    class="rounded-full w-full h-full"
-  />
+      <div
+        class="relative w-[84px] h-[84px] max-sm:w-[60px] max-sm:h-[60px] sm:w-[64px] sm:h-[64px] md:w-[68px] md:h-[68px] lg:w-[72px] lg:h-[72px] xl:w-[84px] xl:h-[84px]"
+      >
+        <img
+          :src="user.avatarUrl"
+          :alt="user.name"
+          class="rounded-full w-full h-full"
+        />
         <div
           class="absolute inset-0 rounded-full border border-white border-opacity-50"
         ></div>
@@ -108,9 +110,7 @@ defineProps<{
   .h-\[54px\] {
     height: 48px;
   }
-  
 }
-
 
 @media (max-width: 1024px) {
   .gap-5 {
@@ -143,10 +143,9 @@ defineProps<{
   .h-8 {
     height: 30px;
   }
-  .biographyinput{
+  .biographyinput {
     font-size: 12px;
   }
-
 }
 
 @media (max-width: 768px) {
@@ -298,7 +297,6 @@ defineProps<{
   }
 }
 
-
 @media (max-width: 400px) {
   section {
     padding-left: 40px;
@@ -311,6 +309,4 @@ defineProps<{
     padding-right: 30px;
   }
 }
-
-
 </style>
