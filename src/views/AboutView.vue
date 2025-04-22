@@ -14,7 +14,9 @@ import AboutFooter from "@/components/About_Components/AboutFooter.vue";
 
     <section class="relative w-full">
       <AboutGradientBackground />
-      <div class="relative z-10 px-[10vw] pt-[17.59vh] pb-[13.89vh] space-y-20">
+      <div
+        class="relative z-10 px-[10vw] pt-[17.59vh] max-md:pt-[6vh] pb-[13.89vh] space-y-20"
+      >
         <AboutBenefits />
         <AboutWhyChoose />
       </div>

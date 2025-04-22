@@ -46,7 +46,7 @@
         >
         <a
           href="#signup"
-          class="flex items-center justify-center bg-white text-blue-900 font-semibold rounded-full hover:bg-purple-700 hover:text-white sign-up-button"
+          class="flex items-center justify-center bg-white text-blue-900 font-semibold rounded-full hover:bg-purple-700 hover:text-white duration-300 sign-up-button"
         >
           Sign up
         </a>
