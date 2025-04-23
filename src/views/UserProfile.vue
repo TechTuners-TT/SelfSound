@@ -124,7 +124,7 @@ const secondGridItems = ref<ContentItem[]>(createGridItems(5));
   </div>
     <div class="max-md:pb-20"></div> -->
 </template>
-
+<!--
 <script setup lang="ts">
 /*
 import { reactive, ref, watch } from "vue";
@@ -206,6 +206,7 @@ watch(
 );
 */
 </script>
+-->
 
 <style scoped>
 /* Ensure content is centered with equal margins */
