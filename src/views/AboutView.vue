@@ -22,8 +22,6 @@ import AboutFooter from "@/components/About_Components/AboutFooter.vue";
       </div>
     </section>
 
-    <AboutBenefits />
-    <AboutWhyChoose />
     <AboutFooter />
 
     <!-- Main Content Area -->

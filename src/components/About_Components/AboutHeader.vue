@@ -41,11 +41,11 @@
         <a href="#guest" class="hover:text-purple-700 font-normal nav-link"
           >Guest mode</a
         >
-        <a href="#login" class="hover:text-purple-700 font-normal nav-link"
+        <a href="#sign-in" class="hover:text-purple-700 font-normal nav-link"
           >Log in</a
         >
         <a
-          href="#signup"
+          href="#sign-up"
           class="flex items-center justify-center bg-white text-blue-900 font-semibold rounded-full hover:bg-purple-700 hover:text-white duration-300 sign-up-button"
         >
           Sign up
