@@ -1,4 +1,6 @@
 <template>
+  <div></div>
+  <!--
   <button
     type="button"
     @click="$emit('click')"
@@ -9,6 +11,7 @@
     </div>
     <span>{{ text }}</span>
   </button>
+  -->
 </template>
 
 <script lang="ts">
