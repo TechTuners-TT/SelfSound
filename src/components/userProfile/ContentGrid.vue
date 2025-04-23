@@ -1,4 +1,13 @@
 <template>
+  <div></div>
+</template>
+
+<script lang="ts">
+// pass
+</script>
+
+<!-- 
+<template>
   <section>
     <div
       class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 sm:gap-5 md:gap-6 lg:gap-7 xl:gap-8"
@@ -55,3 +64,5 @@ export default defineComponent({
   },
 });
 </script>
+
+-->

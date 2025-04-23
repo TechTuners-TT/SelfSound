@@ -58,7 +58,7 @@
       </button>
 
       <p class="text-base font-bold text-center text-white">
-        <router-link to="/sign-in" class="hover:text-gray-300 transition-colors"
+        <router-link to="/sign-in" class="hover:#6D01D0;"
           >Already have a profile? Log in here!</router-link
         >
       </p>
@@ -67,7 +67,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, reactive } from "vue";
+import { defineComponent, reactive } from "vue";
 import SignUpInput from "@/components/Authentication/SignUpInput.vue";
 import SignUpButton from "@/components/Authentication/SignUpButton.vue";
 import SignUpDivider from "@/components/Authentication/SignUpDivider.vue";

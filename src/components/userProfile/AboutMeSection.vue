@@ -1,4 +1,12 @@
 <template>
+  <div></div>
+</template>
+
+<script lang="ts">
+// pass
+</script>
+
+<!-- <template>
   <section
     class="absolute md:right-[40px] lg:right-[60px] xl:right-[91px] md:top-[70px] lg:top-[85px] xl:top-[95px] hidden md:block lg:block"
   >
@@ -27,3 +35,5 @@ export default defineComponent({
   },
 });
 </script>
+
+-->
