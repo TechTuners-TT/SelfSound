@@ -12,7 +12,6 @@
         :aria-expanded="isMenuOpen"
       >
         <svg
-          xmlns="http://www.w3.org/2000/svg"
           class="h-8 w-8"
           fill="none"
           viewBox="0 0 24 24"
@@ -47,7 +46,7 @@
         >
         <a
           href="#signup"
-          class="flex items-center justify-center bg-white text-blue-900 font-semibold rounded-full hover:bg-purple-700 hover:text-white sign-up-button"
+          class="flex items-center justify-center bg-white text-blue-900 font-semibold rounded-full hover:bg-purple-700 hover:text-white duration-300 sign-up-button"
         >
           Sign up
         </a>
@@ -115,8 +114,8 @@ header {
   --logo-font-size: 48px;
   --nav-a-font-size: 24px;
   --sign-up-a-font-size: 24px;
-  --sign-up-a-width: 140px; /* Додано ширину для кнопки */
-  --sign-up-a-height: 50px; /* Додано висоту для кнопки */
+  --sign-up-a-width: 140px;
+  --sign-up-a-height: 50px;
 }
 
 .logo {
@@ -141,8 +140,8 @@ header {
     --logo-font-size: 43.2px;
     --nav-a-font-size: 21.6px;
     --sign-up-a-font-size: 21.6px;
-    --sign-up-a-width: 126px; /* Пропорційно зменшено ширину */
-    --sign-up-a-height: 45px; /* Пропорційно зменшено висоту */
+    --sign-up-a-width: 126px;
+    --sign-up-a-height: 45px;
     padding: 25px 90px;
     padding-left: 150px;
   }
@@ -155,8 +154,8 @@ header {
     --logo-font-size: 38.4px;
     --nav-a-font-size: 19.2px;
     --sign-up-a-font-size: 19.2px;
-    --sign-up-a-width: 112px; /* Пропорційно зменшено ширину */
-    --sign-up-a-height: 40px; /* Пропорційно зменшено висоту */
+    --sign-up-a-width: 112px;
+    --sign-up-a-height: 40px;
     padding: 25px 80px;
     padding-left: 130px;
   }
@@ -169,8 +168,8 @@ header {
     --logo-font-size: 34px;
     --nav-a-font-size: 17px;
     --sign-up-a-font-size: 17px;
-    --sign-up-a-width: 100px; /* Пропорційно зменшено ширину */
-    --sign-up-a-height: 35px; /* Пропорційно зменшено висоту */
+    --sign-up-a-width: 100px;
+    --sign-up-a-height: 35px;
     padding: 25px 60px;
     padding-left: 100px;
   }
@@ -183,8 +182,8 @@ header {
     --logo-font-size: 30px;
     --nav-a-font-size: 15px;
     --sign-up-a-font-size: 15px;
-    --sign-up-a-width: 90px; /* Пропорційно зменшено ширину */
-    --sign-up-a-height: 30px; /* Пропорційно зменшено висоту */
+    --sign-up-a-width: 90px;
+    --sign-up-a-height: 30px;
     padding: 25px 40px;
     padding-left: 80px;
   }
@@ -197,8 +196,8 @@ header {
     --logo-font-size: 26px;
     --nav-a-font-size: 13px;
     --sign-up-a-font-size: 13px;
-    --sign-up-a-width: 80px; /* Пропорційно зменшено ширину */
-    --sign-up-a-height: 25px; /* Пропорційно зменшено висоту */
+    --sign-up-a-width: 80px;
+    --sign-up-a-height: 25px;
     padding: 25px 20px;
     padding-left: 60px;
   }

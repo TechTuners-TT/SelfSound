@@ -31,6 +31,10 @@ body {
   font-family: "Bebas Neue", sans-serif;
 }
 
+.oswald-font {
+  font-family: "Oswald", sans-serif;
+}
+
 @layer utilities {
   .size-var {
     --size: 20px;

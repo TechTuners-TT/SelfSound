@@ -188,9 +188,9 @@ export default defineComponent({
   },
   setup(props, { emit }) {
     const isModalOpen = ref(false);
-    const closeModal = () => {
-      isModalOpen.value = false;
-    };
+    //    const closeModal = () => {
+    //      isModalOpen.value = false;
+    //    };
 
     const formData = reactive<FormData>({
       name: props.user.name,

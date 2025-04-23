@@ -1,4 +1,6 @@
 <template>
+  <div></div>
+  <!--
   <button
     type="button"
     @click="$emit('click')"
@@ -9,9 +11,11 @@
     </div>
     <span>{{ text }}</span>
   </button>
+  -->
 </template>
 
 <script lang="ts">
+/*
 import { defineComponent, computed } from "vue";
 import GoogleIcon from "../SVG/Authentication/Sign_Up_In_If_button_Google.vue";
 
@@ -40,4 +44,5 @@ export default defineComponent({
     },
   },
 });
+*/
 </script>
