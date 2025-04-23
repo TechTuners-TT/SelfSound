@@ -5,7 +5,7 @@
   >
     <!-- Background Image -->
     <img
-      src="https://cdn.builder.io/api/v1/image/assets/0e5cd4cd4ea342f79af0ee55b490f863/03e953200149119670fc3741e91f3b3d89999bd3?placeholderIfAbsent=true"
+      src="@/components/SVG/About_SVG/HeroBackground.svg"
       alt="SelfSound hero background"
       class="object-cover absolute inset-0 w-full h-full"
       loading="lazy"

@@ -3,7 +3,7 @@
     viewBox="0 0 1920 3300"
     fill="none"
     :width="widthAttr"
-    :height="heightAttr"
+    height="100%"
     overflow="visible"
     class="absolute inset-0 -z-10 w-full h-full"
     preserveAspectRatio="none"
@@ -30,26 +30,17 @@
 <script setup lang="ts">
 import { computed } from "vue";
 
-// Типізація пропсів через TypeScript
 interface Props {
   width?: string;
   height?: string;
   size?: string;
 }
 
-// Отримуємо пропси
 const props = defineProps<Props>();
 
-// Обчислювані значення
 const widthAttr = computed(() => {
   if (props.height) return undefined;
   if (props.size) return props.size;
   return props.width || "1920px";
-});
-
-const heightAttr = computed(() => {
-  if (props.width) return undefined;
-  if (props.size) return props.size;
-  return props.height || "3300px";
 });
 </script>

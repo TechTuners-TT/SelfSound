@@ -8,44 +8,53 @@
   >
     <path
       d="M52.4999 70H17.5001C12.8603 69.9948 8.412 68.149 5.13143 64.8686C1.85086 61.5882 0.00516861 57.1398 0 52.4999V17.5001C0.00521029 12.8603 1.85103 8.412 5.13143 5.13143C8.41183 1.85086 12.8602 0.00516861 17.5001 0H35C36.2505 0 37.4059 0.666918 38.0311 1.74999C38.6564 2.83308 38.6564 4.1669 38.0311 5.24997C37.4059 6.33305 36.2505 6.99997 35 6.99997H17.5001C14.7159 7.00322 12.0469 8.11042 10.0786 10.0786C8.11038 12.0469 7.0033 14.7157 6.99997 17.5001V52.4999C7.00322 55.2841 8.11042 57.9531 10.0786 59.9214C12.0469 61.8903 14.7157 62.9974 17.5001 63H52.4999C55.2841 62.9974 57.9531 61.8903 59.9214 59.9214C61.8903 57.9531 62.9974 55.2843 63 52.4999V35C63 33.7495 63.6676 32.5941 64.75 31.9689C65.8331 31.3436 67.1676 31.3436 68.25 31.9689C69.3331 32.5941 70 33.7495 70 35V52.4999V52.4993C69.9948 57.139 68.149 61.5874 64.8686 64.8679C61.5882 68.1485 57.1398 69.9942 52.4999 69.9993V70ZM24.8612 48.9421L35.9494 47.9339C38.3949 47.7098 40.6841 46.6365 42.4211 44.9002L66.4102 20.9129C68.7078 18.6159 69.9993 15.5 69.9993 12.2508C70 9.00157 68.7091 5.88573 66.412 3.58803C64.0784 1.36003 60.9758 0.116728 57.7492 0.116728C54.5227 0.116728 51.4207 1.36003 49.0871 3.58803L25.1014 27.5771C23.3645 29.3147 22.2906 31.6052 22.0665 34.0522L21.0583 45.1403V45.1397C20.9703 46.1192 21.2979 47.0896 21.961 47.8152C22.624 48.5407 23.5618 48.9543 24.5446 48.9549C24.6508 48.9562 24.755 48.951 24.8605 48.9426L24.8612 48.9421ZM61.4625 8.54071C62.4472 9.5248 63.0001 10.8599 63.0001 12.2518C63.0001 13.6442 62.4472 14.9793 61.4625 15.9628L37.4718 39.9535C36.8928 40.5312 36.1295 40.8881 35.3146 40.9617L28.4104 41.5915L29.0401 34.6872L29.0408 34.6879C29.1144 33.8725 29.4719 33.1085 30.0503 32.5296L54.041 8.54056C55.0244 7.55583 56.3595 7.00222 57.752 7.00222C59.1446 7.00222 60.4796 7.55581 61.4631 8.54056L61.4625 8.54071Z"
-      class="fill-current-color"
+      :fill="color"
     />
   </svg>
 </template>
 
-<script>
-export default {
-  name: "Vector",
+<script lang="ts">
+import { defineComponent, computed } from "vue";
 
+interface Props {
+  width?: string;
+  height?: string;
+  size?: string;
+  color?: string;
+}
+
+export default defineComponent({
+  name: "IconSVG",
   props: {
-    width: {
+    width: String,
+    height: String,
+    size: String,
+    color: {
       type: String,
-      required: false,
-    },
-
-    height: {
-      type: String,
-      required: false,
-    },
-
-    size: {
-      type: String,
-      required: false,
+      default: "currentColor",
     },
   },
 
-  computed: {
-    widthAttr() {
-      if (this.height) return undefined;
-      if (this.size) return this.size;
-      return this.width || "70px";
-    },
+  setup(props: Props) {
+    const widthAttr = computed(() => {
+      if (props.height) return undefined;
+      if (props.size) return props.size;
+      return props.width || "70px";
+    });
 
-    heightAttr() {
-      if (this.width) return undefined;
-      if (this.size) return this.size;
-      return this.height || "70px";
-    },
+    const heightAttr = computed(() => {
+      if (props.width) return undefined;
+      if (props.size) return props.size;
+      return props.height || "70px";
+    });
+
+    const colorAttr = computed(() => props.color || "currentColor");
+
+    return {
+      widthAttr,
+      heightAttr,
+      colorAttr,
+    };
   },
-};
+});
 </script>
