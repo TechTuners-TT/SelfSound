@@ -1,4 +1,6 @@
 <template>
+  <div></div>
+  <!--
   <main
     class="flex flex-col justify-center items-center px-5 w-full min-h-screen overflow-hidden"
     style="background-color: rgba(6, 3, 16, 1)"
@@ -59,9 +61,10 @@
       </form>
     </section>
   </main>
-</template>
+--></template>
 
 <script lang="ts">
+/*
 import { defineComponent, ref, reactive } from "vue";
 import LoginFormInput from "@/components/Authentication/LoginFormInput.vue";
 import LoginFormButton from "@/components/Authentication/LoginFormButton.vue";
@@ -150,4 +153,5 @@ export default defineComponent({
     };
   },
 });
+*/
 </script>
