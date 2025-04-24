@@ -1,6 +1,4 @@
 <template>
-  <div></div>
-  <!--
   <main
     class="flex flex-col justify-center items-center px-5 w-full min-h-screen overflow-hidden"
     style="background-color: rgba(6, 3, 16, 1)"
@@ -66,11 +64,9 @@
       </p>
     </form>
   </main>
- -->
 </template>
 
 <script lang="ts">
-/*
 import { defineComponent, reactive } from "vue";
 import SignUpInput from "@/components/Authentication/SignUpInput.vue";
 import SignUpButton from "@/components/Authentication/SignUpButton.vue";
@@ -173,7 +169,6 @@ export default defineComponent({
     };
   },
 });
-*/
 </script>
 <style scoped>
 button:hover {
