@@ -35,7 +35,7 @@
 <script setup lang="ts">
 import NavBarAddPost from "../SVG/Nav_Bar_Icon/NavBarAddPost.vue";
 
-// const props = defineProps<{ isOpen: boolean }>();
+const props = defineProps<{ isOpen: boolean }>();
 const emit = defineEmits(["close", "select"]);
 
 const close = () => emit("close");

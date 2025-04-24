@@ -11,13 +11,11 @@
 <script setup lang="ts">
 import { onMounted, ref } from "vue";
 
-/*
 interface Props {
   svg: string;
 }
-*/
 
-// const props = defineProps<Props>();
+const props = defineProps<Props>();
 const emit = defineEmits(["click"]);
 
 const iconContainer = ref<HTMLElement | null>(null);
