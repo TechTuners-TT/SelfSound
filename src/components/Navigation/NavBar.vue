@@ -53,7 +53,11 @@
           <a href="#home">
             <NavIcon :svg="homeIcon" />
           </a>
-          <NavIcon :svg="addPostIcon" @click="openAddPost" />
+          <NavIcon
+            :svg="addPostIcon"
+            :isActive="isAddPostOpen"
+            @click="openAddPost"
+          />
 
           <NavIcon :svg="notificationsIcon" />
           <a href="#profile">
@@ -127,3 +131,4 @@ const closeAddPost = () => {
   }
 }
 </style>
+<style scoped></style>

@@ -1,71 +1,7 @@
 <template>
-  <div></div>
-</template>
-
-<script lang="ts">
-// pass
-</script>
-
-<!--
-<template>
-  <header
-    class="flex flex-col sm:flex-row gap-6 sm:gap-10 md:gap-14 lg:gap-16 xl:gap-20 items-center sm:items-start"
-  >
-    <div
-      class="relative h-[70px] w-[70px] sm:h-[75px] sm:w-[75px] md:h-[80px] md:w-[80px] lg:h-[84px] lg:w-[84px]"
-      >
-      <section class="flex flex-col items-center gap-5 max-w-[560px] w-full">
-    <div
-      class="flex flex-row gap-19 items-center sm:items-start w-full h-[84px]"
-    >
-      <img
-        :src="profileData.avatarUrl"
-        :alt="profileData.name + ' profile'"
-        class="w-full h-full rounded-full"
-      />
+  <section class="w-full">
+    <div class="flex gap-18">
       <div
-        class="absolute inset-0 rounded-full border border-solid border-white border-opacity-50"
-      ></div>
-    </div>
-    <div class="flex flex-col gap-1 text-center sm:text-left">
-      <h1
-        class="text-2xl sm:text-2xl md:text-2xl lg:text-3xl font-bold text-white"
-      >
-        {{ profileData.name }}
-      </h1>
-      <p class="text-sm sm:text-base font-medium text-white">
-        {{ profileData.username }}
-      </p>
-    </div>
-  </section>
-  </header>
-</template>
-
-<script lang="ts">
-import { defineComponent, type PropType } from "vue";
-
-// Define the type directly in this component to avoid import issues
-interface ProfileData {
-  name: string;
-  username: string;
-  avatarUrl: string;
-  postsCount: number;
-  listenersCount: number;
-  listenedToCount: number;
-  aboutMe: string;
-}
-
-export default defineComponent({
-  name: "ProfileHeader",
-  props: {
-    profileData: {
-      type: Object as PropType<ProfileData>,
-      required: true,
-    },
-  },
-});
-</script>
-=======
         class="relative w-[84px] h-[84px] max-sm:w-[60px] max-sm:h-[60px] sm:w-[64px] sm:h-[64px] md:w-[68px] md:h-[68px] lg:w-[72px] lg:h-[72px] xl:w-[84px] xl:h-[84px]"
       >
         <img
@@ -92,6 +28,7 @@ export default defineComponent({
         </p>
       </div>
     </div>
+
     <div
       class="flex gap-4 items-center justify-center sm:justify-start gap-15 w-full h-[54px]"
     >
@@ -130,7 +67,7 @@ defineProps<{
   .gap-5 {
     gap: 18px;
   }
-  .gap-19 {
+  .gap-18 {
     gap: 50px;
   }
   .gap-15 {
@@ -150,11 +87,11 @@ defineProps<{
   }
 }
 
-@media (max-width: 1280px) {
+@media (max-width: 1279.5px) {
   .gap-5 {
     gap: 8px;
   }
-  .gap-19 {
+  .gap-18 {
     gap: 41.5px;
   }
   .gap-15 {
@@ -174,7 +111,7 @@ defineProps<{
   }
 }
 
-@media (max-width: 1024px) {
+@media (max-width: 1023.5px) {
   .gap-5 {
     gap: 6px;
   }
@@ -183,7 +120,7 @@ defineProps<{
     width: 350px;
   }
 
-  .gap-19 {
+  .gap-18 {
     gap: 53px;
   }
   .gap-15 {
@@ -210,7 +147,7 @@ defineProps<{
   }
 }
 
-@media (max-width: 768px) {
+@media (max-width: 767.5px) {
   section {
     padding-left: 5px;
     padding-right: 5px;
@@ -239,7 +176,7 @@ defineProps<{
     font-size: 24px;
   }
 
-  .gap-19 {
+  .gap-18 {
     gap: 45px;
   }
   .gap-15 {
@@ -285,8 +222,8 @@ defineProps<{
     height: 41px;
   }
 
-  .gap-19 {
-    gap: 38px;
+  .gap-18 {
+    gap: 34px;
   }
 
   .gap-5 {
@@ -312,7 +249,7 @@ defineProps<{
     padding-right: 0px;
   }
   .w-\[100px\] {
-    width: 64px;
+    width: 80px;
   }
 }
 @media (max-width: 479.5px) {
@@ -323,13 +260,16 @@ defineProps<{
   .w-\[100px\] {
     width: 64px;
   }
+  .gap-18 {
+    gap: 42px;
+  }
 }
 
 @media (max-width: 450px) {
   .gap-5 {
     gap: 1px;
   }
-  .gap-19 {
+  .gap-18 {
     gap: 30px;
   }
   .w-\[400px\] {
@@ -372,6 +312,3 @@ defineProps<{
   }
 }
 </style>
->>>>>>> develop
-
--->
