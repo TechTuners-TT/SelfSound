@@ -12,7 +12,8 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, Component } from "vue";
+import { defineComponent } from "vue";
+import type { Component } from "vue";
 import GoogleIcon from "../SVG/Authentication/Sign_Up_In_If_button_Google.vue";
 
 export default defineComponent({
