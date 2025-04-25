@@ -1,45 +1,84 @@
 <template>
-  <article
-    class="flex flex-col grow shrink justify-center items-center p-8 rounded-2xl border-4 border-white border-solid min-h-[286px] min-w-60 w-[570px] max-md:px-5 max-md:max-w-full"
-    :class="bgColor"
-  >
-    <div class="flex flex-col w-full max-w-[653px] max-md:max-w-full">
-      <div class="flex gap-10 items-center self-start text-4xl" v-if="hasIcon">
-        <img
-          v-if="iconSrc"
-          :src="iconSrc"
-          :alt="`${title} icon`"
-          class="object-contain overflow-hidden shrink-0 self-stretch my-auto aspect-square w-[70px]"
-        />
-        <h3 class="self-stretch my-auto">{{ title }}</h3>
+  <article class="card" :class="[bgColor, $attrs.class]">
+    <div class="card-content">
+      <div v-if="icon" class="card-header">
+        <component :is="icon" class="icon" :alt="`${title} icon`" />
+        <h3 class="title">{{ title }}</h3>
       </div>
-      <h3 v-else class="gap-10 self-start text-4xl max-md:max-w-full">
-        {{ title }}
-      </h3>
-      <p class="mt-10 text-2xl max-md:max-w-full">
-        <slot name="content"></slot>
+      <p class="content">
+        <slot name="content" />
       </p>
     </div>
   </article>
 </template>
 
-<script lang="ts" setup>
-defineProps({
-  title: {
-    type: String,
-    required: true,
-  },
-  iconSrc: {
-    type: String,
-    default: "",
-  },
-  bgColor: {
-    type: String,
-    default: "bg-slate-900",
-  },
-  hasIcon: {
-    type: Boolean,
-    default: true,
-  },
-});
+<script setup lang="ts">
+import { defineProps, type Component } from "vue";
+
+const props = defineProps<{
+  title: string;
+  bgColor?: string;
+  icon?: Component;
+}>();
+
+const { title, bgColor, icon } = props;
 </script>
+
+<style scoped>
+.card {
+  border: 4px solid white;
+  border-radius: 0.5rem;
+  padding: clamp(1rem, 2vw, 1.5rem);
+  height: auto;
+  min-height: 286px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  box-sizing: border-box;
+}
+
+.card-content {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 100%;
+}
+
+.card-header {
+  display: flex;
+  align-items: center;
+  gap: clamp(0.5rem, 1vw, 1rem);
+  margin-bottom: clamp(0.75rem, 2vh, 1.5rem);
+}
+
+.icon {
+  flex-shrink: 0;
+  width: clamp(2rem, 3vw, 3rem);
+  height: clamp(2rem, 3vw, 3rem);
+}
+
+.title {
+  font-family: "Oswald", sans-serif;
+  font-weight: 600;
+  font-size: clamp(1.25rem, 2vw + 0.5rem, 1.75rem);
+  line-height: 1.2;
+  margin: 0;
+  word-break: break-word;
+  flex: 1;
+}
+
+.content {
+  font-size: clamp(0.875rem, 1vw + 0.5rem, 1.125rem);
+  line-height: 1.5;
+  margin: 0;
+  overflow-wrap: break-word;
+  hyphens: auto;
+  max-width: 100%;
+
+  /* multi-line truncation */
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+
+  overflow: hidden;
+}
+</style>

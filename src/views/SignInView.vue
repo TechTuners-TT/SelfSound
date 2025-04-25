@@ -25,7 +25,6 @@
           v-model="password"
           :error="errors.password"
           placeholder="enter password"
-          
         />
 
         <LoginFormButton type="submit" marginClass="mb-4.5 , mt-7.5">
@@ -53,7 +52,7 @@
           <router-link
             to="/sign-up"
             @click.prevent="handleSignUp"
-            class="hover:text-gray-300"
+            class="hover:#6D01D0;"
             >Don't have a profile? Sign up here!</router-link
           >
         </p>
@@ -67,7 +66,7 @@ import { defineComponent, ref, reactive } from "vue";
 import LoginFormInput from "@/components/Authentication/LoginFormInput.vue";
 import LoginFormButton from "@/components/Authentication/LoginFormButton.vue";
 import LoginFormDivider from "@/components/Authentication/LoginFormDivider.vue";
-import GoogleIcon from "@/components/icons/GoogleIcon.vue";
+import GoogleIcon from "@/components/SVG/Authentication/Sign_Up_In_If_button_Google.vue";
 
 export default defineComponent({
   name: "LoginForm",

@@ -17,53 +17,43 @@ body {
   height: 100%;
 }
 
-
 @font-face {
-  font-family: 'Horizon';
-  src: url('@/assets/fonts/horizon.otf') format('opentype');
+  font-family: "Horizon";
+  src: url("@/assets/fonts/horizon.otf") format("opentype");
   font-weight: normal;
   font-style: normal;
 }
 
 .horizon-font {
-  font-family: 'Horizon', sans-serif;
+  font-family: "Horizon", sans-serif;
 }
 .bebas_neue-font {
-  font-family: 'Bebas Neue', sans-serif;
+  font-family: "Bebas Neue", sans-serif;
 }
 
-/*@import "./base.css";*/
-/**/
-/*#app {*/
-/*  max-width: 1280px;*/
-/*  margin: 0 auto;*/
-/*  padding: 2rem;*/
-/*  font-weight: normal;*/
-/*}*/
-/**/
-/*a,*/
-/*.green {*/
-/*  text-decoration: none;*/
-/*  color: hsla(160, 100%, 37%, 1);*/
-/*  transition: 0.4s;*/
-/*  padding: 3px;*/
-/*}*/
-/**/
-/*@media (hover: hover) {*/
-/*  a:hover {*/
-/*    background-color: hsla(160, 100%, 37%, 0.2);*/
-/*  }*/
-/*}*/
-/**/
-/*@media (min-width: 1024px) {*/
-/*  body {*/
-/*    display: flex;*/
-/*    place-items: center;*/
-/*  }*/
-/**/
-/*  #app {*/
-/*    display: grid;*/
-/*    grid-template-columns: 1fr 1fr;*/
-/*    padding: 0 2rem;*/
-/*  }*/
-/*}*/
+.oswald-font {
+  font-family: "Oswald", sans-serif;
+}
+
+@layer utilities {
+  .size-var {
+    --size: 20px;
+  }
+}
+@layer utilities {
+  @media (min-width: 1024px) {
+    .size-var {
+      --size: 24px;
+    }
+  }
+  @media (min-width: 1280px) {
+    .size-var {
+      --size: 30px;
+    }
+  }
+  @media (min-width: 1536px) {
+    .size-var {
+      --size: 30px;
+    }
+  }
+}
