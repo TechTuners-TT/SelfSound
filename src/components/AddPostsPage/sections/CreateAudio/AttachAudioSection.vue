@@ -5,7 +5,7 @@
       <h1
         class="2xl:text-[24px] xl:text-[20px] lg:text-[18px] text-[16px] font-bold text-white inter-font"
       >
-        Attach media files
+        Attach audio files
       </h1>
     </div>
 

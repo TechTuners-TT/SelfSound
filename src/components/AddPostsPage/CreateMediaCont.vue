@@ -15,12 +15,6 @@
       <section>
         <AtachMediaSection />
       </section>
-
-      <!-- Section 3 -->
-      <section></section>
-
-      <!-- Section 4 -->
-      <section></section>
     </div>
   </div>
 </template>
@@ -28,5 +22,4 @@
 <script setup lang="ts">
 import TitleSection from "./sections/CreateMedia/TitleSection.vue";
 import AtachMediaSection from "./sections/CreateMedia/AttachMediaSection.vue";
-// import PublishSection from "./sections/CreateMedia/PublishSection.vue";
 </script>
