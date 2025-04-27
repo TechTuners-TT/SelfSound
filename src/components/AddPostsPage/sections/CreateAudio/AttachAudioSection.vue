@@ -71,9 +71,9 @@
             </div>
 
             <!-- Назва пісні та автор -->
-            <div class="flex flex-col text-white text">
-              <p class="font-bold">{{ item.title }}</p>
-              <p class="text-sm">{{ item.artist }}</p>
+            <div class="flex flex-col text-white text w-2/3">
+              <p class="font-bold truncate max-w-xs">{{ item.title }}</p>
+              <p class="text-sm truncate max-w-xs">{{ item.artist }}</p>
             </div>
           </div>
         </div>

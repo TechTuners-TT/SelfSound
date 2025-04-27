@@ -22,16 +22,10 @@
     <!-- Кнопка додавання -->
     <button
       @click="triggerFileInput"
-      :disabled="
-        files.length >= 5 ||
-        files.reduce((total, item) => total + item.file.size, 0) >= 1024 * 1024
-      "
+      :disabled="false"
       :class="[
-        'w-full 2xl:h-[50px] h-[40px] 2xl:rounded-[10px] rounded-[5px] transition inter-font text-white font-bold text-xl flex items-center justify-center mb-6 ',
-        files.length >= 5 ||
-        files.reduce((total, item) => total + item.file.size, 0) >= 1024 * 1024
-          ? 'bg-white/5 cursor-not-allowed'
-          : 'bg-[#000C9C]/40 hover:bg-[#000C9C]/60',
+        'w-full 2xl:h-[50px] h-[40px] 2xl:rounded-[10px] rounded-[5px] transition inter-font text-white font-bold text-xl flex items-center justify-center mb-6',
+        'bg-[#000C9C]/40 hover:bg-[#000C9C]/60',
       ]"
     >
       <AddIcon
@@ -40,41 +34,49 @@
     </button>
 
     <!-- Прев’ю файлів -->
-    <div class="relative" v-for="(item, idx) in files" :key="idx">
-      <!-- Картка файлу -->
+    <div class="bg-[#000C9C]/40 pt-[30px] p-[20px] mb-6 rounded-[5px]">
       <div
-        class="p-[15px] pt-[20px] pb-[20px] hover:bg-[#6D01D0]/30 rounded-[5px] transition cursor-pointer"
+        class="relative bg-white/10 mb-[12px] rounded-[5px]"
+        v-for="(item, idx) in files"
+        :key="idx"
       >
-        <div class="flex items-left">
-          <div class="flex items-center gap-4">
-            <img
-              v-if="item.avatar"
-              :src="item.avatar"
-              alt="Avatar"
-              class="w-20 h-20 mr-[15px] rounded-full object-cover"
-              @error="item.avatar = null"
-            />
-            <div
-              v-else
-              class="mr-[15px] w-20 h-20 rounded-lg bg-gray-400 flex items-center justify-center text-white text-2xl"
-            >
-              +
+        <!-- Картка файлу -->
+        <div
+          class="p-[15px] pt-[20px] pb-[20px] rounded-[5px] transition cursor-pointer"
+        >
+          <div class="flex items-left">
+            <div class="flex items-center gap-4">
+              <img
+                v-if="item.avatar"
+                :src="item.avatar"
+                alt="Avatar"
+                class="w-10 h-10 mr-[15px] rounded-[3px] object-cover"
+                @error="item.avatar = null"
+              />
+              <div
+                v-else
+                class="mr-[15px] w-10 h-10 rounded-[3px] bg-[#6D01D0] flex items-center justify-center text-white text-2xl"
+              >
+                +
+              </div>
+            </div>
+
+            <div class="flex flex-col text-white w-2/3">
+              <p class="font-bold truncate max-w-xs">{{ item.title }}</p>
+              <!-- Додано w-full для обрізання -->
+              <p class="text-sm">{{ fileSizeInKB(item.file) }} KB</p>
             </div>
           </div>
-          <div class="flex flex-col text-white">
-            <p class="font-bold">{{ item.title }}</p>
-            <p class="text-sm">{{ item.artist }}</p>
-          </div>
         </div>
-      </div>
 
-      <!-- Кнопка для видалення файлу -->
-      <button
-        @click.stop="removeFile(idx)"
-        class="absolute top-[-10px] right-[-10px] text-white bg-black/60 hover:bg-black/80 rounded-full w-7 h-7 flex items-center justify-center"
-      >
-        ✖
-      </button>
+        <!-- Кнопка для видалення файлу -->
+        <button
+          @click.stop="removeFile(idx)"
+          class="absolute top-[-10px] right-[-10px] text-white bg-black/60 hover:bg-black/80 rounded-full w-7 h-7 flex items-center justify-center"
+        >
+          ✖
+        </button>
+      </div>
 
       <!-- Відображення використаного місця на диску -->
       <div class="text-xs text-white mt-2">
@@ -86,7 +88,7 @@
     <div class="flex justify-end mb-6">
       <button
         @click="submitPost"
-        :disabled="files.length === 0"
+        :disabled="getUsedMemoryInBytes() > 1024 * 1024"
         class="w-full xl:w-1/2 2xl:h-[50px] h-[40px] 2xl:rounded-[10px] rounded-[5px] transition font-bold text-xl flex items-center justify-center text-[#6D01D0] inter-font bg-[#6D01D0]/20 disabled:opacity-40 disabled:cursor-not-allowed 2xl:text-[24px] xl:text-[20px] lg:text-[18px] text-[16px]"
       >
         Publish
@@ -148,17 +150,21 @@ const handleFileChange = (event: Event) => {
           avatar: "path_to_avatar_image.jpg", // Можна замінити або згенерувати динамічно
         });
       } else {
-        alert("Будь ласка, завантажте тільки MusicXML файл");
+        alert("Please, upload MusicXML file");
       }
     }
   } else {
-    alert("Максимальний ліміт пам’яті 1MB!");
+    alert("Max limit of memmory is 1MB!");
   }
 };
 
 // Функція для отримання загальної зайнятої пам'яті (в байтах)
 const getUsedMemoryInBytes = () => {
   return files.value.reduce((acc, item) => acc + item.file.size, 0);
+};
+
+const fileSizeInKB = (file: File) => {
+  return (file.size / 1024).toFixed(2); // Переведення в КБ
 };
 
 // Функція для отримання відформатованого значення зайнятої пам'яті
@@ -172,13 +178,13 @@ const removeFile = (idx: number) => {
   files.value.splice(idx, 1);
 };
 
-// Відкрити MusicXML файл у новій вкладці
-const openFile = (fileUrl: string) => {
-  window.open(fileUrl, "_blank");
-};
-
 // Подача (поки що просто лог)
 const submitPost = () => {
   console.log("Submitting post with files:", files.value);
+};
+
+// Відкриття файлу при натисканні на елемент
+const openFile = (preview: string) => {
+  window.open(preview, "_blank"); // Відкриває файл в новій вкладці
 };
 </script>
