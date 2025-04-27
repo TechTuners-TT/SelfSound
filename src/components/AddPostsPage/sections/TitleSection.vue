@@ -5,12 +5,12 @@
       <!-- Контейнер для іконки з відступами, але без зміни її розміру -->
       <button class="2xl:mr-[40px] xl:mr-[30px] mr-[20px] p-0">
         <CloseIcon
-          class="2xl:w-[24px] 2xl:h-[24px] xl:w-[24px] xl:h-[24px] lg:w-[20px] lg:h-[20px] w-[16px] h-[16px]"
+          class="2xl:w-[24px] 2xl:h-[24px] xl:w-[20px] xl:h-[20px] lg:w-[18px] lg:h-[18px] w-[16px] h-[16px]"
         />
       </button>
       <!-- Заголовок -->
       <h1
-        class="2xl:text-[24px] xl:text-[24px] lg:text-[20px] text-[16px] font-bold text-white inter-font"
+        class="2xl:text-[24px] xl:text-[20px] lg:text-[18px] text-[16px] font-bold text-white inter-font"
       >
         Add new post
       </h1>
@@ -24,7 +24,7 @@
 </template>
 
 <script setup lang="ts">
-import CloseIcon from "../../../SVG/AddPosts_Icons/CloseIcon.vue";
+import CloseIcon from "../../SVG/AddPosts_Icons/CloseIcon.vue";
 </script>
 
 <style scoped>

@@ -3,7 +3,7 @@
     <!-- Заголовок -->
     <div class="flex items-center mb-6">
       <h1
-        class="2xl:text-[24px] xl:text-[24px] lg:text-[20px] text-[16px] font-bold text-white inter-font"
+        class="2xl:text-[24px] xl:text-[20px] lg:text-[18px] text-[16px] font-bold text-white inter-font"
       >
         Attach media files
       </h1>
@@ -24,13 +24,15 @@
       @click="triggerFileInput"
       :disabled="files.length >= 5"
       :class="[
-        'w-full h-[48px] rounded-[10px] transition inter-font text-white font-bold text-xl flex items-center justify-center mb-6',
+        'w-full 2xl:h-[50px] h-[40px] 2xl:rounded-[10px] rounded-[5px] transition inter-font text-white font-bold text-xl flex items-center justify-center mb-6 ',
         files.length >= 5
           ? 'bg-white/5 cursor-not-allowed'
           : 'bg-[#000C9C]/40 hover:bg-[#000C9C]/60',
       ]"
     >
-      +
+      <AddIcon
+        class="2xl:w-[24px] 2xl:h-[24px] xl:w-[20px] xl:h-[20px] lg:w-[18px] lg:h-[18px] w-[16px] h-[16px]"
+      />
     </button>
 
     <!-- Прев’ю файлів з підтримкою зуму -->
@@ -70,7 +72,7 @@
       <button
         @click="submitPost"
         :disabled="files.length === 0"
-        class="w-1/2 xl:w-1/3 h-[48px] rounded-[10px] transition font-bold text-xl flex items-center justify-center text-[#6D01D0] inter-font bg-[#6D01D0]/20 disabled:opacity-40 disabled:cursor-not-allowed"
+        class="w-full xl:w-1/2 2xl:h-[50px] h-[40px] 2xl:rounded-[10px] rounded-[5px] transition font-bold text-xl flex items-center justify-center text-[#6D01D0] inter-font bg-[#6D01D0]/20 disabled:opacity-40 disabled:cursor-not-allowed 2xl:text-[24px] xl:text-[20px] lg:text-[18px] text-[16px]"
       >
         Publish
       </button>
@@ -115,6 +117,8 @@
 </template>
 
 <script setup lang="ts">
+import AddIcon from "../../../SVG/AddPosts_Icons/AddIcon.vue";
+
 import { ref, onMounted, watch, nextTick } from "vue";
 import mediumZoom from "medium-zoom";
 import type { Zoom } from "medium-zoom";
