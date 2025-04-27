@@ -33,10 +33,10 @@
       class="flex gap-4 items-center justify-center sm:justify-start gap-15 w-full h-[54px]"
     >
       <button
-        class="cursor-pointer h-8 text-sm sm:text-base text-white rounded-xl border bg-slate-900 border border-[rgba(255,255,255,0.5)] w-[100px] text-[16px] inter-font"
+        class="cursor-pointer h-8 text-sm sm:text-base text-white rounded-[5px] w-[100px] text-[16px] inter-font"
         style="font-weight: 400; background-color: rgba(2, 3, 61, 1)"
       >
-        Add tag
+        {{ user.tag }}
       </button>
       <p
         class="grow shrink self-stretch my-auto w-[400px] biographyinput text-white text-[16px] inter-font"
@@ -55,6 +55,7 @@ defineProps<{
     login: string;
     avatarUrl: string;
     biography: string;
+    tag?: string | "add tag";
   };
 }>();
 </script>
