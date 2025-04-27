@@ -20,6 +20,6 @@
 </template>
 
 <script setup lang="ts">
-import TitleSection from "./sections/CreateAudio/TitleSection.vue";
+import TitleSection from "./sections/TitleSection.vue";
 import AttachAudioSection from "./sections/CreateAudio/AttachAudioSection.vue";
 </script>

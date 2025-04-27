@@ -20,6 +20,6 @@
 </template>
 
 <script setup lang="ts">
-import TitleSection from "./sections/CreateMedia/TitleSection.vue";
+import TitleSection from "./sections/TitleSection.vue";
 import AtachMediaSection from "./sections/CreateMedia/AttachMediaSection.vue";
 </script>

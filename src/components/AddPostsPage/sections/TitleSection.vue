@@ -24,7 +24,7 @@
 </template>
 
 <script setup lang="ts">
-import CloseIcon from "../../../SVG/AddPosts_Icons/CloseIcon.vue";
+import CloseIcon from "../../SVG/AddPosts_Icons/CloseIcon.vue";
 </script>
 
 <style scoped>
