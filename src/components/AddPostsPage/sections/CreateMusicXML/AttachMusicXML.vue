@@ -51,7 +51,7 @@
                 :src="item.avatar"
                 alt="Avatar"
                 class="w-10 h-10 mr-[15px] rounded-[3px] object-cover"
-                @error="item.avatar = null"
+                @error="item.avatar = ''"
               />
               <div
                 v-else

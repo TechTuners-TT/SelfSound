@@ -59,7 +59,7 @@
                 :src="item.avatar"
                 alt="Avatar"
                 class="w-20 h-20 mr-[15px] rounded-full object-cover"
-                @error="item.avatar = null"
+                @error="item.avatar = ''"
               />
               <!-- Якщо аватарка відсутня, відображається контейнер з текстом "+" -->
               <div
