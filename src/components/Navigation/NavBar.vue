@@ -1,9 +1,9 @@
 <template>
-  <div class="md:h-[0px] h-[80px]">
+  <div class="md:h-[0px] h-[50px]">
     <!-- Mobile top navigation - only visible on mobile -->
     <span class="hidden max-md:block">
       <nav
-        class="fixed top-0 left-0 w-full h-[80px] px-2 flex justify-between items-center bg-[#060310] z-30"
+        class="fixed top-0 left-0 w-full h-[50px] px-2 flex justify-between items-center bg-[#060310] z-30"
         style="background-color: rgba(6, 3, 16, 1)"
         @click="closeAddPost"
       >
@@ -56,7 +56,7 @@
           <NavIcon
             :svg="addPostIcon"
             :isActive="isAddPostOpen"
-            @click="openAddPost"
+            @click.stop="openAddPost"
           />
 
           <NavIcon :svg="notificationsIcon" />
@@ -93,9 +93,13 @@ import {
 } from "@/components/SVG/Nav_Bar_Icon/NavBarIcon";
 
 const isAddPostOpen = ref(false);
+
+// Функція для відкриття модального вікна
 const openAddPost = () => {
   isAddPostOpen.value = true;
 };
+
+// Функція для закриття модального вікна
 const closeAddPost = () => {
   isAddPostOpen.value = false;
 };

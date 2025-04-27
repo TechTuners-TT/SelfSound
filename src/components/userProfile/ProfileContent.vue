@@ -1,7 +1,7 @@
 <template>
   <section class="flex flex-col gap-15 max-w w-full mx-auto section_1">
     <button
-      class="cursor-pointer max-w-[540px] max-2xl:max-w-[460px] max-xl:max-w-[380px] max-lg:max-w-[300px] button_Edit w-full h-8 text-sm sm:text-base text-white rounded-xl shadow-sm border border-[rgba(255,255,255,0.5)] mx-auto block inter-font"
+      class="cursor-pointer max-w-[540px] max-2xl:max-w-[460px] max-xl:max-w-[380px] max-lg:max-w-[300px] button_Edit w-full h-8 text-sm sm:text-base text-white rounded-[5px] shadow-sm mx-auto block inter-font"
       style="background-color: rgba(2, 3, 61, 1); font-weight: 500"
       @click="isModalOpen = true"
     >
@@ -22,7 +22,7 @@
     @click.self="isModalOpen = false"
   >
     <div
-      class="rounded-xl relative pointer-events-auto shadow-xl w-[640px] bg-[#060310] border border-[rgba(255,255,255,0.5)] rounded-xl max-md:px-4 max-sm:px-2"
+      class="rounded-xl relative pointer-events-auto shadow-[10px] w-[640px] bg-[#060310] border border-[rgba(255,255,255,0.5)] rounded-xl max-md:px-4 max-sm:px-2"
     >
       <img
         :src="user.avatarUrl"
@@ -42,7 +42,7 @@
             Name:
           </div>
           <div
-            class="h-[20px] w-[400px] rounded-md border border-[rgba(255,255,255,0.2)] bg-[#04020B] flex items-center"
+            class="h-[20px] w-[400px] rounded-[5px] border border-[rgba(255,255,255,0.2)] bg-[#04020B] flex items-center"
           >
             <input
               v-model="formData.name"
@@ -65,7 +65,7 @@
             Login:
           </div>
           <div
-            class="h-[20px] w-[400px] w-full rounded-md border border-[rgba(255,255,255,0.2)] bg-[#04020B] flex items-center"
+            class="h-[20px] w-[400px] w-full rounded-[5px] border border-[rgba(255,255,255,0.2)] bg-[#04020B] flex items-center"
           >
             <input
               v-model="formData.login"
@@ -88,7 +88,7 @@
             Biography:
           </div>
           <div
-            class="flex-1 h-[54px] w-[400px] rounded-md border border-[rgba(255,255,255,0.2)] bg-[#04020B] max-md:h-[38px] flex items-center"
+            class="flex-1 h-[54px] w-[400px] rounded-[5px] border border-[rgba(255,255,255,0.2)] bg-[#04020B] max-md:h-[38px] flex items-center"
           >
             <textarea
               v-model="formData.biography"
@@ -114,10 +114,10 @@
           <div class="flex gap-[20px] w-[400px] max-md:w-full flex-nowrap">
             <div
               :class="[
-                'w-[100px] h-[32px] leading-[32px] py-0 px-0 rounded-xl border  inter-font text-black bg-[#FFFFFF] border-opacity-50 cursor-pointer text-center select-none tag_type',
+                'w-[100px] h-[32px] leading-[32px] py-0 px-0 rounded-[5px]   inter-font text-black bg-[#FFFFFF]  cursor-pointer text-center select-none tag_type',
                 formData.selectedTag === 'listener'
-                  ? 'border-2  border-red-500/50'
-                  : 'border-white  border-opacity-50',
+                  ? 'border border-2  border-red-500/50 border-opacity-50'
+                  : '',
                 'max-md:w-[80px] max-md:h-[30px] max-md:text-xs',
               ]"
               @click="selectTag('listener')"
@@ -126,10 +126,10 @@
             </div>
             <div
               :class="[
-                'w-[100px] h-[32px] leading-[32px] py-0 px-0 rounded-xl border inter-font  border-opacity-50 cursor-pointer text-center text-white bg-[#6D01D0] select-none tag_type',
+                'w-[100px] h-[32px] leading-[32px] py-0 px-0 rounded-[5px]  inter-font   cursor-pointer text-center text-white bg-[#6D01D0] select-none tag_type',
                 formData.selectedTag === 'musician'
-                  ? 'border-2  border-red-500/50'
-                  : 'border-white  border-opacity-50',
+                  ? 'border border-2  border-red-500/50 border-opacity-50'
+                  : '',
                 'max-md:w-[80px] max-md:h-[30px] max-md:text-xs',
               ]"
               @click="selectTag('musician')"
@@ -138,10 +138,10 @@
             </div>
             <div
               :class="[
-                'w-[100px] h-[32px] leading-[32px] py-0 px-0 rounded-xl border inter-font border-opacity-50 cursor-pointer  text-center bg-[#000C9C]  text-white  select-none tag_type',
+                'w-[100px] h-[32px] leading-[32px] py-0 px-0 rounded-[5px]  inter-font  cursor-pointer  text-center bg-[#000C9C]  text-white  select-none tag_type',
                 formData.selectedTag === 'learner'
-                  ? 'border-2  border-red-500/50'
-                  : 'border-white  border-opacity-50',
+                  ? 'border border-2  border-red-500/50 border-opacity-50'
+                  : '',
                 'max-md:w-[80px] max-md:h-[30px] max-md:text-xs',
               ]"
               @click="selectTag('learner')"
@@ -153,7 +153,7 @@
 
         <!-- Save Button -->
         <div
-          class="self-end mb-[45px] font-bold cursor-pointer text-white hover:text-[#6D01D0] max-md:self-center"
+          class="self-end mb-[45px] font-bold cursor-pointer text-white hover:text-[#6D01D0] max-md:mr-[30px]"
           @click="saveChanges"
         >
           Save changes
@@ -170,7 +170,7 @@ interface FormData {
   name: string;
   login: string;
   biography: string;
-  selectedTag: string | null;
+  selectedTag: string | "Add tag";
 }
 
 export default defineComponent({
@@ -181,7 +181,7 @@ export default defineComponent({
         login: string;
         avatarUrl: string;
         biography: string;
-        tag?: string | null;
+        tag?: string | "Add tag";
       },
       required: true,
     },
@@ -196,7 +196,7 @@ export default defineComponent({
       name: props.user.name,
       login: props.user.login,
       biography: props.user.biography,
-      selectedTag: props.user.tag || null,
+      selectedTag: props.user.tag || "Add tag",
     });
     const onLoginInput = (event: Event) => {
       const input = event.target as HTMLInputElement;
@@ -205,7 +205,7 @@ export default defineComponent({
     };
 
     const selectTag = (tag: string) => {
-      formData.selectedTag = formData.selectedTag === tag ? null : tag;
+      formData.selectedTag = formData.selectedTag === tag ? "Add tag" : tag;
     };
 
     const saveChanges = () => {
@@ -225,7 +225,7 @@ export default defineComponent({
         formData.name = newUser.name;
         formData.login = newUser.login;
         formData.biography = newUser.biography;
-        formData.selectedTag = newUser.tag || null;
+        formData.selectedTag = newUser.tag || "Add tag";
       },
       { deep: true },
     );

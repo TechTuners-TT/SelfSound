@@ -1,5 +1,5 @@
 <template>
-  <!-- Виключаємо min-h-screen, використовуємо h-full, щоб зайняв доступну висоту -->
+  <!-- Виключаємо min-h-screen, використовуємо h-full, щоб зайняв доступну висоту  [@media(min-width:1537px)]:mx-25 xl:mx-[70px] lg:mx-[60px] md:mx-[60px] sm:mx-[0px]-->
   <div class="relative flex items-start justify-center w-full h-full">
     <!-- Забираємо h-full / max-h-screen із внутрішнього контейнера або замінюємо їх на max-h-full -->
 

@@ -5,7 +5,7 @@
   >
     <section class="w-full max-w-sm">
       <header class="mb-6.5 text-2xl font-bold text-center text-white">
-        <h1>Log in to your Profile</h1>
+        <h1>Log in</h1>
       </header>
 
       <form @submit.prevent="handleSubmit">

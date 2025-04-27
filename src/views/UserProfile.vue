@@ -14,7 +14,7 @@
         style="background-color: rgba(6, 3, 16, 1)"
       >
         <div
-          class="items-center gap-10 flex flex-col h-full [@media(min-width:1537px)]:pt-16.25 xl:pt-14.25 lg:pt-12.25 md:pt-10.25 max-md:pt-22.25 mx-auto w-full max-w-[640px] sm:w-[320px] md:w-[400px] lg:w-[480px] xl:w-[560px] 2xl:w-[640px]"
+          class="items-center gap-10 flex flex-col h-full [@media(min-width:1537px)]:pt-16.25 xl:pt-14.25 lg:pt-12.25 md:pt-10.25 max-md:pt-15 mx-auto w-full max-w-[640px] sm:w-[320px] md:w-[400px] lg:w-[480px] xl:w-[560px] 2xl:w-[640px]"
           style="background-color: rgba(0, 0, 0, 0.3)"
         >
           <ProfileHeader :user="user" />
@@ -40,7 +40,7 @@ interface User {
   login: string;
   avatarUrl: string;
   biography: string;
-  tag?: string | null;
+  tag?: string | "add tag";
 }
 
 interface Stats {
@@ -55,6 +55,7 @@ const user = reactive<User>({
   avatarUrl:
     "https://cdn.builder.io/api/v1/image/assets/TEMP/3922534bd59dfe0deae8bd149c0b3cba46e3eb47?placeholderIfAbsent=true&apiKey=04fef95365634cc5973c2029f1fc78f5",
   biography: "Lorem ipsum dolor sit amet,consectetur adipiscing",
+  tag: "Add tag",
 });
 
 const stats = reactive<Stats>({
@@ -102,7 +103,7 @@ watch(
     formData.name = newUser.name || "";
     formData.login = newUser.login || "";
     formData.biography = newUser.biography || "";
-    formData.selectedTag = newUser.tag || null;
+    formData.selectedTag = newUser.tag || "Add tag";
   },
   { deep: true },
 );
