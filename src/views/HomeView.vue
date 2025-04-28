@@ -6,10 +6,9 @@
       <!-- MAIN CONTENT -->
 
       <!-- Nav Bar -->
-
+      <NavBar />
       <!--  Content -->
       <div class="flex-grow max-h-full">
-        <NavBar />
         <!-- Виключаємо min-h-screen, використовуємо h-full, щоб зайняв доступну висоту    [@media(min-width:1537px)]:pl-25 [@media(min-width:1537px)]:pr-25 xl:mr-[70px] xl:ml-[70px] lg:ml-[60px] lg:mr-[60px] md:ml-[60px] md:mr-[60px] sm:ml-[0px] sm:mr-[0px]-->
         <div class="relative flex items-start justify-center w-full h-full">
           <!-- Забираємо h-full / max-h-screen із внутрішнього контейнера або замінюємо їх на max-h-full -->

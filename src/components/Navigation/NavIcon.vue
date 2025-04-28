@@ -1,3 +1,5 @@
+<!--
+
 <template>
   <button
     class="nav-button flex items-center justify-center w-full hover:scale-110"
@@ -115,7 +117,9 @@ onMounted(() => {
 }
 </style>
 
-<!-- 
+-->
+
+<!--
 
 <template>
   <button
@@ -194,5 +198,36 @@ onMounted(() => {
 }
 </style>
 
+-->
 
- -->
+<template>
+  <button
+    class="nav-button flex items-center justify-center w-full hover:scale-110"
+    ref="button"
+  >
+    <span ref="iconContainer" v-html="svg"></span>
+  </button>
+</template>
+
+<script setup lang="ts">
+import { onMounted, ref } from "vue";
+
+interface Props {
+  svg: string;
+}
+
+const props = defineProps<Props>();
+</script>
+
+<style scoped>
+.nav-button {
+  background: transparent;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto;
+}
+</style>
