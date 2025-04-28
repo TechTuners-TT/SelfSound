@@ -1,11 +1,10 @@
 <template>
-  <div class="md:h-[0px] h-[50px]">
+  <div class="md:h-[0px] h-[50px] z-[9999]">
     <!-- Mobile top navigation - only visible on mobile -->
     <span class="hidden max-md:block">
       <nav
         class="fixed top-0 left-0 w-full h-[50px] px-2 flex justify-between items-center bg-[#060310] z-30"
         style="background-color: rgba(6, 3, 16, 1)"
-        @click="closeAddPost"
       >
         <!-- Centered Header containing the 'S' -->
         <header
@@ -53,11 +52,24 @@
           <a href="#home">
             <NavIcon :svg="homeIcon" />
           </a>
+          <!--
           <NavIcon
             :svg="addPostIcon"
             :isActive="isAddPostOpen"
-            @click.stop="openAddPost"
+            @click="openAddPost"
           />
+-->
+          <!-- Add post button -->
+
+          <button
+            :class="[
+              'nav-button flex items-center justify-center w-full hover:scale-110',
+              isAddPostOpen ? 'bg-red-500' : 'bg-white',
+            ]"
+            @click="openAddPost"
+          >
+            +
+          </button>
 
           <NavIcon :svg="notificationsIcon" />
           <a href="#profile">
@@ -69,7 +81,9 @@
           class="mb-0 max-md:order-3 max-md:absolute max-md:bottom-3 max-md:right-4"
         >
           <span class="hidden max-md:block"></span>
-          <span class="max-md:hidden"><NavIcon :svg="settingsIcon" /></span>
+          <span class="max-md:hidden">
+            <a href="#settings"><NavIcon :svg="settingsIcon" /> </a
+          ></span>
         </div>
       </div>
     </nav>
@@ -92,11 +106,11 @@ import {
   settingsIcon,
 } from "@/components/SVG/Nav_Bar_Icon/NavBarIcon";
 
-const isAddPostOpen = ref(false);
+const isAddPostOpen = ref(true);
 
 // Функція для відкриття модального вікна
 const openAddPost = () => {
-  isAddPostOpen.value = true;
+  isAddPostOpen.value = !isAddPostOpen.value;
 };
 
 // Функція для закриття модального вікна
