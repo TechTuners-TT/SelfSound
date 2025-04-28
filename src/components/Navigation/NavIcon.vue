@@ -203,7 +203,6 @@ onMounted(() => {
 <template>
   <button
     class="nav-button flex items-center justify-center w-full hover:scale-110"
-    @click="handleClick"
     ref="button"
   >
     <span ref="iconContainer" v-html="svg"></span>
