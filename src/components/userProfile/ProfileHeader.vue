@@ -10,7 +10,7 @@
           class="rounded-full w-full h-full"
         />
         <div
-          class="absolute inset-0 rounded-full border border-white border-opacity-50"
+          class="absolute inset-0 rounded-full border border-[rgba(255,255,255,0.5)]"
         ></div>
       </div>
       <div class="flex flex-col gap-2.5 text-center text-left">

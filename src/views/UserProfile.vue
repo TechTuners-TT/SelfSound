@@ -67,7 +67,7 @@ const stats = reactive<Stats>({
 const formData = reactive({
   name: user.name,
   login: user.login,
-
+  avatarUrl: user.avatarUrl,
   biography: user.biography,
   selectedTag: user.tag || null,
 });
@@ -79,6 +79,7 @@ const updateUser = (updatedUser: User) => {
   user.login = updatedUser.login;
   user.biography = updatedUser.biography;
   user.tag = updatedUser.tag;
+  user.avatarUrl = updatedUser.avatarUrl;
 };
 
 const isModalOpen = ref(false);
@@ -94,6 +95,7 @@ const saveChanges = () => {
     login: formData.login,
     biography: formData.biography,
     tag: formData.selectedTag,
+    avatarUrl: formData.avatarUrl,
   });
   isModalOpen.value = false;
 };
@@ -105,6 +107,7 @@ watch(
     formData.login = newUser.login || "";
     formData.biography = newUser.biography || "";
     formData.selectedTag = newUser.tag || "Add tag";
+    formData.avatarUrl = newUser.avatarUrl || "";
   },
   { deep: true },
 );

@@ -25,9 +25,18 @@
       class="rounded-xl relative pointer-events-auto shadow-[10px] w-[640px] bg-[#060310] border border-[rgba(255,255,255,0.5)] rounded-xl max-md:px-4 max-sm:px-2"
     >
       <img
-        :src="user.avatarUrl"
-        :alt="user.name"
-        class="object-contain self-center max-w-full aspect-square w-[100px] h-[100px] rounded-full mx-auto [@media(min-width:1536px)]:mt-11.25 max-md:w-[80px] max-md:h-[80px] max-sm:w-[64px] max-sm:h-[64px] max-2xl:mt-10 max-xl:mt-8 max-lg:mt-7 max-md:mt-6"
+        :src="formData.avatarUrl"
+        :alt="formData.name"
+        @click="triggerFileInput"
+        class="object-contain self-center max-w-full aspect-square w-[100px] h-[100px] border rounded-full mx-auto [@media(min-width:1536px)]:mt-11.25 max-md:w-[80px] max-md:h-[80px] max-sm:w-[64px] max-sm:h-[64px] max-2xl:mt-10 max-xl:mt-8 max-lg:mt-7 max-md:mt-6"
+      />
+      <!-- Схований input для вибору зображення -->
+      <input
+        type="file"
+        ref="fileInput"
+        @change="handleFileChange"
+        accept="image/*"
+        class="hidden"
       />
 
       <div class="flex flex-col px-[50px] mt-9.25 w-full max-md:mt-6">
@@ -170,6 +179,7 @@ interface FormData {
   name: string;
   login: string;
   biography: string;
+  avatarUrl: string;
   selectedTag: string | "Add tag";
 }
 
@@ -181,31 +191,43 @@ export default defineComponent({
         login: string;
         avatarUrl: string;
         biography: string;
-        tag?: string | "Add tag";
+        tag?: string;
       },
       required: true,
     },
   },
   setup(props, { emit }) {
     const isModalOpen = ref(false);
-    //    const closeModal = () => {
-    //      isModalOpen.value = false;
-    //    };
 
     const formData = reactive<FormData>({
       name: props.user.name,
       login: props.user.login,
+      avatarUrl: props.user.avatarUrl,
       biography: props.user.biography,
       selectedTag: props.user.tag || "Add tag",
     });
+
     const onLoginInput = (event: Event) => {
       const input = event.target as HTMLInputElement;
-      // Видаляє пробіли, крапки та @
-      formData.login = input.value.replace(/@/g, "");
+      formData.login = input.value.replace(/[@\s.]/g, "");
     };
 
     const selectTag = (tag: string) => {
       formData.selectedTag = formData.selectedTag === tag ? "Add tag" : tag;
+    };
+
+    const fileInput = ref<HTMLInputElement | null>(null);
+
+    const triggerFileInput = () => {
+      fileInput.value?.click();
+    };
+
+    const handleFileChange = (event: Event) => {
+      const target = event.target as HTMLInputElement;
+      const file = target.files?.[0];
+      if (file) {
+        formData.avatarUrl = URL.createObjectURL(file);
+      }
     };
 
     const saveChanges = () => {
@@ -214,7 +236,7 @@ export default defineComponent({
         login: formData.login,
         biography: formData.biography,
         tag: formData.selectedTag,
-        avatarUrl: props.user.avatarUrl,
+        avatarUrl: formData.avatarUrl,
       });
       isModalOpen.value = false;
     };
@@ -225,12 +247,21 @@ export default defineComponent({
         formData.name = newUser.name;
         formData.login = newUser.login;
         formData.biography = newUser.biography;
+        formData.avatarUrl = newUser.avatarUrl;
         formData.selectedTag = newUser.tag || "Add tag";
       },
-      { deep: true },
     );
 
-    return { formData, isModalOpen, selectTag, saveChanges, onLoginInput };
+    return {
+      isModalOpen,
+      formData,
+      onLoginInput,
+      selectTag,
+      fileInput,
+      triggerFileInput,
+      handleFileChange,
+      saveChanges,
+    };
   },
 });
 </script>
