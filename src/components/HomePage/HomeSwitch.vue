@@ -6,7 +6,7 @@
       <h1
         class="2xl:text-[24px] xl:text-[24px] lg:text-[20px] md:text-[16px] text-[14px] font-semibold text-white inter-font"
         :class="['tab', activeTab === 'forYou' ? 'active' : '']"
-        @click="activeTab = 'forYou'"
+        @click="$emit('update:activeTab', 'forYou')"
       >
         For you
       </h1>
@@ -19,7 +19,7 @@
       <h1
         class="2xl:text-[24px] xl:text-[24px] lg:text-[20px] md:text-[16px] text-[14px] font-semibold text-white inter-font"
         :class="['tab', activeTab === 'listened' ? 'active' : '']"
-        @click="activeTab = 'listened'"
+        @click="$emit('update:activeTab', 'listened')"
       >
         Listened to
       </h1>
@@ -28,9 +28,8 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from "vue";
-
-const activeTab = ref("forYou"); // Спочатку активна вкладка "For you"
+defineProps<{ activeTab: string }>();
+defineEmits(["update:activeTab"]);
 </script>
 
 <style scoped>
