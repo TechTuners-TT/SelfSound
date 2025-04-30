@@ -18,11 +18,15 @@
           >
             <!-- Section 1 -->
             <section>
-              <HomeSwitch />
+              <HomeSwitch
+                :activeTab="activeTab"
+                @update:activeTab="activeTab = $event"
+              />
             </section>
             <!-- Section 2 -->
             <section>
-              <HomePostsee />
+              <HomePostsee v-if="activeTab === 'forYou'" />
+              <HomeListenedTo v-else />
             </section>
           </div>
         </div>
@@ -36,4 +40,7 @@
 import NavBar from "../components/Navigation/NavBar.vue";
 import HomeSwitch from "@/components/HomePage/HomeSwitch.vue";
 import HomePostsee from "@/components/HomePage/HomePostsee.vue";
+import HomeListenedTo from "@/components/HomePage/HomeListenedTo.vue";
+import { ref } from "vue";
+const activeTab = ref("forYou"); // Спочатку активна вкладка "For you"
 </script>

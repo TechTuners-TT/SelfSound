@@ -1,6 +1,6 @@
 <template>
   <div class="flex items-center justify-center mx-[14px] test">
-    <h1 class="text-white">For you</h1>
+    <h1 class="text-white">Listened to</h1>
   </div>
 </template>
 
@@ -11,6 +11,6 @@
   font-family: "Inter", sans-serif;
 }
 .test {
-  background-color: rgb(52, 67, 201);
+  background-color: rgb(60, 177, 127);
 }
 </style>

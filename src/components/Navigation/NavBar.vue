@@ -17,9 +17,12 @@
         <div
           class="max-md:order-3 max-md:absolute max-md:top-1/2 max-md:right-4 transform max-md:-translate-y-1/2"
         >
-          <a href="#settings">
+          <a href="#settings" @click="setPage('settings')">
             <span class="hidden max-md:block">
-              <NavIcon :svg="settingsIcon" />
+              <NavIcon
+                :svg="settingsIcon"
+                :isActive="currentPage === 'settings'"
+              />
             </span>
           </a>
         </div>
@@ -48,9 +51,12 @@
         <section
           class="flex flex-col gap-[30px] items-center max-md:flex-row max-md:absolute max-md:bottom-3 max-md:left-1/2 max-md:-translate-x-1/2 max-md:order-2"
         >
-          <NavIcon :svg="searchIcon" />
-          <a href="#home">
-            <NavIcon :svg="homeIcon" />
+          <a href="#search" @click="setPage('search')">
+            <NavIcon :svg="searchIcon" :isActive="currentPage === 'search'" />
+          </a>
+
+          <a href="#home" @click="setPage('home')">
+            <NavIcon :svg="homeIcon" :isActive="currentPage === 'home'" />
           </a>
           <!--
           <NavIcon
@@ -63,17 +69,23 @@
 
           <button
             :class="[
-              'nav-button flex items-center justify-center w-full hover:scale-110',
-              isAddPostOpen ? 'bg-red-500' : 'bg-white',
+              'nav-button flex items-center justify-center w-full hover:scale-110 border rounded-[5px]',
+              isAddPostOpen ? 'bg-[#000C9C] ' : 'bg-[#6D01D0]',
             ]"
             @click="openAddPost"
           >
-            +
+            <NavIcon :svg="addPostIcon" />
           </button>
 
-          <NavIcon :svg="notificationsIcon" />
-          <a href="#profile">
-            <NavIcon :svg="profileIcon" />
+          <a href="#notifications" @click="setPage('notifications')">
+            <NavIcon
+              :svg="notificationsIcon"
+              :isActive="currentPage === 'notifications'"
+            />
+          </a>
+
+          <a href="#profile" @click="setPage('profile')">
+            <NavIcon :svg="profileIcon" :isActive="currentPage === 'profile'" />
           </a>
         </section>
 
@@ -82,7 +94,11 @@
         >
           <span class="hidden max-md:block"></span>
           <span class="max-md:hidden">
-            <a href="#settings"><NavIcon :svg="settingsIcon" /> </a
+            <a href="#settings" @click="setPage('settings')"
+              ><NavIcon
+                :svg="settingsIcon"
+                :isActive="currentPage === 'settings'"
+              /> </a
           ></span>
         </div>
       </div>
@@ -106,7 +122,12 @@ import {
   settingsIcon,
 } from "@/components/SVG/Nav_Bar_Icon/NavBarIcon";
 
-const isAddPostOpen = ref(true);
+const isAddPostOpen = ref(false); // Стан для контролю відкриття/закриття модального вікна
+
+const currentPage = ref("");
+const setPage = (page: string) => {
+  currentPage.value = page;
+};
 
 // Функція для відкриття модального вікна
 const openAddPost = () => {
@@ -149,4 +170,3 @@ const closeAddPost = () => {
   }
 }
 </style>
-<style scoped></style>

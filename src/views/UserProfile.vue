@@ -67,6 +67,7 @@ const stats = reactive<Stats>({
 const formData = reactive({
   name: user.name,
   login: user.login,
+
   biography: user.biography,
   selectedTag: user.tag || null,
 });
