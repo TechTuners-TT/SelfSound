@@ -65,7 +65,7 @@
     </div>
 
     <section
-      class="flex gap-[20px] sm:gap-[40px] md:gap-[30px] lg:gap-[40px] xl:gap-[20px] 2xl:gap-[45px] mb-1.25 inter-font font-medium h-[12px] justify-end"
+      class="flex gap-[20px] sm:gap-[40px] md:gap-[30px] lg:gap-[40px] xl:gap-[20px] 2xl:gap-[40px] mb-1.25 inter-font font-medium h-[12px] justify-end"
     >
       <p
         class="font-medium text-white inter-font text-[10px] sm:text-[9px] md:text-[10px] xl:text-[11px] 2xl:text-[12px] h-[12px]"
