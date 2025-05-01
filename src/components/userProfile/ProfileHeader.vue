@@ -1,51 +1,93 @@
 <template>
-  <section class="w-full">
-    <div class="flex gap-18">
-      <div
-        class="relative w-[84px] h-[84px] max-sm:w-[60px] max-sm:h-[60px] sm:w-[64px] sm:h-[64px] md:w-[68px] md:h-[68px] lg:w-[72px] lg:h-[72px] xl:w-[84px] xl:h-[84px]"
-      >
-        <img
-          :src="user.avatarUrl"
-          :alt="user.name"
-          class="rounded-full w-full h-full"
-        />
-        <div
-          class="absolute inset-0 rounded-full border border-white border-opacity-50"
-        ></div>
-      </div>
-      <div class="flex flex-col gap-2.5 text-center text-left">
-        <p
-          class="font-bold text-white w-full h-[30px] text-[30px] inter-font"
-          style="font-weight: 700"
-        >
-          {{ user.name }}
-        </p>
-        <p
-          class="text-base font-medium text-white w-full w-full h-[12px] text-[16px] inter-font"
-          style="font-weight: 500"
-        >
-          {{ user.login }}
-        </p>
-      </div>
-    </div>
-
+  <div
+    class="flex gap-10 iteam-centere mt-10 sm:gap-15 md:gap-[46px] lg:gap-[76px] xl:gap-[56px] 2xl:gap-[76px]"
+  >
     <div
-      class="flex gap-4 items-center justify-center sm:justify-start gap-15 w-full h-[54px]"
+      class="relative w-[84px] h-[84px] max-sm:w-[60px] max-sm:h-[60px] sm:w-[64px] sm:h-[64px] md:w-[68px] md:h-[68px] lg:w-[72px] lg:h-[72px] xl:w-[84px] xl:h-[84px]"
     >
-      <button
-        class="cursor-pointer h-8 text-sm sm:text-base text-white rounded-[5px] w-[100px] text-[16px] inter-font"
+      <img
+        :src="user.avatarUrl"
+        :alt="user.name"
+        class="rounded-full w-full h-full"
+      />
+      <div
+        class="absolute inset-0 rounded-full border border-[rgba(255,255,255,0.5)]"
+      ></div>
+    </div>
+    <div class="flex flex-col gap-1 sm:gap-2.5 text-left">
+      <p
+        class="font-bold text-white h-[24px] sm:h-[30px] text-[20px] sm:text-[24px] xl:text-[22px] 2xl:text-[30px] inter-font"
+        style="font-weight: 700"
+      >
+        {{ user.name }}
+      </p>
+      <p
+        class="text-base font-medium text-white h-[12px] text-[13px] sm:text-[14px] md:text-[14px] xl:text-[15px] 2xl:text-[16px] inter-font"
+        style="font-weight: 500"
+      >
+        {{ user.login }}
+      </p>
+    </div>
+  </div>
+
+  <div
+    class="flex items-center gap-6.5 h-[54px] sm:gap-12.5 md:gap-[40px] lg:gap-[60px] xl:gap-[50px] 2xl:gap-[60px]"
+  >
+    <div
+      class="flex-shrink-0 min-w-[60px] max-w-[100px] w-[100px] 2xl:w-[100px] xl:w-[90px] lg:w-[88px] md:w-[74px] sm:w-[74px] max-sm:w-[74px]"
+    >
+      <div
+        class="h-[26px] w-full sm:h-[32px] text-sm sm:text-base text-white rounded-[5px] text-[16px] inter-font flex items-center justify-center"
         style="font-weight: 400; background-color: rgba(2, 3, 61, 1)"
       >
         {{ user.tag }}
-      </button>
-      <p
-        class="grow shrink self-stretch my-auto w-[400px] biographyinput text-white text-[16px] inter-font"
-        style="font-weight: 400; line-height: 1.125"
-      >
-        {{ user.biography }}
-      </p>
+      </div>
     </div>
-  </section>
+
+    <p
+      class="grow m-auto text-white text-[12px] sm:text-[13px] md:text-[14px] xl:text-[15px] 2xl:text-[16px] inter-font biographyinput"
+      style="font-weight: 400; line-height: 1.125"
+    >
+      {{ user.biography }}
+    </p>
+  </div>
+
+  <div
+    class="flex items-center h-[12px] mt-5 sm:mt-5 md:mt-10 lg:mt-5 xl:mt-10 gap-6.5 sm:gap-12.5 md:gap-[40px] lg:gap-[60px] xl:gap-[50px] 2xl:gap-[60px]"
+  >
+    <div
+      class="flex-shrink-0 min-w-[60px] max-w-[100px] w-[100px] 2xl:w-[100px] xl:w-[90px] lg:w-[88px] md:w-[74px] sm:w-[74px] max-sm:w-[74px]"
+    >
+      <div
+        class="h-[26px] w-full sm:h-[32px] text-sm sm:text-base text-white rounded-[5px] text-[16px] inter-font flex items-center justify-center"
+        style="font-weight: 400"
+      ></div>
+    </div>
+
+    <section
+      class="flex gap-[20px] sm:gap-[40px] md:gap-[30px] lg:gap-[40px] xl:gap-[20px] 2xl:gap-[45px] mb-1.25 inter-font font-medium h-[12px] justify-end"
+    >
+      <p
+        class="font-medium text-white inter-font text-[10px] sm:text-[9px] md:text-[10px] xl:text-[11px] 2xl:text-[12px] h-[12px]"
+        style="font-weight: 500"
+      >
+        {{ stats.posts }} posts
+      </p>
+      <p
+        class="font-medium text-white inter-font text-[10px] sm:text-[10px] md:text-[10px] xl:text-[11px] 2xl:text-[12px] h-[12px]"
+        style="font-weight: 500"
+      >
+        Listeners: {{ stats.listeners }}
+      </p>
+      <p
+        class="font-medium text-white inter-font text-[10px] sm:text-[10px] md:text-[10px] xl:text-[11px] 2xl:text-[12px] h-[12px]"
+        style="font-weight: 500"
+      >
+        Listened to: {{ stats.listenedTo }}
+      </p>
+    </section>
+  </div>
+  <!-- Статистика (після біографії) -->
 </template>
 
 <script setup lang="ts">
@@ -57,259 +99,15 @@ defineProps<{
     biography: string;
     tag?: string | "add tag";
   };
+  stats: {
+    posts: number;
+    listeners: number;
+    listenedTo: number;
+  };
 }>();
 </script>
 <style scoped>
 .inter-font {
   font-family: "Inter", sans-serif;
-}
-
-@media (max-width: 1536px) {
-  .gap-5 {
-    gap: 18px;
-  }
-  .gap-18 {
-    gap: 50px;
-  }
-  .gap-15 {
-    gap: 52px;
-  }
-  .text-\[30px\] {
-    font-size: 28px;
-  }
-  .text-\[16px\] {
-    font-size: 15px;
-  }
-  .h-8 {
-    height: 32px;
-  }
-  .h-\[54px\] {
-    height: 50px;
-  }
-}
-
-@media (max-width: 1279.5px) {
-  .gap-5 {
-    gap: 8px;
-  }
-  .gap-18 {
-    gap: 41.5px;
-  }
-  .gap-15 {
-    gap: 45px;
-  }
-  .text-\[30px\] {
-    font-size: 24px;
-  }
-  .text-\[16px\] {
-    font-size: 14px;
-  }
-  .h-8 {
-    height: 30px;
-  }
-  .h-\[54px\] {
-    height: 48px;
-  }
-}
-
-@media (max-width: 1023.5px) {
-  .gap-5 {
-    gap: 6px;
-  }
-
-  .w-\[560px\] {
-    width: 350px;
-  }
-
-  .gap-18 {
-    gap: 53px;
-  }
-  .gap-15 {
-    gap: 52px;
-  }
-  .w-\[100px\] {
-    width: 149.5px;
-  }
-  .h-\[54px\] {
-    height: 46px;
-  }
-
-  .text-\[30px\] {
-    font-size: 20px;
-  }
-  .text-\[16px\] {
-    font-size: 13px;
-  }
-  .h-8 {
-    height: 30px;
-  }
-  .biographyinput {
-    font-size: 12px;
-  }
-}
-
-@media (max-width: 767.5px) {
-  section {
-    padding-left: 5px;
-    padding-right: 5px;
-  }
-
-  .w-\[560px\] {
-    width: 100%;
-  }
-
-  .w-\[400px\] {
-    width: 100%;
-  }
-
-  .h-\[54px\] {
-    height: 44px;
-  }
-
-  .text-\[30px\] {
-    font-size: 18px;
-  }
-
-  .text-\[16px\] {
-    font-size: 12px;
-  }
-  .text-\[\30px\] {
-    font-size: 24px;
-  }
-
-  .gap-18 {
-    gap: 45px;
-  }
-  .gap-15 {
-    gap: 44px;
-  }
-  .w-\[100px\] {
-    width: 110px;
-  }
-  .biographyinput {
-    width: 350px;
-  }
-
-  .text-base {
-    font-size: 14px;
-  }
-  .gap-5 {
-    gap: 4px;
-  }
-  .h-8 {
-    height: 28px;
-  }
-}
-
-@media (max-width: 640px) {
-  section {
-    padding-left: 5px;
-    padding-right: 5px;
-  }
-
-  .w-\[400px\] {
-    width: 300px;
-  }
-
-  .text-\[30px\] {
-    font-size: 16px;
-  }
-
-  .text-\[16px\] {
-    font-size: 11px;
-  }
-
-  .h-\[54px\] {
-    height: 41px;
-  }
-
-  .gap-18 {
-    gap: 34px;
-  }
-
-  .gap-5 {
-    gap: 2px;
-  }
-
-  .gap-15 {
-    gap: 38px;
-  }
-  .w-\[100px\] {
-    width: 84px;
-  }
-  .biographyinput {
-    width: 300px;
-  }
-  .h-8 {
-    height: 26px;
-  }
-}
-@media (max-width: 480px) {
-  section {
-    padding-left: 0px;
-    padding-right: 0px;
-  }
-  .w-\[100px\] {
-    width: 80px;
-  }
-}
-@media (max-width: 479.5px) {
-  section {
-    padding-left: 40px;
-    padding-right: 40px;
-  }
-  .w-\[100px\] {
-    width: 64px;
-  }
-  .gap-18 {
-    gap: 42px;
-  }
-}
-
-@media (max-width: 450px) {
-  .gap-5 {
-    gap: 1px;
-  }
-  .gap-18 {
-    gap: 30px;
-  }
-  .w-\[400px\] {
-    width: 190px;
-  }
-  .text-\[30px\] {
-    font-size: 15px;
-  }
-  .text-\[16px\] {
-    font-size: 10px;
-  }
-  .gap-15 {
-    gap: 30px;
-  }
-  .w-\[100px\] {
-    width: 60px;
-  }
-  .biographyinput {
-    width: 190px;
-  }
-  .h-8 {
-    height: 24px;
-  }
-  section {
-    padding-left: 50px;
-    padding-right: 50px;
-  }
-}
-
-@media (max-width: 400px) {
-  section {
-    padding-left: 40px;
-    padding-right: 40px;
-  }
-}
-@media (max-width: 380px) {
-  section {
-    padding-left: 30px;
-    padding-right: 30px;
-  }
 }
 </style>

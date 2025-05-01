@@ -1,28 +1,34 @@
 <template>
-  <div
-    class="relative w-full h-screen"
-    style="background-color: rgba(6, 3, 16, 1)"
-  >
-    <main
-      class="flex w-full h-screen overflow-x-hidden"
-      style="background-color: rgba(6, 3, 16, 1)"
-    >
+  <div class="relative w-full min-h-screen flex flex-col bg-[#060310]">
+    <!-- Main content -->
+
+    <main class="flex flex-col flex-grow overflow-auto">
+      <!-- MAIN CONTENT -->
+
+      <!-- Nav Bar -->
       <NavBar />
+      <!--  Content -->
+      <div class="flex-grow max-h-full">
+        <!-- Виключаємо min-h-screen, використовуємо h-full, щоб зайняв доступну висоту  -->
+        <div class="relative flex items-start justify-center w-full h-full">
+          <!-- Забираємо h-full / max-h-screen із внутрішнього контейнера або замінюємо їх на max-h-full -->
 
-      <section
-        class="flex relative flex-col flex-1 [@media(min-width:1537px)]:mx-25 xl:mx-[70px] lg:mx-[60px] md:mx-[60px] sm:mx-[0px] h-screen"
-        style="background-color: rgba(6, 3, 16, 1)"
-      >
-        <div
-          class="items-center gap-10 flex flex-col h-full [@media(min-width:1537px)]:pt-16.25 xl:pt-14.25 lg:pt-12.25 md:pt-10.25 max-md:pt-15 mx-auto w-full max-w-[640px] sm:w-[320px] md:w-[400px] lg:w-[480px] xl:w-[560px] 2xl:w-[640px]"
-          style="background-color: rgba(0, 0, 0, 0.3)"
-        >
-          <ProfileHeader :user="user" />
+          <div
+            class="gap-[20px] sm:gap-[20px] md:gap-[25px] lg:gap-[30px] xl:gap-[35px] 2xl:gap-10 relative flex w-full md:w-1/2 xl:w-1/3 bg-black/30 flex flex-col min-h-screen overflow-y-auto"
+          >
+            <!-- Section 1 -->
+            <section
+              class="px-[10px] sm:px-[50px] md:px-[20px] lg:px-[30px] xl:px-[30px] 2xl:px-[40px]"
+            >
+              <ProfileHeader :user="user" :stats="stats" />
+            </section>
 
-          <ProfileStats :stats="stats" />
-          <ProfileContent :user="user" @update:user="updateUser" />
+            <section>
+              <ProfileContent :user="user" @update:user="updateUser" />
+            </section>
+          </div>
         </div>
-      </section>
+      </div>
     </main>
   </div>
   <div class="max-md:pb-20"></div>
@@ -32,7 +38,7 @@
 import { reactive, ref, watch } from "vue";
 import NavBar from "@/components/Navigation/NavBar.vue";
 import ProfileHeader from "@/components/userProfile/ProfileHeader.vue";
-import ProfileStats from "@/components/userProfile/ProfileStats.vue";
+
 import ProfileContent from "@/components/userProfile/ProfileContent.vue";
 
 interface User {
@@ -67,7 +73,7 @@ const stats = reactive<Stats>({
 const formData = reactive({
   name: user.name,
   login: user.login,
-
+  avatarUrl: user.avatarUrl,
   biography: user.biography,
   selectedTag: user.tag || null,
 });
@@ -79,6 +85,7 @@ const updateUser = (updatedUser: User) => {
   user.login = updatedUser.login;
   user.biography = updatedUser.biography;
   user.tag = updatedUser.tag;
+  user.avatarUrl = updatedUser.avatarUrl;
 };
 
 const isModalOpen = ref(false);
@@ -94,6 +101,7 @@ const saveChanges = () => {
     login: formData.login,
     biography: formData.biography,
     tag: formData.selectedTag,
+    avatarUrl: formData.avatarUrl,
   });
   isModalOpen.value = false;
 };
@@ -105,6 +113,7 @@ watch(
     formData.login = newUser.login || "";
     formData.biography = newUser.biography || "";
     formData.selectedTag = newUser.tag || "Add tag";
+    formData.avatarUrl = newUser.avatarUrl || "";
   },
   { deep: true },
 );
@@ -112,11 +121,6 @@ watch(
 
 <style scoped>
 /* Ensure content is centered with equal margins */
-@media (min-width: 768px) {
-  section {
-    max-width: calc(100% - 100px);
-  }
-}
 
 .inter-font {
   font-family: "Inter", sans-serif;
@@ -126,53 +130,5 @@ watch(
 main {
   display: flex;
   justify-content: center;
-}
-
-@media (max-width: 1280px) {
-  .gap-10 {
-    gap: 2.25rem;
-  }
-}
-
-@media (max-width: 1024px) {
-  .gap-10 {
-    gap: 2rem;
-  }
-}
-
-@media (max-width: 768px) {
-  .gap-10 {
-    gap: 1.8rem;
-  }
-}
-
-@media (max-width: 640px) {
-  section {
-    max-width: 100%;
-    margin: 0 10px; /* Adjust margin for small screens */
-  }
-
-  .py-4 {
-    padding-top: 20px;
-    padding-bottom: 20px;
-  }
-  .gap-10 {
-    gap: 1.5rem;
-  }
-}
-
-@media (max-width: 450px) {
-  section {
-    margin: 0 5px;
-  }
-
-  .py-4 {
-    padding-top: 15px;
-    padding-bottom: 15px;
-  }
-
-  .gap-10 {
-    gap: 1.5rem;
-  }
 }
 </style>
