@@ -37,8 +37,19 @@
       class="flex-shrink-0 min-w-[60px] max-w-[100px] w-[100px] 2xl:w-[100px] xl:w-[90px] lg:w-[88px] md:w-[74px] sm:w-[74px] max-sm:w-[74px]"
     >
       <div
-        class="h-[26px] w-full sm:h-[32px] text-sm sm:text-base text-white rounded-[5px] text-[16px] inter-font flex items-center justify-center"
-        style="font-weight: 400; background-color: rgba(2, 3, 61, 1)"
+        class="h-[26px] w-full sm:h-[32px] text-sm sm:text-base text-white rounded-[5px] max-md:text-[10px] md:text-[12px] lg:text-[14px] xl:text-[14px] 2xl:text-[16px] inter-font flex items-center justify-center"
+        :style="{
+          fontWeight: '400',
+          backgroundColor:
+            user.tag === 'listener'
+              ? 'white'
+              : user.tag === 'musician'
+                ? '#6D01D0'
+                : user.tag === 'learner'
+                  ? '#000C9C'
+                  : 'rgba(0, 12, 156, 0.5)',
+          color: user.tag === 'listener' ? 'black' : 'white',
+        }"
       >
         {{ user.tag }}
       </div>
