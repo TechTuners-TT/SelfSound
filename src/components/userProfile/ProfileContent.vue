@@ -1,12 +1,17 @@
 <template>
   <section class="flex flex-col gap-15 mx-auto section_1">
-    <button
-      class="cursor-pointer w-full h-8 text-sm sm:text-base text-white rounded-[5px] shadow-sm mx-auto block inter-font"
-      style="background-color: rgba(2, 3, 61, 1); font-weight: 500"
-      @click="isModalOpen = true"
+    <div
+      class="px-[10px] sm:px-[50px] md:px-[20px] lg:px-[30px] xl:px-[30px] 2xl:px-[40px]"
     >
-      Edit profile
-    </button>
+      <button
+        class="cursor-pointer w-full h-8 text-sm sm:text-base text-white rounded-[5px] shadow-sm mx-auto block inter-font"
+        style="background-color: rgba(2, 3, 61, 1); font-weight: 500"
+        @click="isModalOpen = true"
+      >
+        Edit profile
+      </button>
+    </div>
+
     <div class="w-full h-px border border-[rgba(255,255,255,0.5)]"></div>
     <p
       class="mt-10 sm:mt-47.5 text-sm sm:text-base text-white text-center inter-font text_size"
@@ -22,13 +27,13 @@
     @click.self="isModalOpen = false"
   >
     <div
-      class="rounded-xl relative pointer-events-auto shadow-[10px] w-5/6 sm:w-5/7 md:w-4/5 lg:w-5/6 xl:w-9/10 bg-[#060310] border border-[rgba(255,255,255,0.5)] rounded-xl max-md:px-4 max-sm:px-2"
+      class="rounded-xl relative pointer-events-auto shadow-[10px] w-5/6 sm:w-5/7 md:w-4/5 lg:w-5/6 xl:w-9/10 2xl:w-full bg-[#060310] border border-[rgba(255,255,255,0.5)] rounded-xl max-md:px-4 max-sm:px-2"
     >
       <img
         :src="formData.avatarUrl"
         :alt="formData.name"
         @click="triggerFileInput"
-        class="object-contain self-center max-w-full aspect-square w-[100px] h-[100px] border rounded-full mx-auto [@media(min-width:1536px)]:mt-11.25 max-md:w-[80px] max-md:h-[80px] max-sm:w-[64px] max-sm:h-[64px] max-2xl:mt-10 max-xl:mt-8 max-lg:mt-7 max-md:mt-6"
+        class="object-contain self-center max-w-full aspect-square border rounded-full mx-auto w-[60px] h-[60px] sm:w-[64px] sm:h-[64px] md:w-[74px] md:h-[74px] lg:w-[84px] lg:h-[84px] xl:h-[90px] xl:w-[90px] 2xl:w-[100px] 2xl:h-[100px] 2xl:mt-[45px] xl:mt-[40px] lg:mt-[35px] md:[30px] sm:mt-[25px] mt-[20px]"
       />
       <!-- Схований input для вибору зображення -->
       <input
@@ -39,19 +44,21 @@
         class="hidden"
       />
 
-      <div class="flex flex-col px-[50px] mt-9.25 w-full max-md:mt-6">
+      <div
+        class="flex flex-col md:px-[15px] lg:px-[20px] xl:px-[20px] 2xl:px-[50px] w-full 2xl:mt-[37px] xl:mt-[32px] lg:mt-[27px] md:[22px] sm:mt-[17px] mt-[12px]"
+      >
         <!-- Name -->
         <div
-          class="flex items-center gap-[91px] font-medium mb-5 max-md:gap-15 max-md:mb-4 justify-end w-[540px] h-[20px]"
+          class="flex items-center gap-[41px] sm:gap-[51px] md:gap-[51px] lg:gap-[71px] xl:gap-[81px] 2xl:gap-[91px] font-medium mb-5 max-md:mb-4 h-[20px]"
         >
           <div
-            class="text-white text-[16px] h-[16px] w-[50px] max-md:text-sm max-md:w-[70px] inter-font"
+            class="text-white text-[16px] h-[16px] max-md:text-sm inter-font"
             style="font-weight: 500"
           >
             Name:
           </div>
           <div
-            class="h-[20px] w-[400px] rounded-[5px] border border-[rgba(255,255,255,0.2)] bg-[#04020B] flex items-center"
+            class="h-[20px] w-full rounded-[5px] border border-[rgba(255,255,255,0.2)] bg-[#04020B] flex items-center"
           >
             <input
               v-model="formData.name"
@@ -64,11 +71,12 @@
         </div>
 
         <!-- Login -->
+
         <div
-          class="flex items-center gap-23.5 font-medium mb-5 max-md:gap-15 max-md:mb-4 justify-end w-[540px] h-[20px]"
+          class="flex items-center gap-[44px] sm:gap-[54px] md:gap-[54px] lg:gap-[74px] xl:gap-[84px] 2xl:gap-[94px] font-medium mb-5 max-md:mb-4 h-[20px]"
         >
           <div
-            class="text-white text-[16px] h-[16px] w-[47px] max-md:text-sm max-md:w-[70px] inter-font"
+            class="text-white text-[16px] h-[16px] max-md:text-sm inter-font"
             style="font-weight: 500"
           >
             Login:
@@ -88,16 +96,16 @@
         </div>
         <!-- Biography -->
         <div
-          class="flex items-center gap-[59px] font-medium max-md:gap-11 max-md:mb-4 justify-end w-[540px]"
+          class="flex items-center gap-[13px] sm:gap-[23px] md:gap-[19px] lg:gap-[39px] xl:gap-[49px] 2xl:gap-[59px] font-medium"
         >
           <div
-            class="text-white text-[16px] h-[12px] w-[82px] max-md:text-sm max-md:w-[70px] inter-font relative -top-[20px]"
+            class="text-white text-[16px] h-[12px] max-md:text-sm inter-font relative max-md:-top-[12px] -top-[20px]"
             style="font-weight: 500"
           >
             Biography:
           </div>
           <div
-            class="flex-1 h-[54px] w-[400px] rounded-[5px] border border-[rgba(255,255,255,0.2)] bg-[#04020B] max-md:h-[38px] flex items-center"
+            class="flex-1 h-[54px] w-full rounded-[5px] border border-[rgba(255,255,255,0.2)] bg-[#04020B] max-md:h-[38px] flex items-center"
           >
             <textarea
               v-model="formData.biography"
@@ -112,22 +120,24 @@
         <!-- Tags -->
 
         <div
-          class="flex items-center gap-[62px] font-medium mt-[30px] mb-[65px] max-md:flex-row max-md:gap-2"
+          class="flex items-center gap-[57px] sm:gap-[67px] md:gap-[70px] lg:gap-[89px] xl:gap-[99px] 2xl:gap-[109px] font-medium 2xl:mt-[30px] xl:mt-[25px] lg:mt-[20px] md:mt-[18px] sm:mt-[15px] mt-[12px] 2xl:mb-[65px] xl:mb-[55px] lg:mb-[50px] md:mb-[40px] sm:mb-[35px] mb-[30px] max-md:flex-row"
         >
           <div
-            class="text-white text-[16px] h-[16px] w-[80px] max-md:text-sm inter-font"
+            class="text-white text-[16px] h-[16px] max-md:text-sm inter-font"
             style="font-weight: 500"
           >
             Tag:
           </div>
-          <div class="flex gap-[20px] w-[400px] max-md:w-full flex-nowrap">
+          <div
+            class="flex gap-[14px] sm:gap-[14px] md:gap-[14px] lg:gap-[16px] xl:gap-[18px] 2xl:gap-[20px] flex-nowrap w-full"
+          >
             <div
               :class="[
-                'w-[100px] h-[32px] leading-[32px] py-0 px-0 rounded-[5px]   inter-font text-black bg-[#FFFFFF]  cursor-pointer text-center select-none tag_type',
+                'flex-1 max-w-[100px] h-[32px] leading-[32px] py-0 px-0 rounded-[5px] inter-font text-black bg-[#FFFFFF] cursor-pointer text-center select-none tag_type',
                 formData.selectedTag === 'listener'
-                  ? 'border border-2  border-red-500/50 border-opacity-50'
+                  ? 'bg-[rgba(182,11,173,0.771)] text-white'
                   : '',
-                'max-md:w-[80px] max-md:h-[30px] max-md:text-xs',
+                'max-md:h-[30px] max-md:text-[10px] md:text-[12px] lg:text-[14px] xl:text-[14px] 2xl:text-[16px]',
               ]"
               @click="selectTag('listener')"
             >
@@ -135,11 +145,11 @@
             </div>
             <div
               :class="[
-                'w-[100px] h-[32px] leading-[32px] py-0 px-0 rounded-[5px]  inter-font   cursor-pointer text-center text-white bg-[#6D01D0] select-none tag_type',
+                'flex-1 max-w-[100px] h-[32px] leading-[32px] py-0 px-0 rounded-[5px] inter-font cursor-pointer text-center text-white bg-[#6D01D0] select-none tag_type',
                 formData.selectedTag === 'musician'
-                  ? 'border border-2  border-red-500/50 border-opacity-50'
+                  ? 'bg-[rgba(182,11,173,0.771)] '
                   : '',
-                'max-md:w-[80px] max-md:h-[30px] max-md:text-xs',
+                'max-md:h-[30px] max-md:text-[10px] md:text-[12px] lg:text-[14px] xl:text-[14px] 2xl:text-[16px]',
               ]"
               @click="selectTag('musician')"
             >
@@ -147,11 +157,11 @@
             </div>
             <div
               :class="[
-                'w-[100px] h-[32px] leading-[32px] py-0 px-0 rounded-[5px]  inter-font  cursor-pointer  text-center bg-[#000C9C]  text-white  select-none tag_type',
+                'flex-1 max-w-[100px] h-[32px] leading-[32px] py-0 px-0 rounded-[5px] inter-font cursor-pointer text-center text-white bg-[#000C9C] select-none tag_type',
                 formData.selectedTag === 'learner'
-                  ? 'border border-2  border-red-500/50 border-opacity-50'
+                  ? 'bg-[rgba(182,11,173,0.771)]'
                   : '',
-                'max-md:w-[80px] max-md:h-[30px] max-md:text-xs',
+                'max-md:h-[30px] max-md:text-[10px] md:text-[12px] lg:text-[14px] xl:text-[14px] 2xl:text-[16px]',
               ]"
               @click="selectTag('learner')"
             >
@@ -162,7 +172,7 @@
 
         <!-- Save Button -->
         <div
-          class="self-end mb-[45px] font-bold cursor-pointer text-white hover:text-[#6D01D0] max-md:mr-[30px]"
+          class="self-end 2xl:mb-[45px] xl:mb-[40px] lg:mb-[35px] md:mb-[30px] sm:mb-[25px] mb-[20px] font-bold cursor-pointer text-white hover:text-[#6D01D0] text-[12px] sm:text-[12px] md:text-[13px] lg:text-[14px] xl:text-[15px] 2xl:text-[16px]"
           @click="saveChanges"
         >
           Save changes

@@ -14,15 +14,15 @@
           <!-- Забираємо h-full / max-h-screen із внутрішнього контейнера або замінюємо їх на max-h-full -->
 
           <div
-            class="gap-10 relative flex w-full md:w-1/2 xl:w-1/3 bg-black/30 flex flex-col min-h-screen overflow-y-auto"
+            class="gap-[20px] sm:gap-[20px] md:gap-[25px] lg:gap-[30px] xl:gap-[35px] 2xl:gap-10 relative flex w-full md:w-1/2 xl:w-1/3 bg-black/30 flex flex-col min-h-screen overflow-y-auto"
           >
             <!-- Section 1 -->
-            <section class="px-[10px]">
-              <ProfileHeader :user="user" />
+            <section
+              class="px-[10px] sm:px-[50px] md:px-[20px] lg:px-[30px] xl:px-[30px] 2xl:px-[40px]"
+            >
+              <ProfileHeader :user="user" :stats="stats" />
             </section>
-            <section class="px-[10px]">
-              <ProfileStats :stats="stats" />
-            </section>
+
             <section>
               <ProfileContent :user="user" @update:user="updateUser" />
             </section>
@@ -38,7 +38,7 @@
 import { reactive, ref, watch } from "vue";
 import NavBar from "@/components/Navigation/NavBar.vue";
 import ProfileHeader from "@/components/userProfile/ProfileHeader.vue";
-import ProfileStats from "@/components/userProfile/ProfileStats.vue";
+
 import ProfileContent from "@/components/userProfile/ProfileContent.vue";
 
 interface User {
