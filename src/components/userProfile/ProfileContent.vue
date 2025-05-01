@@ -5,7 +5,7 @@
     >
       <button
         class="cursor-pointer w-full h-8 text-sm sm:text-base text-white rounded-[5px] shadow-sm mx-auto block inter-font"
-        style="background-color: rgba(2, 3, 61, 1); font-weight: 500"
+        style="background-color: rgba(0, 12, 156, 0.5); font-weight: 500"
         @click="isModalOpen = true"
       >
         Edit profile
@@ -27,13 +27,13 @@
     @click.self="isModalOpen = false"
   >
     <div
-      class="rounded-xl relative pointer-events-auto shadow-[10px] w-5/6 sm:w-5/7 md:w-4/5 lg:w-5/6 xl:w-9/10 2xl:w-full bg-[#060310] border border-[rgba(255,255,255,0.5)] rounded-xl max-md:px-4 max-sm:px-2"
+      class="rounded-xl relative pointer-events-auto shadow-[10px] w-5/6 sm:w-6/8 md:w-5/6 lg:w-8/9 xl:w-9/10 2xl:w-full bg-[#060310] border border-[rgba(255,255,255,0.5)] rounded-xl max-md:px-4 max-sm:px-2"
     >
       <img
         :src="formData.avatarUrl"
         :alt="formData.name"
         @click="triggerFileInput"
-        class="object-contain self-center max-w-full aspect-square border rounded-full mx-auto w-[60px] h-[60px] sm:w-[64px] sm:h-[64px] md:w-[74px] md:h-[74px] lg:w-[84px] lg:h-[84px] xl:h-[90px] xl:w-[90px] 2xl:w-[100px] 2xl:h-[100px] 2xl:mt-[45px] xl:mt-[40px] lg:mt-[35px] md:[30px] sm:mt-[25px] mt-[20px]"
+        class="object-contain self-center max-w-full aspect-square border rounded-full mx-auto w-[60px] h-[60px] sm:w-[64px] sm:h-[64px] md:w-[74px] md:h-[74px] lg:w-[84px] lg:h-[84px] xl:h-[90px] xl:w-[90px] 2xl:w-[100px] 2xl:h-[100px] 2xl:mt-[45px] xl:mt-[42px] lg:mt-[40px] md:[36px] sm:mt-[32px] mt-[30px]"
       />
       <!-- Схований input для вибору зображення -->
       <input
@@ -45,11 +45,11 @@
       />
 
       <div
-        class="flex flex-col md:px-[15px] lg:px-[20px] xl:px-[20px] 2xl:px-[50px] w-full 2xl:mt-[37px] xl:mt-[32px] lg:mt-[27px] md:[22px] sm:mt-[17px] mt-[12px]"
+        class="flex flex-col px-[7px] sm:px-[8px] md:px-[25px] lg:px-[30px] xl:px-[25px] 2xl:px-[50px] w-full 2xl:mt-[37px] xl:mt-[32px] lg:mt-[27px] md:[25px] sm:mt-[22px] mt-[20px]"
       >
         <!-- Name -->
         <div
-          class="flex items-center gap-[41px] sm:gap-[51px] md:gap-[51px] lg:gap-[71px] xl:gap-[81px] 2xl:gap-[91px] font-medium mb-5 max-md:mb-4 h-[20px]"
+          class="flex items-center gap-[41px] sm:gap-[51px] md:gap-[51px] lg:gap-[71px] xl:gap-[81px] 2xl:gap-[91px] font-medium mb-5 h-[20px]"
         >
           <div
             class="text-white text-[16px] h-[16px] max-md:text-sm inter-font"
@@ -73,7 +73,7 @@
         <!-- Login -->
 
         <div
-          class="flex items-center gap-[44px] sm:gap-[54px] md:gap-[54px] lg:gap-[74px] xl:gap-[84px] 2xl:gap-[94px] font-medium mb-5 max-md:mb-4 h-[20px]"
+          class="flex items-center gap-[44px] sm:gap-[54px] md:gap-[54px] lg:gap-[74px] xl:gap-[84px] 2xl:gap-[94px] font-medium mb-5 h-[20px]"
         >
           <div
             class="text-white text-[16px] h-[16px] max-md:text-sm inter-font"
@@ -120,7 +120,7 @@
         <!-- Tags -->
 
         <div
-          class="flex items-center gap-[57px] sm:gap-[67px] md:gap-[70px] lg:gap-[89px] xl:gap-[99px] 2xl:gap-[109px] font-medium 2xl:mt-[30px] xl:mt-[25px] lg:mt-[20px] md:mt-[18px] sm:mt-[15px] mt-[12px] 2xl:mb-[65px] xl:mb-[55px] lg:mb-[50px] md:mb-[40px] sm:mb-[35px] mb-[30px] max-md:flex-row"
+          class="flex items-center gap-[57px] sm:gap-[67px] md:gap-[70px] lg:gap-[89px] xl:gap-[99px] 2xl:gap-[109px] font-medium 2xl:mt-[30px] xl:mt-[28px] lg:mt-[26px] md:mt-[24px] sm:mt-[22px] mt-[20px] 2xl:mb-[65px] xl:mb-[60px] lg:mb-[55px] md:mb-[50px] sm:mb-[45px] mb-[40px] max-md:flex-row"
         >
           <div
             class="text-white text-[16px] h-[16px] max-md:text-sm inter-font"
@@ -135,7 +135,7 @@
               :class="[
                 'flex-1 max-w-[100px] h-[32px] leading-[32px] py-0 px-0 rounded-[5px] inter-font text-black bg-[#FFFFFF] cursor-pointer text-center select-none tag_type',
                 formData.selectedTag === 'listener'
-                  ? 'bg-[rgba(182,11,173,0.771)] text-white'
+                  ? 'ring-2 ring-[#6D01D0]'
                   : '',
                 'max-md:h-[30px] max-md:text-[10px] md:text-[12px] lg:text-[14px] xl:text-[14px] 2xl:text-[16px]',
               ]"
@@ -146,9 +146,7 @@
             <div
               :class="[
                 'flex-1 max-w-[100px] h-[32px] leading-[32px] py-0 px-0 rounded-[5px] inter-font cursor-pointer text-center text-white bg-[#6D01D0] select-none tag_type',
-                formData.selectedTag === 'musician'
-                  ? 'bg-[rgba(182,11,173,0.771)] '
-                  : '',
+                formData.selectedTag === 'musician' ? 'ring-2 ring-white ' : '',
                 'max-md:h-[30px] max-md:text-[10px] md:text-[12px] lg:text-[14px] xl:text-[14px] 2xl:text-[16px]',
               ]"
               @click="selectTag('musician')"
@@ -158,9 +156,7 @@
             <div
               :class="[
                 'flex-1 max-w-[100px] h-[32px] leading-[32px] py-0 px-0 rounded-[5px] inter-font cursor-pointer text-center text-white bg-[#000C9C] select-none tag_type',
-                formData.selectedTag === 'learner'
-                  ? 'bg-[rgba(182,11,173,0.771)]'
-                  : '',
+                formData.selectedTag === 'learner' ? 'ring-2 ring-white' : '',
                 'max-md:h-[30px] max-md:text-[10px] md:text-[12px] lg:text-[14px] xl:text-[14px] 2xl:text-[16px]',
               ]"
               @click="selectTag('learner')"
@@ -172,7 +168,7 @@
 
         <!-- Save Button -->
         <div
-          class="self-end 2xl:mb-[45px] xl:mb-[40px] lg:mb-[35px] md:mb-[30px] sm:mb-[25px] mb-[20px] font-bold cursor-pointer text-white hover:text-[#6D01D0] text-[12px] sm:text-[12px] md:text-[13px] lg:text-[14px] xl:text-[15px] 2xl:text-[16px]"
+          class="self-end 2xl:mb-[45px] xl:mb-[45px] lg:mb-[40px] md:mb-[35px] sm:mb-[30px] mb-[30px] font-bold cursor-pointer text-white hover:text-[#6D01D0] text-[12px] sm:text-[12px] md:text-[13px] lg:text-[14px] xl:text-[15px] 2xl:text-[16px]"
           @click="saveChanges"
         >
           Save changes
