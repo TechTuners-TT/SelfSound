@@ -12,20 +12,20 @@
         class="flex gap-[5.5px] sm:gap-[8px] md:gap-[10.7px] lg:gap-[13.5px] xl:gap-[16px] [@media(min-width:1537px)]:gap-[20px]"
       >
         <button @click="close">
-          <NavBarAddPost name="Media" />
+          <a href="#add-post-media"> <NavBarAddPost name="Media" /></a>
         </button>
         <button @click="close">
-          <NavBarAddPost name="Audio" />
+          <a href="#add-post-audio"><NavBarAddPost name="Audio" /></a>
         </button>
       </div>
       <div
         class="flex gap-[5.5px] sm:gap-[8px] md:gap-[10.7px] lg:gap-[13.5px] xl:gap-[16px] [@media(min-width:1537px)]:gap-[20px]"
       >
         <button @click="close">
-          <NavBarAddPost name="Lyrics" />
+          <a href="#add-post-lyrics"><NavBarAddPost name="Lyrics" /></a>
         </button>
         <button @click="close">
-          <NavBarAddPost name="MusicXML" />
+          <a href="#add-post-musicxml"><NavBarAddPost name="MusicXML" /></a>
         </button>
       </div>
     </div>

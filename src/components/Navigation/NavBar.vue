@@ -10,7 +10,9 @@
         <header
           class="text-[34px] w-[34px] h-[34px] text-center text-white capitalize w-full flex justify-center items-center"
         >
-          <span class="hidden max-md:block bebas_neue-font">S</span>
+          <span class="hidden max-md:block bebas_neue-font"
+            ><a href="#home">S</a></span
+          >
         </header>
 
         <!-- Right-aligned NavIcon -->
@@ -44,7 +46,9 @@
           class="flex items-center justify-center w-[50px] h-[34px] 2xl:text-[46px] xl:text-[40px] lg:text-[38px] md:text-[36px] text-white leading-none"
         >
           <span class="hidden max-md:block"></span>
-          <span class="max-md:hidden bebas_neue-font">S</span>
+          <span class="max-md:hidden bebas_neue-font cursor-pointer"
+            ><a href="#home">S</a></span
+          >
         </header>
 
         <!-- Center: buttons centered at bottom (only for mobile) -->
