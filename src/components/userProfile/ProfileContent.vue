@@ -134,32 +134,32 @@
             <div
               :class="[
                 'flex-1 max-w-[100px] h-[32px] leading-[32px] py-0 px-0 rounded-[5px] inter-font text-black bg-[#FFFFFF] cursor-pointer text-center select-none tag_type',
-                formData.selectedTag === 'listener'
+                formData.selectedTag === 'Listener'
                   ? 'ring-2 ring-[#6D01D0]'
                   : '',
                 'max-md:h-[30px] max-md:text-[10px] md:text-[12px] lg:text-[14px] xl:text-[14px] 2xl:text-[16px]',
               ]"
-              @click="selectTag('listener')"
+              @click="selectTag('Listener')"
             >
               Listener
             </div>
             <div
               :class="[
                 'flex-1 max-w-[100px] h-[32px] leading-[32px] py-0 px-0 rounded-[5px] inter-font cursor-pointer text-center text-white bg-[#6D01D0] select-none tag_type',
-                formData.selectedTag === 'musician' ? 'ring-2 ring-white ' : '',
+                formData.selectedTag === 'Musician' ? 'ring-2 ring-white ' : '',
                 'max-md:h-[30px] max-md:text-[10px] md:text-[12px] lg:text-[14px] xl:text-[14px] 2xl:text-[16px]',
               ]"
-              @click="selectTag('musician')"
+              @click="selectTag('Musician')"
             >
               Musician
             </div>
             <div
               :class="[
                 'flex-1 max-w-[100px] h-[32px] leading-[32px] py-0 px-0 rounded-[5px] inter-font cursor-pointer text-center text-white bg-[#000C9C] select-none tag_type',
-                formData.selectedTag === 'learner' ? 'ring-2 ring-white' : '',
+                formData.selectedTag === 'Learner' ? 'ring-2 ring-white' : '',
                 'max-md:h-[30px] max-md:text-[10px] md:text-[12px] lg:text-[14px] xl:text-[14px] 2xl:text-[16px]',
               ]"
-              @click="selectTag('learner')"
+              @click="selectTag('Learner')"
             >
               Learner
             </div>

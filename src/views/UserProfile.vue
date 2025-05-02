@@ -14,7 +14,7 @@
           <!-- Забираємо h-full / max-h-screen із внутрішнього контейнера або замінюємо їх на max-h-full -->
 
           <div
-            class="gap-[20px] sm:gap-[20px] md:gap-[25px] lg:gap-[30px] xl:gap-[35px] 2xl:gap-10 relative flex w-full md:w-3/5 xl:w-1/3 bg-black/30 flex flex-col min-h-screen overflow-y-auto"
+            class="gap-[20px] sm:gap-[20px] md:gap-[25px] lg:gap-[30px] xl:gap-[35px] 2xl:gap-10 relative w-full md:w-3/5 xl:w-1/3 bg-black/30 flex flex-col min-h-screen overflow-y-auto"
           >
             <!-- Section 1 -->
             <section
@@ -46,7 +46,7 @@ interface User {
   login: string;
   avatarUrl: string;
   biography: string;
-  tag?: string | "add tag";
+  tag?: string | "Add tag";
 }
 
 interface Stats {
