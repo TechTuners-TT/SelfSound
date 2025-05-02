@@ -22,7 +22,7 @@ export const homeIcon = `<svg  viewBox="0 0 50 50" fill="none" class="nav-icon
 export const addPostIcon = `
   <div class="add-post-icon-background fill="none"" style="border-radius: 5px; ; width: 50px; height: 50px; display: flex; align-items: center; justify-content: center;">
     <svg  viewBox="0 0 50 50" fill="none"
-      class=" add-post-icon w-[40px] h-[40px]
+      class=" nav-icon  add-post-icon w-[40px] h-[40px]
   sm:w-10 sm:h-10 
    md:w-8.5 md:h-8.5 
   lg:w-8.5 lg:h-8.5 
