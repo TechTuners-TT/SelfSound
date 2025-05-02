@@ -8,7 +8,7 @@
       >
         <!-- Centered Header containing the 'S' -->
         <header
-          class="text-[34px] w-[34px] h-[34px] text-center text-white capitalize w-full flex justify-center items-center"
+          class="text-[34px] h-[34px] text-center text-white capitalize w-full flex justify-center items-center"
         >
           <span class="hidden max-md:block bebas_neue-font"
             ><a href="#home">S</a></span
@@ -35,15 +35,15 @@
 
     <!-- Main navigation - sidebar on desktop, bottom bar on mobile -->
     <nav
-      class="fixed left-0 h-screen [@media(min-width:1537px)]:w-[100px] [@media(min-width:1537px)]:px-6.25 [@media(min-width:1537px)]:py-7.75 xl:w-[70px] xl:px-3.5 xl:py-5 lg:w-[60px] lg:px-3 lg:py-4 flex justify-center max-md:w-full max-md:h-auto md:w-[60px] max-md:bottom-0 max-md:left-0 md:px-3 md:py-3 md:py-3 max-md:z-50 [@media(max-width:767.5px)]:h-[80px]"
+      class="fixed left-0 h-screen [@media(min-width:1537px)]:w-[100px] [@media(min-width:1537px)]:px-6.25 [@media(min-width:1537px)]:py-7.75 xl:w-[70px] xl:px-3.5 xl:py-5 lg:w-[60px] lg:px-3 lg:py-4 flex justify-center max-md:w-full max-md:h-auto md:w-[60px] max-md:bottom-0 max-md:left-0 md:px-3 md:py-3 max-md:z-50 [@media(max-width:767.5px)]:h-[60px]"
       style="background-color: rgba(6, 3, 16, 1)"
     >
       <div
-        class="flex flex-col justify-between items-center h-full w-[50px] min-h-full max-md:w-full max-md:h-auto max-md:flex-row max-md:items-center max-md:justify-between - sm:w-[0px] md:w-[50px]"
+        class="flex flex-col justify-between items-center h-full w-[50px] min-h-full max-md:w-full max-md:h-auto max-md:flex-row max-md:items-center max-md:justify-center sm:w-[0px] md:w-[50px] max-md:gap-0 max-md:gap-0"
       >
         <!-- Logo: Hidden on small screens but panel maintains height -->
         <header
-          class="flex items-center justify-center w-[50px] h-[34px] 2xl:text-[46px] xl:text-[40px] lg:text-[38px] md:text-[36px] text-white leading-none"
+          class="flex items-center justify-center w-[50px] h-[34px] 2xl:text-[46px] xl:text-[40px] lg:text-[38px] md:text-[36px] text-white leading-none max-md:w-0 max-md:h-0"
         >
           <span class="hidden max-md:block"></span>
           <span class="max-md:hidden bebas_neue-font cursor-pointer"
@@ -53,7 +53,7 @@
 
         <!-- Center: buttons centered at bottom (only for mobile) -->
         <section
-          class="flex flex-col gap-[30px] items-center max-md:flex-row max-md:absolute max-md:bottom-3 max-md:left-1/2 max-md:-translate-x-1/2 max-md:order-2"
+          class="flex flex-col gap-[30px] items-center max-md:flex-row max-md:bottom-3 max-md:order-2"
         >
           <a href="#search">
             <NavIcon :svg="searchIcon" :isActive="currentPage === 'search'" />
@@ -65,7 +65,7 @@
 
           <button
             :class="[
-              'nav-button flex items-center justify-center w-full hover:scale-110 border rounded-[5px]',
+              'nav-button flex items-center justify-center w-full border rounded-[5px]',
               isAddPostOpen ? 'bg-[#000C9C] ' : 'bg-[#6D01D0]',
             ]"
             @click="openAddPost"

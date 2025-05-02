@@ -1,6 +1,6 @@
 <template>
   <button
-    class="nav-button flex items-center justify-center w-full hover:scale-110 transition-transform duration-150"
+    class="nav-button flex items-center justify-center w-full transition-transform duration-150"
     @click="handleClick"
     ref="button"
   >

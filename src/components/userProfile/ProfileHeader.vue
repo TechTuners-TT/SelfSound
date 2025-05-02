@@ -8,7 +8,7 @@
       <img
         :src="user.avatarUrl"
         :alt="user.name"
-        class="rounded-full w-full h-full"
+        class="rounded-full object-cover w-full h-full"
       />
       <div
         class="absolute inset-0 rounded-full border border-[rgba(255,255,255,0.5)]"

@@ -33,7 +33,7 @@
       </div>
     </main>
   </div>
-  <div class="max-md:pb-20"></div>
+  <div class="max-md:pb-15"></div>
 </template>
 
 <script setup lang="ts">

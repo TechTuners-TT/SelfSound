@@ -5,7 +5,7 @@
     @click.self="close"
   >
     <div
-      class="py-[4px] gap-[4px] flex flex-col justify-between items-center max-md:mb-20 w-[100px] h-[108px] sm:w-[114px] sm:h-[122px] sm:py-[6px] sm:gap-[6px] md:w-[128px] md:h-[128px] md:py-[8px] md:gap-[8px] lg:w-[142px] lg:h-[142px] lg:py-[10px] lg:gap-[10px] xl:w-[156px] xl:h-[156px] xl:py-[12px] xl:gap-[12px] [@media(min-width:1537px)]:w-[175px] [@media(min-width:1537px)]:h-[175px] [@media(min-width:1537px)]:py-[15px] [@media(min-width:1537px)]:gap-[15px] px-[5.5px] sm:px-[8px] md:px-[10.7px] lg:px-[13.5px] xl:px-[16px] [@media(min-width:1537px)]:px-[20px] rounded-tr-xl rounded-br-xl max-md:rounded-tr-none max-md:rounded-br-none max-md:rounded-tl-xl max-md:rounded-tr-xl"
+      class="py-[4px] gap-[4px] flex flex-col justify-between items-center max-md:mb-15 w-[95px] h-[104px] sm:w-[106px] sm:h-[118px] sm:py-[6px] sm:gap-[6px] md:w-[128px] md:h-[128px] md:py-[8px] md:gap-[8px] lg:w-[142px] lg:h-[142px] lg:py-[10px] lg:gap-[10px] xl:w-[156px] xl:h-[156px] xl:py-[12px] xl:gap-[12px] [@media(min-width:1537px)]:w-[175px] [@media(min-width:1537px)]:h-[175px] [@media(min-width:1537px)]:py-[15px] [@media(min-width:1537px)]:gap-[15px] px-[4px] sm:px-[6px] md:px-[10.7px] lg:px-[13.5px] xl:px-[16px] [@media(min-width:1537px)]:px-[20px] rounded-tr-xl rounded-br-xl max-md:rounded-br-none max-md:rounded-tl-xl max-md:rounded-tr-xl"
       style="background-color: rgba(0, 12, 156, 0.4)"
     >
       <div

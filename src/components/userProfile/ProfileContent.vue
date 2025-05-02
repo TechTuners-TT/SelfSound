@@ -33,7 +33,7 @@
         :src="formData.avatarUrl"
         :alt="formData.name"
         @click="triggerFileInput"
-        class="object-contain self-center max-w-full aspect-square border rounded-full mx-auto w-[60px] h-[60px] sm:w-[64px] sm:h-[64px] md:w-[74px] md:h-[74px] lg:w-[84px] lg:h-[84px] xl:h-[90px] xl:w-[90px] 2xl:w-[100px] 2xl:h-[100px] 2xl:mt-[45px] xl:mt-[42px] lg:mt-[40px] md:[36px] sm:mt-[32px] mt-[30px]"
+        class="object-cover self-center max-w-full border rounded-full mx-auto w-[60px] h-[60px] sm:w-[64px] sm:h-[64px] md:w-[74px] md:h-[74px] lg:w-[84px] lg:h-[84px] xl:h-[90px] xl:w-[90px] 2xl:w-[100px] 2xl:h-[100px] 2xl:mt-[45px] xl:mt-[42px] lg:mt-[40px] md:[36px] sm:mt-[32px] mt-[30px]"
       />
       <!-- Схований input для вибору зображення -->
       <input
@@ -63,7 +63,7 @@
             <input
               v-model="formData.name"
               maxlength="15"
-              class="w-full text-[12px] h-full bg-[#04020B] border-none outline-none text-white px-2 max-md:text-sm inter-font rounded-md"
+              class="w-full text-[10px] sm:text-[11px] md:text-[12px] h-full bg-[#04020B] border-none outline-none text-white px-2 inter-font rounded-md"
               style="font-weight: 500"
               type="text"
             />
@@ -88,7 +88,7 @@
               v-model="formData.login"
               @input="onLoginInput"
               maxlength="20"
-              class="w-full text-[12px] h-full bg-[#04020B] border-none outline-none text-white px-2 max-md:text-sm inter-font rounded-md"
+              class="w-full text-[10px] sm:text-[11px] md:text-[12px] h-full bg-[#04020B] border-none outline-none text-white px-2 inter-font rounded-md"
               style="font-weight: 500"
               type="text"
             />
@@ -110,7 +110,7 @@
             <textarea
               v-model="formData.biography"
               maxlength="130"
-              class="w-full h-full text-[12px] bg-[#04020B] border-none outline-none text-white px-2 py-2 max-md:text-sm inter-font rounded-md resize-none"
+              class="w-full h-full text-[10px] sm:text-[11px] md:text-[12px] bg-[#04020B] border-none outline-none text-white px-2 py-1 inter-font rounded-md resize-none"
               style="font-weight: 500"
               placeholder="Enter your biography..."
             ></textarea>
