@@ -31,24 +31,24 @@
   </div>
 
   <div
-    class="flex items-center gap-6.5 h-[54px] sm:gap-12.5 md:gap-[40px] lg:gap-[60px] xl:gap-[50px] 2xl:gap-[60px]"
+    class="flex items-center gap-10 h-[54px] sm:gap-15 md:gap-[46px] lg:gap-[76px] xl:gap-[56px] 2xl:gap-[60px]"
   >
     <div
-      class="flex-shrink-0 min-w-[60px] max-w-[100px] w-[100px] 2xl:w-[100px] xl:w-[90px] lg:w-[88px] md:w-[74px] sm:w-[74px] max-sm:w-[74px]"
+      class="flex-shrink-0 min-w-[60px] max-w-[100px] w-[100px] 2xl:w-[100px] xl:w-[84px] lg:w-[72px] md:w-[68px] sm:w-[64px] max-sm:w-[60px]"
     >
       <div
-        class="h-[26px] w-full sm:h-[32px] text-sm sm:text-base text-white rounded-[5px] max-md:text-[10px] md:text-[12px] lg:text-[14px] xl:text-[14px] 2xl:text-[16px] inter-font flex items-center justify-center"
+        class="h-[26px] w-full sm:h-[32px] text-sm sm:text-base text-white rounded-[5px] text-[11px] sm:text-[12px] md:text-[13px] lg:text-[14px] xl:text-[15px] 2xl:text-[16px] inter-font flex items-center justify-center"
         :style="{
           fontWeight: '400',
           backgroundColor:
-            user.tag === 'listener'
+            user.tag === 'Listener'
               ? 'white'
-              : user.tag === 'musician'
+              : user.tag === 'Musician'
                 ? '#6D01D0'
-                : user.tag === 'learner'
+                : user.tag === 'Learner'
                   ? '#000C9C'
                   : 'rgba(0, 12, 156, 0.5)',
-          color: user.tag === 'listener' ? 'black' : 'white',
+          color: user.tag === 'Listener' ? 'black' : 'white',
         }"
       >
         {{ user.tag }}
