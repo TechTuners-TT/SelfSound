@@ -27,7 +27,7 @@
     @click.self="isModalOpen = false"
   >
     <div
-      class="rounded-xl relative pointer-events-auto shadow-[10px] w-5/6 sm:w-6/8 md:w-5/6 lg:w-8/9 xl:w-9/10 2xl:w-full bg-[#060310] border border-[rgba(255,255,255,0.5)] rounded-xl max-md:px-4 max-sm:px-2"
+      class="rounded-xl relative pointer-events-auto shadow-[10px] w-5/6 sm:w-6/8 md:w-5/6 lg:w-8/9 xl:w-9/10 2xl:w-full bg-[#060310] border border-[rgba(255,255,255,0.5)] max-md:px-4 max-sm:px-2"
     >
       <img
         :src="formData.avatarUrl"
@@ -82,7 +82,7 @@
             Login:
           </div>
           <div
-            class="h-[20px] w-[400px] w-full rounded-[5px] border border-[rgba(255,255,255,0.2)] bg-[#04020B] flex items-center"
+            class="h-[20px] w-full rounded-[5px] border border-[rgba(255,255,255,0.2)] bg-[#04020B] flex items-center"
           >
             <input
               v-model="formData.login"
