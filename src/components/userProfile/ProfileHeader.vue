@@ -47,7 +47,7 @@
                 ? '#6D01D0'
                 : user.tag === 'Learner'
                   ? '#000C9C'
-                  : 'rgba(0, 12, 156, 0.5)',
+                  : 'rgba(0, 12, 156, 0.4)',
           color: user.tag === 'Listener' ? 'black' : 'white',
         }"
       >

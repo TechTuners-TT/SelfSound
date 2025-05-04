@@ -5,7 +5,7 @@
     >
       <button
         class="cursor-pointer w-full h-8 text-sm sm:text-base text-white rounded-[5px] shadow-sm mx-auto block inter-font"
-        style="background-color: rgba(0, 12, 156, 0.5); font-weight: 500"
+        style="background-color: rgba(0, 12, 156, 0.4); font-weight: 500"
         @click="isModalOpen = true"
       >
         Edit profile
