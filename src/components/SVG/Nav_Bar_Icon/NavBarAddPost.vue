@@ -2,7 +2,7 @@
   <!-- add button add post -->
   <svg
     v-if="name === 'Media'"
-    class="nav-icon-add hover:scale-105 hover:text-[#6D01D0] transition-all duration-300 w-[46px] h-[52px] sm:w-11.5 sm:h-13 md:w-12 md:h-13 lg:w-13 lg:h-14 xl:w-14 xl:h-15 [@media(min-width:1537px)]:w-[60px] [@media(min-width:1537px)]:h-[65px]"
+    class="nav-icon-add hover:text-[#6D01D0] transition-all duration-300 w-[42px] h-[46px] sm:w-11.5 sm:h-12.5 md:w-12 md:h-13 lg:w-13 lg:h-14 xl:w-14 xl:h-15 [@media(min-width:1537px)]:w-[60px] [@media(min-width:1537px)]:h-[65px]"
     width="60"
     height="65"
     fill="currentColor"
@@ -33,7 +33,7 @@
 
   <svg
     v-if="name === 'Audio'"
-    class="nav-icon-add hover:scale-105 hover:text-[#6D01D0] transition-all duration-300 w-[46px] h-[52px] sm:w-11.5 sm:h-13 md:w-12 md:h-13 lg:w-13 lg:h-14 xl:w-14 xl:h-15 [@media(min-width:1537px)]:w-[60px] [@media(min-width:1537px)]:h-[65px]"
+    class="nav-icon-add hover:text-[#6D01D0] transition-all duration-300 w-[42px] h-[46px] sm:w-11.5 sm:h-12.5 md:w-12 md:h-13 lg:w-13 lg:h-14 xl:w-14 xl:h-15 [@media(min-width:1537px)]:w-[60px] [@media(min-width:1537px)]:h-[65px]"
     width="60"
     height="65"
     fill="currentColor"
@@ -63,7 +63,7 @@
 
   <svg
     v-if="name === 'Lyrics'"
-    class="nav-icon-add hover:scale-105 hover:text-[#6D01D0] transition-all duration-300 w-[46px] h-[52px] sm:w-11.5 sm:h-13 md:w-12 md:h-13 lg:w-13 lg:h-14 xl:w-14 xl:h-15 [@media(min-width:1537px)]:w-[60px] [@media(min-width:1537px)]:h-[65px]"
+    class="nav-icon-add hover:text-[#6D01D0] transition-all duration-300 w-[42px] h-[46px] sm:w-11.5 sm:h-12.5 md:w-12 md:h-13 lg:w-13 lg:h-14 xl:w-14 xl:h-15 [@media(min-width:1537px)]:w-[60px] [@media(min-width:1537px)]:h-[65px]"
     width="60"
     height="65"
     fill="currentColor"
@@ -94,7 +94,7 @@
 
   <svg
     v-if="name === 'MusicXML'"
-    class="nav-icon-add hover:scale-105 hover:text-[#6D01D0] transition-all duration-300 w-[46px] h-[52px] sm:w-11.5 sm:h-13 md:w-12 md:h-13 lg:w-13 lg:h-14 xl:w-14 xl:h-15 [@media(min-width:1537px)]:w-[60px] [@media(min-width:1537px)]:h-[65px]"
+    class="nav-icon-add hover:text-[#6D01D0] transition-all duration-300 w-[42px] h-[46px] sm:w-11.5 sm:h-12.5 md:w-12 md:h-13 lg:w-13 lg:h-14 xl:w-14 xl:h-15 [@media(min-width:1537px)]:w-[60px] [@media(min-width:1537px)]:h-[65px]"
     width="60"
     height="65"
     fill="currentColor"

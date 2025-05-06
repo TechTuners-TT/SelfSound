@@ -5,27 +5,27 @@
     @click.self="close"
   >
     <div
-      class="rounded-xl p-1 flex flex-col justify-between items-center max-md:mb-20 gap-1 w-[120px] h-[120px] sm:w-32 sm:h-32 sm:p-2 sm:gap-1 md:w-33 md:h-33 md:p-2 md:gap-2.5 lg:w-36 lg:h-36 lg:p-2 lg:gap-3.5 xl:w-38 xl:h-38 xl:p-2 xl:gap-3.5 [@media(min-width:1537px)]:w-[175px] [@media(min-width:1537px)]:h-[175px] [@media(min-width:1537px)]:p-3.5 [@media(min-width:1537px)]:gap-3.5"
+      class="py-[4px] gap-[4px] flex flex-col justify-between items-center max-md:mb-15 w-[95px] h-[104px] sm:w-[106px] sm:h-[118px] sm:py-[6px] sm:gap-[6px] md:w-[128px] md:h-[128px] md:py-[8px] md:gap-[8px] lg:w-[142px] lg:h-[142px] lg:py-[10px] lg:gap-[10px] xl:w-[156px] xl:h-[156px] xl:py-[12px] xl:gap-[12px] [@media(min-width:1537px)]:w-[175px] [@media(min-width:1537px)]:h-[175px] [@media(min-width:1537px)]:py-[15px] [@media(min-width:1537px)]:gap-[15px] px-[4px] sm:px-[6px] md:px-[10.7px] lg:px-[13.5px] xl:px-[16px] [@media(min-width:1537px)]:px-[20px] rounded-tr-xl rounded-br-xl max-md:rounded-br-none max-md:rounded-tl-xl max-md:rounded-tr-xl"
       style="background-color: rgba(0, 12, 156, 0.4)"
     >
       <div
-        class="flex gap-[15px] sm:gap-[15px] md:gap-[20px] lg:gap-[20px] xl:gap-[20px] [@media(min-width:1537px)]:gap-[20px]"
+        class="flex gap-[5.5px] sm:gap-[8px] md:gap-[10.7px] lg:gap-[13.5px] xl:gap-[16px] [@media(min-width:1537px)]:gap-[20px]"
       >
-        <button>
-          <NavBarAddPost name="Media" />
+        <button @click="close">
+          <a href="#add-post-media"> <NavBarAddPost name="Media" /></a>
         </button>
-        <button>
-          <NavBarAddPost name="Audio" />
+        <button @click="close">
+          <a href="#add-post-audio"><NavBarAddPost name="Audio" /></a>
         </button>
       </div>
       <div
-        class="flex gap-[15px] sm:gap-[15px] md:gap-[20px] lg:gap-[20px] xl:gap-[20px] [@media(min-width:1537px)]:gap-[20px]"
+        class="flex gap-[5.5px] sm:gap-[8px] md:gap-[10.7px] lg:gap-[13.5px] xl:gap-[16px] [@media(min-width:1537px)]:gap-[20px]"
       >
-        <button>
-          <NavBarAddPost name="Lyrics" />
+        <button @click="close">
+          <a href="#add-post-lyrics"><NavBarAddPost name="Lyrics" /></a>
         </button>
-        <button>
-          <NavBarAddPost name="MusicXML" />
+        <button @click="close">
+          <a href="#add-post-musicxml"><NavBarAddPost name="MusicXML" /></a>
         </button>
       </div>
     </div>

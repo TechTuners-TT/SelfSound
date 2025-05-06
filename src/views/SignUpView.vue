@@ -4,9 +4,7 @@
     style="background-color: rgba(6, 3, 16, 1)"
   >
     <form @submit.prevent="handleSubmit" class="w-full max-w-sm">
-      <h1 class="mb-12.5 text-2xl font-bold text-center text-white">
-        Sign up your Profile
-      </h1>
+      <h1 class="mb-12.5 text-2xl font-bold text-center text-white">Sign up</h1>
 
       <SignUpInput
         label="Your name"
@@ -30,7 +28,7 @@
         v-model="formData.password"
         :error="errors.password"
         class="mb-7.5"
-        placeholder="enter passwordl"
+        placeholder="enter password"
       />
 
       <button
