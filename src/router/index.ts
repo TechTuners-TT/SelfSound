@@ -9,6 +9,7 @@ import CreatePostMediaView from "../views/AddPosts/CreatePostMediaView.vue";
 import CreatePostAudioView from "../views/AddPosts/CreatePostAudioView.vue";
 import CreatePostMusicXMLView from "../views/AddPosts/CreatePostMusicXML.vue";
 import CreatePostLyricsView from "../views/AddPosts/CreatePostLyricsView.vue";
+import SearchView from "../views/SearchView.vue";
 
 const router = createRouter({
   history: createWebHashHistory(import.meta.env.BASE_URL),
@@ -62,6 +63,12 @@ const router = createRouter({
       path: "/add-post-lyrics",
       name: "add-post-lyrics",
       component: CreatePostLyricsView,
+    },
+
+    {
+      path: "/search",
+      name: "search",
+      component: SearchView,
     },
 
     //{
