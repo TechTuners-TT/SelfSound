@@ -4,7 +4,7 @@
     <!-- Забираємо h-full / max-h-screen із внутрішнього контейнера або замінюємо їх на max-h-full -->
 
     <div
-      class="relative flex w-full md:w-1/2 xl:w-1/3 bg-black/30 flex flex-col min-h-screen overflow-y-auto"
+      class="relative w-full md:w-1/2 xl:w-1/3 bg-black/30 flex flex-col min-h-screen overflow-y-auto"
     >
       <!-- Section 1 -->
       <section>
