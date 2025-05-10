@@ -21,22 +21,6 @@
       @change="handleFileChange"
     />
 
-    <!-- Кнопка додавання -->
-    <button
-      @click="triggerFileInput"
-      :disabled="files.length >= 5"
-      :class="[
-        'w-full 2xl:h-[50px] h-[40px] 2xl:rounded-[10px] rounded-[5px] transition inter-font text-white font-bold text-xl flex items-center justify-center mb-6 ',
-        files.length >= 5
-          ? 'bg-white/5 cursor-not-allowed'
-          : 'bg-[#000C9C]/40 hover:bg-[#6D01D0]',
-      ]"
-    >
-      <AddIcon
-        class="2xl:w-[24px] 2xl:h-[24px] xl:w-[20px] xl:h-[20px] lg:w-[18px] lg:h-[18px] w-[16px] h-[16px]"
-      />
-    </button>
-
     <!-- Прев’ю файлів з підтримкою зуму -->
     <div class="space-y-6 mb-6">
       <div
@@ -64,18 +48,32 @@
           @click.stop="removeFile(idx)"
           class="absolute top-[10px] right-[10px] text-white text-[20px] rounded-full w-[20px] h-[20px] flex items-center justify-center"
         >
-          <MediaClose :iconColor="getIconColor(item)" />
+          <MediaClose :iconColor="iconColors[idx]" />
         </button>
       </div>
     </div>
-
+    <!-- Кнопка додавання -->
+    <button
+      @click="triggerFileInput"
+      :disabled="files.length >= 5"
+      :class="[
+        'w-full 2xl:h-[50px] h-[40px] 2xl:rounded-[10px] rounded-[5px] transition inter-font text-white font-bold text-xl flex items-center justify-center mb-6 ',
+        files.length >= 5
+          ? 'bg-white/5 cursor-not-allowed'
+          : 'bg-[#000C9C]/40 hover:bg-[#6D01D0]',
+      ]"
+    >
+      <AddIcon
+        class="2xl:w-[24px] 2xl:h-[24px] xl:w-[20px] xl:h-[20px] lg:w-[18px] lg:h-[18px] w-[16px] h-[16px]"
+      />
+    </button>
     <!-- Кнопка сабміту (відображається тільки якщо є файли) -->
     <div v-if="files.length > 0" class="flex justify-end mb-6">
       <button
         @click="submitPost"
-        class="cursor-pointer w-full xl:w-1/2 2xl:h-[37px] xl:h-[32px] lg:h-[28px] md:h-[24px] sm:h-[20px] h-[18px] 2xl:rounded-[10px] rounded-[5px] transition font-bold text-xl flex items-end justify-end text-[#6D01D0] inter-font 2xl:text-[24px] xl:text-[20px] lg:text-[18px] text-[16px]"
+        class="cursor-pointer w-[75px] sm:w-[80px] md:w-[85px] lg:w-[95px] xl:w-[105px] 2xl:w-[119px] 2xl:h-[37px] bg-[#6D01D0]/20 xl:h-[32px] lg:h-[28px] md:h-[24px] sm:h-[20px] h-[18px] 2xl:rounded-[10px] rounded-[5px] transition font-bold text-xl flex items-center justify-center text-[#6D01D0] inter-font 2xl:text-[24px] xl:text-[20px] lg:text-[18px] text-[16px]"
       >
-        Publish
+        <p @click="goBack">Publish</p>
       </button>
     </div>
 
@@ -118,8 +116,8 @@
 </template>
 
 <script setup lang="ts">
-import AddIcon from "../../../SVG/AddPosts_Icons/AddIcon.vue";
 import MediaClose from "@/components/SVG/AddPosts_Icons/MediaClose.vue";
+import AddIcon from "@/components/SVG/AddPosts_Icons/AddIcon.vue";
 
 import { ref, onMounted, watch, nextTick } from "vue";
 import mediumZoom from "medium-zoom";
@@ -131,6 +129,12 @@ const modalPreview = ref<{ preview: string; file: File; type: string } | null>(
   null,
 );
 const zoomInstance = ref<Zoom | null>(null);
+
+function goBack() {
+  window.history.back();
+}
+
+const iconColors = ref<string[]>([]); // Define iconColors as an array of strings
 
 // Тригер для вибору файлів
 const triggerFileInput = () => {
@@ -194,109 +198,95 @@ const setupZoom = () => {
 onMounted(setupZoom);
 watch(files, setupZoom);
 
-const iconColors = ref<Record<number, string>>({});
-watch(files, async () => {
-  for (let i = 0; i < files.value.length; i++) {
-    const file = files.value[i];
-    const color = await getIconColor(file);
-    iconColors.value[i] = color;
-  }
-});
-function getLuminance(hex: string): number {
-  const r = parseInt(hex.slice(1, 3), 16) / 255;
-  const g = parseInt(hex.slice(3, 5), 16) / 255;
-  const b = parseInt(hex.slice(5, 7), 16) / 255;
-  return 0.2126 * r + 0.7152 * g + 0.0722 * b;
-}
-
-function contrastRatio(l1: number, l2: number): number {
-  const [a, b] = l1 > l2 ? [l1, l2] : [l2, l1];
-  return (a + 0.05) / (b + 0.05);
-}
-
-function getContrastColor(bgHex: string): string {
-  const candidates = ["#FFFFFF", "#000000", "#6D01D0", "#000C9C"];
-  const bgLum = getLuminance(bgHex);
-  let bestColor = "#000000";
-  let maxContrast = 0;
-
-  for (const color of candidates) {
-    const lum = getLuminance(color);
-    const c = contrastRatio(bgLum, lum);
-    if (c > maxContrast) {
-      maxContrast = c;
-      bestColor = color;
-    }
-  }
-
-  return bestColor;
-}
-
+// Функція для отримання контрастного кольору для хрестика
 async function getIconColor(file: {
   preview: string;
   file: File;
   type: string;
 }): Promise<string> {
-  if (!file.type.startsWith("image/")) return "#FFFFFF"; // default for non-images
+  if (!file.type.startsWith("image/")) return "#FFFFFF"; // колір для не зображень
   const cornerColor = await getAverageCornerColor(file.preview);
   return getContrastColor(cornerColor); // Контрастний колір для іконки
 }
 
+// Функція для отримання середнього кольору кута зображення
 async function getAverageCornerColor(imageUrl: string): Promise<string> {
-  return new Promise((resolve) => {
-    const img = new Image();
-    img.crossOrigin = "Anonymous"; // Дозволяє читати пікселі, якщо це дозволено CORS
+  const img = new Image();
+  img.src = imageUrl;
 
+  return new Promise((resolve, reject) => {
     img.onload = () => {
       const canvas = document.createElement("canvas");
-      canvas.width = img.width;
-      canvas.height = img.height;
-
       const ctx = canvas.getContext("2d");
       if (!ctx) {
-        resolve("#000000"); // Fallback
+        reject("Canvas context is not available");
         return;
       }
 
+      // Set the canvas dimensions to the image size
+      canvas.width = img.width;
+      canvas.height = img.height;
+
+      // Draw the image on the canvas
       ctx.drawImage(img, 0, 0);
 
-      const size = 30;
-      const startX = img.width - size;
-      const startY = 0;
+      // Get pixel data from the four corners
+      const corners = [
+        { x: 0, y: 0 }, // top-left
+        { x: img.width - 1, y: 0 }, // top-right
+        { x: 0, y: img.height - 1 }, // bottom-left
+        { x: img.width - 1, y: img.height - 1 }, // bottom-right
+      ];
 
-      try {
-        const imageData = ctx.getImageData(startX, startY, size, size);
-        const data = imageData.data;
+      let r = 0,
+        g = 0,
+        b = 0;
 
-        let r = 0,
-          g = 0,
-          b = 0;
-        const pixelCount = data.length / 4;
+      corners.forEach(({ x, y }) => {
+        const pixel = ctx.getImageData(x, y, 1, 1).data;
+        r += pixel[0]; // red
+        g += pixel[1]; // green
+        b += pixel[2]; // blue
+      });
 
-        for (let i = 0; i < data.length; i += 4) {
-          r += data[i]; // R
-          g += data[i + 1]; // G
-          b += data[i + 2]; // B
-        }
+      // Average the color values
+      r = Math.round(r / 4);
+      g = Math.round(g / 4);
+      b = Math.round(b / 4);
 
-        r = Math.round(r / pixelCount);
-        g = Math.round(g / pixelCount);
-        b = Math.round(b / pixelCount);
-
-        const hex = `#${[r, g, b].map((x) => x.toString(16).padStart(2, "0")).join("")}`;
-        resolve(hex);
-      } catch (e) {
-        console.error("getImageData error:", e);
-        resolve("#000000");
-      }
+      // Convert RGB to HEX
+      const hex = rgbToHex(r, g, b);
+      resolve(hex);
     };
 
-    img.onerror = () => {
-      console.error("Image load error");
-      resolve("#000000");
-    };
-
-    img.src = imageUrl;
+    img.onerror = () => reject("Image loading error");
   });
 }
+
+// Перетворення RGB в HEX
+function rgbToHex(r: number, g: number, b: number): string {
+  return `#${((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1).toUpperCase()}`;
+}
+
+// Функція для визначення контрастного кольору
+function getContrastColor(hex: string): string {
+  // Визначаємо, чи темний або світлий колір
+  const hexColor = hex.startsWith("#") ? hex.slice(1) : hex;
+  const r = parseInt(hexColor.slice(0, 2), 16);
+  const g = parseInt(hexColor.slice(2, 4), 16);
+  const b = parseInt(hexColor.slice(4, 6), 16);
+
+  // Обчислення контрасту за допомогою формули для визначення яскравості
+  const brightness = (r * 299 + g * 587 + b * 114) / 1000;
+
+  // Якщо колір темний, повертаємо білий
+  return brightness > 128 ? "#000000" : "#FFFFFF";
+}
+
+// Оновлення кольору іконки після вибору файлів
+watch(files, async () => {
+  iconColors.value = await Promise.all(
+    files.value.map((file) => getIconColor(file)),
+  );
+});
 </script>
