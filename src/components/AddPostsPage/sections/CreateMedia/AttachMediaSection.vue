@@ -46,9 +46,10 @@
 
         <button
           @click.stop="removeFile(idx)"
-          class="absolute top-[10px] right-[10px] text-white text-[20px] rounded-full w-[20px] h-[20px] flex items-center justify-center"
+          class="cursor-pointer absolute top-[10px] right-[10px] text-white text-[20px] rounded-full w-[20px] h-[20px] flex items-center justify-center"
         >
-          <MediaClose :iconColor="iconColors[idx]" />
+          <!--bg-white-->
+          <MediaClose :style="{ color: iconColors[idx] || '#FFFFFF' }" />
         </button>
       </div>
     </div>
@@ -104,12 +105,13 @@
         ></video>
 
         <!-- Кнопка закриття -->
+        <!--
         <button
           class="absolute top-4 right-4 bg-black/60 text-white rounded-full px-3 py-1 text-xl hover:bg-black"
           @click="modalPreview = null"
         >
           <MediaClose />
-        </button>
+        </button> -->
       </div>
     </div>
   </div>
@@ -133,8 +135,6 @@ const zoomInstance = ref<Zoom | null>(null);
 function goBack() {
   window.history.back();
 }
-
-const iconColors = ref<string[]>([]); // Define iconColors as an array of strings
 
 // Тригер для вибору файлів
 const triggerFileInput = () => {
@@ -198,95 +198,84 @@ const setupZoom = () => {
 onMounted(setupZoom);
 watch(files, setupZoom);
 
-// Функція для отримання контрастного кольору для хрестика
+// ===================== Кольори =====================
+const iconColors = ref<string[]>([]);
+
 async function getIconColor(file: {
   preview: string;
   file: File;
   type: string;
 }): Promise<string> {
-  if (!file.type.startsWith("image/")) return "#FFFFFF"; // колір для не зображень
+  if (!file.type.startsWith("image/")) return "#FFFFFF";
   const cornerColor = await getAverageCornerColor(file.preview);
-  return getContrastColor(cornerColor); // Контрастний колір для іконки
+  return getContrastColor(cornerColor);
 }
 
-// Функція для отримання середнього кольору кута зображення
 async function getAverageCornerColor(imageUrl: string): Promise<string> {
   const img = new Image();
+  img.crossOrigin = "anonymous";
   img.src = imageUrl;
 
   return new Promise((resolve, reject) => {
     img.onload = () => {
       const canvas = document.createElement("canvas");
       const ctx = canvas.getContext("2d");
-      if (!ctx) {
-        reject("Canvas context is not available");
-        return;
-      }
+      if (!ctx) return reject("Canvas context not available");
 
-      // Set the canvas dimensions to the image size
       canvas.width = img.width;
       canvas.height = img.height;
-
-      // Draw the image on the canvas
       ctx.drawImage(img, 0, 0);
 
-      // Get pixel data from the four corners
       const corners = [
-        { x: 0, y: 0 }, // top-left
-        { x: img.width - 1, y: 0 }, // top-right
-        { x: 0, y: img.height - 1 }, // bottom-left
-        { x: img.width - 1, y: img.height - 1 }, // bottom-right
+        ctx.getImageData(0, 0, 1, 1).data,
+        ctx.getImageData(img.width - 1, 0, 1, 1).data,
+        ctx.getImageData(0, img.height - 1, 1, 1).data,
+        ctx.getImageData(img.width - 1, img.height - 1, 1, 1).data,
       ];
 
-      let r = 0,
-        g = 0,
-        b = 0;
+      const avg = corners.reduce(
+        (acc, data) => {
+          acc.r += data[0];
+          acc.g += data[1];
+          acc.b += data[2];
+          return acc;
+        },
+        { r: 0, g: 0, b: 0 },
+      );
 
-      corners.forEach(({ x, y }) => {
-        const pixel = ctx.getImageData(x, y, 1, 1).data;
-        r += pixel[0]; // red
-        g += pixel[1]; // green
-        b += pixel[2]; // blue
-      });
-
-      // Average the color values
-      r = Math.round(r / 4);
-      g = Math.round(g / 4);
-      b = Math.round(b / 4);
-
-      // Convert RGB to HEX
-      const hex = rgbToHex(r, g, b);
-      resolve(hex);
+      const r = Math.round(avg.r / 4);
+      const g = Math.round(avg.g / 4);
+      const b = Math.round(avg.b / 4);
+      resolve(rgbToHex(r, g, b));
     };
 
     img.onerror = () => reject("Image loading error");
   });
 }
-
-// Перетворення RGB в HEX
 function rgbToHex(r: number, g: number, b: number): string {
-  return `#${((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1).toUpperCase()}`;
-}
-
-// Функція для визначення контрастного кольору
-function getContrastColor(hex: string): string {
-  // Визначаємо, чи темний або світлий колір
-  const hexColor = hex.startsWith("#") ? hex.slice(1) : hex;
-  const r = parseInt(hexColor.slice(0, 2), 16);
-  const g = parseInt(hexColor.slice(2, 4), 16);
-  const b = parseInt(hexColor.slice(4, 6), 16);
-
-  // Обчислення контрасту за допомогою формули для визначення яскравості
-  const brightness = (r * 299 + g * 587 + b * 114) / 1000;
-
-  // Якщо колір темний, повертаємо білий
-  return brightness > 128 ? "#000000" : "#FFFFFF";
-}
-
-// Оновлення кольору іконки після вибору файлів
-watch(files, async () => {
-  iconColors.value = await Promise.all(
-    files.value.map((file) => getIconColor(file)),
+  return (
+    "#" +
+    [r, g, b]
+      .map((x) => {
+        const hex = x.toString(16);
+        return hex.length === 1 ? "0" + hex : hex;
+      })
+      .join("")
   );
+}
+
+function getContrastColor(hexColor: string): string {
+  const r = parseInt(hexColor.substring(1, 3), 16);
+  const g = parseInt(hexColor.substring(3, 5), 16);
+  const b = parseInt(hexColor.substring(5, 7), 16);
+
+  const luminance = (0.299 * r + 0.587 * g + 0.114 * b) / 255;
+  return luminance > 0.5 ? "#000000" : "#FFFFFF";
+}
+
+// Оновлення кольорів після змін у списку файлів
+watch(files, async (newFiles) => {
+  const colors = await Promise.all(newFiles.map((file) => getIconColor(file)));
+  iconColors.value = colors;
 });
 </script>

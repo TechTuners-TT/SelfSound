@@ -12,7 +12,7 @@
   </svg>
 </template>
 
-<script setup>
+<script setup lang="ts">
 defineProps({
   isPlaying: Boolean,
 });

@@ -6,7 +6,7 @@
   </svg>
 </template>
 
-<script setup>
+<script setup lang="ts">
 defineProps({
   currentColor: {
     type: String,
