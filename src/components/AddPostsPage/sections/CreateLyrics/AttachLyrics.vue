@@ -52,7 +52,7 @@
         <div class="relative w-30/99 sm:w-25/99">
           <select
             v-model="part.type"
-            class="appearance-none w-full h-[37px] items-center justify-center rounded-[5px] text-white placeholder-gray-400 focus:outline-none custom-select pl-2 pr-4"
+            class="appearance-none text-[14px] xl:text-[15px] 2xl:text-[16px] w-full h-[37px] items-center justify-center rounded-[5px] text-white placeholder-gray-400 focus:outline-none custom-select pl-2 pr-4"
           >
             <option
               disabled
