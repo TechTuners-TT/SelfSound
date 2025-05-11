@@ -87,7 +87,7 @@
             <span>{{ formatTime(item.currentTime || 0) }}</span>
             <input
               type="range"
-              class="w-full h-[4px] bg-white rounded appearance-none cursor-pointer"
+              class="w-full h-[4px] bg-white rounded appearance-none cursor-pointer range-thumb-purple"
               :max="item.duration || 0"
               :value="item.currentTime || 0"
               @input="(e) => seekAudio(item, e)"
@@ -254,3 +254,24 @@ const goBack = () => {
   window.history.back();
 };
 </script>
+
+<style scoped>
+.range-thumb-purple::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  height: 12px;
+  width: 12px;
+  background: #6d01d0; /* фіолетовий */
+  border-radius: 50%;
+  cursor: pointer;
+  margin-top: 0px; /* вирівнювання по центру */
+}
+
+.range-thumb-purple::-moz-range-thumb {
+  height: 12px;
+  width: 12px;
+  background: #6d01d0;
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+}
+</style>

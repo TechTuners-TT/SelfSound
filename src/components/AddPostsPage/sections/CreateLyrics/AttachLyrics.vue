@@ -197,7 +197,7 @@ const goBack = () => {
 }
 
 .custom-select option {
-  color: rgb(0, 0, 0) !important; /* Текст у селекті білий */
+  color: white !important; /* Текст у селекті білий */
   background-color: rgba(
     109,
     1,
@@ -205,6 +205,13 @@ const goBack = () => {
     0.5
   ) !important; /* Фон в селекті фіолетовий */
 }
+
+/* Стиль тільки для placeholder (disabled) */
+.custom-select option:disabled {
+  color: rgba(255, 255, 255, 0.7) !important; /* трохи прозорий білий */
+  font-style: italic;
+}
+
 textarea::-webkit-scrollbar-thumb {
   background-color: rgba(255, 255, 255, 0.3); /* світло-сірий */
   border-radius: 8px;
