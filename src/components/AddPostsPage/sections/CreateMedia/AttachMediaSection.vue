@@ -3,9 +3,9 @@
     class="2xl:m-[40px] xl:m-[35px] lg:m-[33px] md:m-[32px] sm:m-[30px] m-[28px]"
   >
     <!-- Заголовок -->
-    <div class="flex items-center mb-6 h-[17px]">
+    <div class="flex items-center mb-6">
       <h1
-        class="h-[17px] 2xl:text-[24px] xl:text-[20px] lg:text-[18px] text-[16px] font-semibold text-white inter-font"
+        class="2xl:text-[24px] xl:text-[20px] lg:text-[18px] text-[16px] font-semibold text-white inter-font"
       >
         Attach media files
       </h1>
@@ -103,15 +103,6 @@
           autoplay
           class="zoomable-media object-contain w-full h-full transform hover:scale-125 transition duration-300"
         ></video>
-
-        <!-- Кнопка закриття -->
-        <!--
-        <button
-          class="absolute top-4 right-4 bg-black/60 text-white rounded-full px-3 py-1 text-xl hover:bg-black"
-          @click="modalPreview = null"
-        >
-          <MediaClose />
-        </button> -->
       </div>
     </div>
   </div>
