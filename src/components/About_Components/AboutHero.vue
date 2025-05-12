@@ -29,12 +29,12 @@
       </div>
 
       <!-- Button -->
-      <a
-        href="#signup"
+      <router-link
+        to="/sign-up"
         class="overflow-hidden gap-2.5 text-2xl font-semibold bg-purple-700 flex justify-center rounded-full hover:bg-white hover:text-blue-900 transition-all duration-300 hero-button"
       >
         Sign up for free
-      </a>
+      </router-link>
     </div>
   </section>
 </template>

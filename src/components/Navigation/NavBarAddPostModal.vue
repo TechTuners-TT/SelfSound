@@ -12,20 +12,28 @@
         class="flex gap-[5.5px] sm:gap-[8px] md:gap-[10.7px] lg:gap-[13.5px] xl:gap-[16px] [@media(min-width:1537px)]:gap-[20px]"
       >
         <button @click="close">
-          <a href="#add-post-media"> <NavBarAddPost name="Media" /></a>
+          <router-link to="/add-post-media">
+            <NavBarAddPost name="Media"
+          /></router-link>
         </button>
         <button @click="close">
-          <a href="#add-post-audio"><NavBarAddPost name="Audio" /></a>
+          <router-link to="/add-post-audio"
+            ><NavBarAddPost name="Audio"
+          /></router-link>
         </button>
       </div>
       <div
         class="flex gap-[5.5px] sm:gap-[8px] md:gap-[10.7px] lg:gap-[13.5px] xl:gap-[16px] [@media(min-width:1537px)]:gap-[20px]"
       >
         <button @click="close">
-          <a href="#add-post-lyrics"><NavBarAddPost name="Lyrics" /></a>
+          <router-link to="/add-post-lyrics"
+            ><NavBarAddPost name="Lyrics"
+          /></router-link>
         </button>
         <button @click="close">
-          <a href="#add-post-musicxml"><NavBarAddPost name="MusicXML" /></a>
+          <router-link to="/add-post-musicxml"
+            ><NavBarAddPost name="MusicXML"
+          /></router-link>
         </button>
       </div>
     </div>

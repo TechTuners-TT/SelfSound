@@ -1,22 +1,25 @@
-import { createRouter, createWebHashHistory } from "vue-router";
+import { createRouter, createWebHistory } from "vue-router";
+
 import AboutView from "../views/AboutView.vue";
+
+import HomeView from "../views/HomeView.vue";
+import SearchView from "../views/SearchView.vue";
+import SettingsView from "../views/SettingsView.vue";
 import SignInView from "../views/SignInView.vue";
 import SignUpView from "../views/SignUpView.vue";
-import HomeView from "../views/HomeView.vue";
-import UserProfile from "@/views/UserProfile.vue";
-import SettingsView from "@/views/SettingsView.vue";
-import CreatePostMediaView from "../views/AddPosts/CreatePostMediaView.vue";
+import UserProfile from "../views/UserProfile.vue";
+
 import CreatePostAudioView from "../views/AddPosts/CreatePostAudioView.vue";
-import CreatePostMusicXMLView from "../views/AddPosts/CreatePostMusicXML.vue";
 import CreatePostLyricsView from "../views/AddPosts/CreatePostLyricsView.vue";
-import SearchView from "../views/SearchView.vue";
+import CreatePostMediaView from "../views/AddPosts/CreatePostMediaView.vue";
+import CreatePostMusicXMLView from "../views/AddPosts/CreatePostMusicXML.vue";
 
 const router = createRouter({
-  history: createWebHashHistory(import.meta.env.BASE_URL),
+  history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
     {
-      path: "/",
-      name: "about",
+      path: "/about-selfsound",
+      name: "about selfsound",
       component: AboutView,
     },
     {

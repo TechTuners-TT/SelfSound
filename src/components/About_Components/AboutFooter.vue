@@ -22,7 +22,7 @@
             <ul
               class="font-inter mt-8 space-y-4 text-xl max-md:mt-5 max-md:text-lg"
             >
-              <li><a href="#about">About Us</a></li>
+              <li><router-link to="/about-us">About Us</router-link></li>
             </ul>
           </div>
           <div>
@@ -30,9 +30,9 @@
             <ul
               class="font-inter mt-8 space-y-4 text-xl max-md:mt-5 max-md:text-lg"
             >
-              <li><a href="#support">Support</a></li>
-              <li><a href="#terms">Terms of Use</a></li>
-              <li><a href="#privacy">Privacy Policy</a></li>
+              <li><router-link to="/support">Support</router-link></li>
+              <li><router-link to="/terms">Terms of Use</router-link></li>
+              <li><router-link to="/privacy">Privacy Policy</router-link></li>
             </ul>
           </div>
           <div>
@@ -40,27 +40,37 @@
             <ul
               class="font-inter mt-8 space-y-4 text-xl max-md:mt-5 max-md:text-lg"
             >
-              <li><a href="#advertisers">For Advertisers</a></li>
+              <li>
+                <router-link to="/advertisers">For Advertisers</router-link>
+              </li>
             </ul>
           </div>
         </nav>
 
         <!-- Соціальні -->
         <div class="flex gap-8 max-md:mt-8">
-          <a href="#social1" aria-label="Discord" class="social-btn">
+          <router-link
+            to="/socials/discord"
+            aria-label="Discord"
+            class="social-btn"
+          >
             <img
               src="@/components/SVG/About_SVG/Socials_Discord.svg"
               alt="Discord"
               class="w-[72px] h-[72px] rounded-2xl max-md:w-[54px] max-md:h-[54px]"
             />
-          </a>
-          <a href="#social2" aria-label="Instagram" class="social-btn">
+          </router-link>
+          <router-link
+            to="/socials/instagram"
+            aria-label="Instagram"
+            class="social-btn"
+          >
             <img
               src="@/components/SVG/About_SVG/Socials_Instagram.svg"
               alt="Instagram"
               class="w-[72px] h-[72px] rounded-2xl max-md:w-[54px] max-md:h-[54px]"
             />
-          </a>
+          </router-link>
         </div>
       </div>
 
@@ -95,6 +105,7 @@ a:hover {
     transform 0.3s ease,
     filter 0.3s ease;
 }
+
 .social-btn:hover {
   transform: scale(1.1);
   filter: brightness(1.2);
