@@ -1,6 +1,6 @@
 <template>
   <div
-    class="flex gap-10 iteam-centere mt-10 sm:gap-15 md:gap-[46px] lg:gap-[76px] xl:gap-[56px] 2xl:gap-[76px]"
+    class="mb-[10px] flex gap-10 iteam-centere mt-10 sm:gap-15 md:gap-[46px] lg:gap-[76px] xl:gap-[56px] 2xl:gap-[76px] sm:mb-[12px] md:mb-[14px] lg:mb-[16px] xl:mb-[18px] 2xl:mb-[20px]"
   >
     <div
       class="relative w-[84px] h-[84px] max-sm:w-[60px] max-sm:h-[60px] sm:w-[64px] sm:h-[64px] md:w-[68px] md:h-[68px] lg:w-[72px] lg:h-[72px] xl:w-[84px] xl:h-[84px]"
@@ -31,7 +31,7 @@
   </div>
 
   <div
-    class="flex items-center gap-10 h-[54px] sm:gap-15 md:gap-[46px] lg:gap-[76px] xl:gap-[56px] 2xl:gap-[60px]"
+    class="flex items-center gap-10 min-h-[34px] sm:gap-15 md:gap-[46px] lg:gap-[76px] xl:gap-[56px] 2xl:gap-[60px]"
   >
     <div
       class="flex-shrink-0 min-w-[60px] max-w-[100px] w-[100px] 2xl:w-[100px] xl:w-[84px] lg:w-[72px] md:w-[68px] sm:w-[64px] max-sm:w-[60px]"
@@ -64,7 +64,7 @@
   </div>
 
   <div
-    class="flex items-center h-[12px] mt-5 sm:mt-5 md:mt-10 lg:mt-5 xl:mt-10 gap-6.5 sm:gap-12.5 md:gap-[40px] lg:gap-[60px] xl:gap-[50px] 2xl:gap-[60px]"
+    class="flex items-center h-[12px] mt-[15px] sm:mt-[20px] md:mt-[25px] lg:mt-[30px] xl:mt-[35px] 2xl:mt-[40px] gap-6.5 sm:gap-12.5 md:gap-[40px] lg:gap-[60px] xl:gap-[50px] 2xl:gap-[60px]"
   >
     <div
       class="flex-shrink-0 min-w-[60px] max-w-[100px] w-[100px] 2xl:w-[100px] xl:w-[90px] lg:w-[88px] md:w-[74px] sm:w-[74px] max-sm:w-[74px]"
