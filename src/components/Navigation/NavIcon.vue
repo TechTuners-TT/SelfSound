@@ -4,12 +4,13 @@
     @click="handleClick"
     ref="button"
   >
-    <span ref="iconContainer" v-html="svg"></span>
+    <span ref="iconContainer" v-html="safeSvg"></span>
   </button>
 </template>
 
 <script setup lang="ts">
-import { onMounted, ref, watch } from "vue";
+import { onMounted, ref, watch, computed } from "vue";
+import DOMPurify from "dompurify";
 
 interface Props {
   svg: string;
@@ -22,13 +23,17 @@ const emit = defineEmits(["click"]);
 const iconContainer = ref<HTMLElement | null>(null);
 const handleClick = () => emit("click");
 
+// Очищення SVG перед рендером
+const safeSvg = computed(() =>
+  DOMPurify.sanitize(props.svg, { USE_PROFILES: { svg: true } }),
+);
+
 // Змінює стилі SVG відповідно до активного стану
 const updateIconStyles = () => {
   if (!iconContainer.value) return;
   const path = iconContainer.value.querySelector(
     ".nav-icon path",
   ) as HTMLElement | null;
-
   if (path) {
     path.setAttribute("fill", props.isActive ? "#6D01D0" : "white");
   }
@@ -57,6 +62,4 @@ watch(
   justify-content: center;
   margin: 0 auto;
 }
-/*
-nav-icon */
 </style>
