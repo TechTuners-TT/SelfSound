@@ -1,9 +1,11 @@
 <template>
-  <div class="2xl:m-[40px] xl:m-[30px] m-[20px]">
+  <div
+    class="2xl:m-[40px] xl:m-[35px] lg:m-[33px] md:m-[32px] sm:m-[30px] m-[28px]"
+  >
     <!-- Заголовок -->
     <div class="flex items-center mb-6">
       <h1
-        class="2xl:text-[24px] xl:text-[20px] lg:text-[18px] text-[16px] font-bold text-white inter-font"
+        class="2xl:text-[24px] xl:text-[20px] lg:text-[18px] text-[16px] font-semibold text-white inter-font"
       >
         Attach MusicXML files
       </h1>
@@ -19,22 +21,11 @@
       @change="handleFileChange"
     />
 
-    <!-- Кнопка додавання -->
-    <button
-      @click="triggerFileInput"
-      :disabled="false"
-      :class="[
-        'w-full 2xl:h-[50px] h-[40px] 2xl:rounded-[10px] rounded-[5px] transition inter-font text-white font-bold text-xl flex items-center justify-center mb-6',
-        'bg-[#000C9C]/40 hover:bg-[#000C9C]/60',
-      ]"
-    >
-      <AddIcon
-        class="2xl:w-[24px] 2xl:h-[24px] xl:w-[20px] xl:h-[20px] lg:w-[18px] lg:h-[18px] w-[16px] h-[16px]"
-      />
-    </button>
-
     <!-- Прев’ю файлів -->
-    <div class="bg-[#000C9C]/40 pt-[30px] p-[20px] mb-6 rounded-[5px]">
+    <div
+      v-if="files.length"
+      class="bg-[#000C9C]/40 mb-6 rounded-[5px] pt-[20px] p-[10px] sm:pt-[25px] sm:p-[15px] 2xl:pt-[30px] 2xl:p-[20px]"
+    >
       <div
         class="relative bg-white/10 mb-[12px] rounded-[5px]"
         v-for="(item, idx) in files"
@@ -42,7 +33,7 @@
       >
         <!-- Картка файлу -->
         <div
-          class="p-[15px] pt-[20px] pb-[20px] rounded-[5px] transition cursor-pointer"
+          class="p-[10px] sm:p-[12px] lg:p-[13px] xl:p-[14px] 2xl:p-[15px] rounded-[5px] transition"
         >
           <div class="flex items-left">
             <div class="flex items-center gap-4">
@@ -57,41 +48,57 @@
                 v-else
                 class="mr-[15px] w-10 h-10 rounded-[3px] bg-[#6D01D0] flex items-center justify-center text-white text-2xl"
               >
-                +
+                <XMLIcon />
               </div>
             </div>
 
-            <div class="flex flex-col text-white w-2/3">
-              <p class="font-bold truncate max-w-xs">{{ item.title }}</p>
+            <div class="flex flex-col text-white w-3/5">
+              <p
+                class="font-bold truncate max-w-xs text-[15px] sm:text-[16px] md:text-[18px] lg:text-[20px] xl:text-[22px] 2xl:text-[24px]"
+              >
+                {{ item.title }}
+              </p>
               <!-- Додано w-full для обрізання -->
-              <p class="text-sm">{{ fileSizeInKB(item.file) }} KB</p>
+              <p
+                class="text-[11px] sm:text-[12px] md:text-[13px] lg:text-[14px] xl:text-[15px] 2xl:text-[16px]"
+              >
+                {{ fileSizeInKB(item.file) }} KB
+              </p>
             </div>
+            <!-- Кнопка для видалення файлу -->
+            <button
+              @click.stop="removeFile(idx)"
+              class="absolute top-1/2 left-[auto] right-[12px] sm:right-[15px] md:right-[17px] lg:right-[20px] xl:right-[22px] 2xl:right-[25.85px] transform -translate-y-1/2 h-[10px] sm:h-[12px] md:h-[14px] lg:h-[16px] xl:h-[18px] 2xl:h-[20px] w-[10px] sm:w-[12px] md:w-[14px] lg:w-[16px] xl:w-[18px] 2xl:w-[20px] rounded-full flex items-center justify-center"
+            >
+              <AudioClose11 />
+            </button>
           </div>
         </div>
-
-        <!-- Кнопка для видалення файлу -->
-        <button
-          @click.stop="removeFile(idx)"
-          class="absolute top-[-10px] right-[-10px] text-white bg-black/60 hover:bg-black/80 rounded-full w-7 h-7 flex items-center justify-center"
-        >
-          ✖
-        </button>
-      </div>
-
-      <!-- Відображення використаного місця на диску -->
-      <div class="text-xs text-white mt-2">
-        <p>{{ getUsedMemory() }} / 1MB used</p>
       </div>
     </div>
+    <!-- Кнопка додавання -->
+    <button
+      @click="triggerFileInput"
+      :disabled="files.length >= 5"
+      :class="[
+        'w-full 2xl:h-[50px] h-[40px] 2xl:rounded-[10px] rounded-[5px] transition inter-font text-white font-bold text-xl flex items-center justify-center mb-6 ',
+        files.length >= 5
+          ? 'bg-white/5 cursor-not-allowed'
+          : 'bg-[#000C9C]/40 hover:bg-[#6D01D0]',
+      ]"
+    >
+      <AddIcon
+        class="2xl:w-[24px] 2xl:h-[24px] xl:w-[20px] xl:h-[20px] lg:w-[18px] lg:h-[18px] w-[16px] h-[16px]"
+      />
+    </button>
 
-    <!-- Кнопка сабміту -->
-    <div class="flex justify-end mb-6">
+    <!-- Кнопка сабміту (відображається тільки якщо є файли) -->
+    <div v-if="files.length > 0" class="flex justify-end mb-6">
       <button
         @click="submitPost"
-        :disabled="getUsedMemoryInBytes() > 1024 * 1024"
-        class="w-full xl:w-1/2 2xl:h-[50px] h-[40px] 2xl:rounded-[10px] rounded-[5px] transition font-bold text-xl flex items-center justify-center text-[#6D01D0] inter-font bg-[#6D01D0]/20 disabled:opacity-40 disabled:cursor-not-allowed 2xl:text-[24px] xl:text-[20px] lg:text-[18px] text-[16px]"
+        class="cursor-pointer w-[75px] sm:w-[80px] md:w-[85px] lg:w-[95px] xl:w-[105px] 2xl:w-[119px] 2xl:h-[37px] bg-[#6D01D0]/20 xl:h-[32px] lg:h-[28px] md:h-[24px] sm:h-[20px] h-[18px] 2xl:rounded-[10px] rounded-[5px] transition font-bold text-xl flex items-center justify-center text-[#6D01D0] inter-font 2xl:text-[24px] xl:text-[20px] lg:text-[18px] text-[16px]"
       >
-        Publish
+        <p @click="goBack">Publish</p>
       </button>
     </div>
   </div>
@@ -100,8 +107,9 @@
 <script setup lang="ts">
 import AddIcon from "../../../SVG/AddPosts_Icons/AddIcon.vue";
 import { ref } from "vue";
-
-// Масив для збереження MusicXML файлів
+import AudioClose11 from "@/components/SVG/AddPosts_Icons/AudioClose11.vue";
+import XMLIcon from "@/components/SVG/AddPosts_Icons/XMLIcon.vue";
+// Масив файлів
 const fileInput = ref<HTMLInputElement | null>(null);
 const files = ref<
   {
@@ -115,11 +123,7 @@ const files = ref<
 
 // Тригер для відкриття діалогу вибору файлів
 const triggerFileInput = () => {
-  if (getUsedMemoryInBytes() < 1024 * 1024) {
-    fileInput.value?.click();
-  } else {
-    alert("Максимальний ліміт пам’яті 1MB!");
-  }
+  fileInput.value?.click();
 };
 
 // Обробник вибору файлу
@@ -129,11 +133,15 @@ const handleFileChange = (event: Event) => {
   if (!selectedFiles) return;
 
   const newFiles = Array.from(selectedFiles);
-  const totalFileSize =
-    getUsedMemoryInBytes() + newFiles.reduce((acc, file) => acc + file.size, 0);
 
-  if (totalFileSize <= 1024 * 1024) {
-    for (const file of newFiles) {
+  // Перевірка, скільки файлів уже додано
+  const remainingFilesCount = 5 - files.value.length;
+
+  // Додаємо тільки стільки файлів, скільки ще можна додати
+  const filesToAdd = newFiles.slice(0, remainingFilesCount);
+
+  if (filesToAdd.length > 0) {
+    for (const file of filesToAdd) {
       // Перевірка типу файлів
       if (
         file.name.endsWith(".musicxml") ||
@@ -153,8 +161,6 @@ const handleFileChange = (event: Event) => {
         alert("Please, upload MusicXML file");
       }
     }
-  } else {
-    alert("Max limit of memmory is 1MB!");
   }
 };
 
@@ -165,12 +171,6 @@ const getUsedMemoryInBytes = () => {
 
 const fileSizeInKB = (file: File) => {
   return (file.size / 1024).toFixed(2); // Переведення в КБ
-};
-
-// Функція для отримання відформатованого значення зайнятої пам'яті
-const getUsedMemory = () => {
-  const usedMemory = getUsedMemoryInBytes();
-  return `${(usedMemory / 1024).toFixed(2)} KB`; // Відображаємо в КБ
 };
 
 // Видалити файл з масиву
@@ -186,5 +186,8 @@ const submitPost = () => {
 // Відкриття файлу при натисканні на елемент
 const openFile = (preview: string) => {
   window.open(preview, "_blank"); // Відкриває файл в новій вкладці
+};
+const goBack = () => {
+  window.history.back();
 };
 </script>

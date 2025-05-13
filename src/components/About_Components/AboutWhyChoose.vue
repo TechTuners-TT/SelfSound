@@ -78,12 +78,12 @@
             <h3 class="oswald-font text-3xl max-md:text-2xl uppercase">
               Ready to dive into music talk? <br />Let’s go!
             </h3>
-            <a
-              href="#signup"
+            <router-link
+              to="/sign-up"
               class="font-inter inline-block mt-4 px-6 py-3 sm:px-8 sm:py-4 md:px-10 md:py-5 bg-white text-blue-900 text-lg sm:text-xl md:text-2xl font-semibold rounded-full whitespace-nowrap transition-all duration-300 hover:bg-[#000C9C] hover:text-[#FFFFFF]"
             >
               Sign up for free
-            </a>
+            </router-link>
           </div>
           <div class="w-full md:w-1/2 flex justify-center">
             <img

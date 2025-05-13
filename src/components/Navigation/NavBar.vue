@@ -11,7 +11,7 @@
           class="text-[34px] h-[34px] text-center text-white capitalize w-full flex justify-center items-center"
         >
           <span class="hidden max-md:block bebas_neue-font"
-            ><a href="#home">S</a></span
+            ><router-link to="/home">S</router-link></span
           >
         </header>
 
@@ -19,14 +19,14 @@
         <div
           class="max-md:order-3 max-md:absolute max-md:top-1/2 max-md:right-4 transform max-md:-translate-y-1/2"
         >
-          <a href="#settings">
+          <router-link to="/settings">
             <span class="hidden max-md:block">
               <NavIcon
                 :svg="settingsIcon"
                 :isActive="currentPage === 'settings'"
               />
             </span>
-          </a>
+          </router-link>
         </div>
       </nav>
     </span>
@@ -47,7 +47,7 @@
         >
           <span class="hidden max-md:block"></span>
           <span class="max-md:hidden bebas_neue-font cursor-pointer"
-            ><a href="#home">S</a></span
+            ><router-link to="/home">S</router-link></span
           >
         </header>
 
@@ -55,13 +55,13 @@
         <section
           class="flex flex-col gap-[30px] items-center max-md:flex-row max-md:bottom-3 max-md:order-2"
         >
-          <a href="#search">
+          <router-link to="/search">
             <NavIcon :svg="searchIcon" :isActive="currentPage === 'search'" />
-          </a>
+          </router-link>
 
-          <a href="#home">
+          <router-link to="/home">
             <NavIcon :svg="homeIcon" :isActive="currentPage === 'home'" />
-          </a>
+          </router-link>
 
           <button
             :class="[
@@ -73,16 +73,16 @@
             <NavIcon :svg="addPostIcon" :isActive="isAddPostOpen" />
           </button>
 
-          <a href="#notifications">
+          <router-link to="/notifications">
             <NavIcon
               :svg="notificationsIcon"
               :isActive="currentPage === 'notifications'"
             />
-          </a>
+          </router-link>
 
-          <a href="#profile">
+          <router-link to="/profile">
             <NavIcon :svg="profileIcon" :isActive="currentPage === 'profile'" />
-          </a>
+          </router-link>
         </section>
 
         <div
@@ -90,12 +90,13 @@
         >
           <span class="hidden max-md:block"></span>
           <span class="max-md:hidden">
-            <a href="#settings"
-              ><NavIcon
+            <router-link to="/settings">
+              <NavIcon
                 :svg="settingsIcon"
                 :isActive="currentPage === 'settings'"
-              /> </a
-          ></span>
+              />
+            </router-link>
+          </span>
         </div>
       </div>
     </nav>

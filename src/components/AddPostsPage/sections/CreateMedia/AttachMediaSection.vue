@@ -1,9 +1,11 @@
 <template>
-  <div class="2xl:m-[40px] xl:m-[30px] m-[20px]">
+  <div
+    class="2xl:m-[40px] xl:m-[35px] lg:m-[33px] md:m-[32px] sm:m-[30px] m-[28px]"
+  >
     <!-- Заголовок -->
     <div class="flex items-center mb-6">
       <h1
-        class="2xl:text-[24px] xl:text-[20px] lg:text-[18px] text-[16px] font-bold text-white inter-font"
+        class="2xl:text-[24px] xl:text-[20px] lg:text-[18px] text-[16px] font-semibold text-white inter-font"
       >
         Attach media files
       </h1>
@@ -18,22 +20,6 @@
       class="hidden"
       @change="handleFileChange"
     />
-
-    <!-- Кнопка додавання -->
-    <button
-      @click="triggerFileInput"
-      :disabled="files.length >= 5"
-      :class="[
-        'w-full 2xl:h-[50px] h-[40px] 2xl:rounded-[10px] rounded-[5px] transition inter-font text-white font-bold text-xl flex items-center justify-center mb-6 ',
-        files.length >= 5
-          ? 'bg-white/5 cursor-not-allowed'
-          : 'bg-[#000C9C]/40 hover:bg-[#000C9C]/60',
-      ]"
-    >
-      <AddIcon
-        class="2xl:w-[24px] 2xl:h-[24px] xl:w-[20px] xl:h-[20px] lg:w-[18px] lg:h-[18px] w-[16px] h-[16px]"
-      />
-    </button>
 
     <!-- Прев’ю файлів з підтримкою зуму -->
     <div class="space-y-6 mb-6">
@@ -60,21 +46,35 @@
 
         <button
           @click.stop="removeFile(idx)"
-          class="absolute top-2 right-2 text-white bg-black/60 hover:bg-black/80 rounded-full w-7 h-7 flex items-center justify-center"
+          class="cursor-pointer absolute top-[10px] right-[10px] text-white text-[20px] rounded-full w-[20px] h-[20px] flex items-center justify-center"
         >
-          ✖
+          <!--bg-white-->
+          <MediaClose :style="{ color: iconColors[idx] || '#FFFFFF' }" />
         </button>
       </div>
     </div>
-
-    <!-- Кнопка сабміту -->
-    <div class="flex justify-end mb-6">
+    <!-- Кнопка додавання -->
+    <button
+      @click="triggerFileInput"
+      :disabled="files.length >= 5"
+      :class="[
+        'w-full 2xl:h-[50px] h-[40px] 2xl:rounded-[10px] rounded-[5px] transition inter-font text-white font-bold text-xl flex items-center justify-center mb-6 ',
+        files.length >= 5
+          ? 'bg-white/5 cursor-not-allowed'
+          : 'bg-[#000C9C]/40 hover:bg-[#6D01D0]',
+      ]"
+    >
+      <AddIcon
+        class="2xl:w-[24px] 2xl:h-[24px] xl:w-[20px] xl:h-[20px] lg:w-[18px] lg:h-[18px] w-[16px] h-[16px]"
+      />
+    </button>
+    <!-- Кнопка сабміту (відображається тільки якщо є файли) -->
+    <div v-if="files.length > 0" class="flex justify-end mb-6">
       <button
         @click="submitPost"
-        :disabled="files.length === 0"
-        class="w-full xl:w-1/2 2xl:h-[50px] h-[40px] 2xl:rounded-[10px] rounded-[5px] transition font-bold text-xl flex items-center justify-center text-[#6D01D0] inter-font bg-[#6D01D0]/20 disabled:opacity-40 disabled:cursor-not-allowed 2xl:text-[24px] xl:text-[20px] lg:text-[18px] text-[16px]"
+        class="cursor-pointer w-[75px] sm:w-[80px] md:w-[85px] lg:w-[95px] xl:w-[105px] 2xl:w-[119px] 2xl:h-[37px] bg-[#6D01D0]/20 xl:h-[32px] lg:h-[28px] md:h-[24px] sm:h-[20px] h-[18px] 2xl:rounded-[10px] rounded-[5px] transition font-bold text-xl flex items-center justify-center text-[#6D01D0] inter-font 2xl:text-[24px] xl:text-[20px] lg:text-[18px] text-[16px]"
       >
-        Publish
+        <p @click="goBack">Publish</p>
       </button>
     </div>
 
@@ -103,21 +103,14 @@
           autoplay
           class="zoomable-media object-contain w-full h-full transform hover:scale-125 transition duration-300"
         ></video>
-
-        <!-- Кнопка закриття -->
-        <button
-          class="absolute top-4 right-4 bg-black/60 text-white rounded-full px-3 py-1 text-xl hover:bg-black"
-          @click="modalPreview = null"
-        >
-          ✖
-        </button>
       </div>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import AddIcon from "../../../SVG/AddPosts_Icons/AddIcon.vue";
+import MediaClose from "@/components/SVG/AddPosts_Icons/MediaClose.vue";
+import AddIcon from "@/components/SVG/AddPosts_Icons/AddIcon.vue";
 
 import { ref, onMounted, watch, nextTick } from "vue";
 import mediumZoom from "medium-zoom";
@@ -129,6 +122,10 @@ const modalPreview = ref<{ preview: string; file: File; type: string } | null>(
   null,
 );
 const zoomInstance = ref<Zoom | null>(null);
+
+function goBack() {
+  window.history.back();
+}
 
 // Тригер для вибору файлів
 const triggerFileInput = () => {
@@ -191,4 +188,85 @@ const setupZoom = () => {
 // Перезапуск zoom кожного разу, коли файли оновлюються
 onMounted(setupZoom);
 watch(files, setupZoom);
+
+// ===================== Кольори =====================
+const iconColors = ref<string[]>([]);
+
+async function getIconColor(file: {
+  preview: string;
+  file: File;
+  type: string;
+}): Promise<string> {
+  if (!file.type.startsWith("image/")) return "#FFFFFF";
+  const cornerColor = await getAverageCornerColor(file.preview);
+  return getContrastColor(cornerColor);
+}
+
+async function getAverageCornerColor(imageUrl: string): Promise<string> {
+  const img = new Image();
+  img.crossOrigin = "anonymous";
+  img.src = imageUrl;
+
+  return new Promise((resolve, reject) => {
+    img.onload = () => {
+      const canvas = document.createElement("canvas");
+      const ctx = canvas.getContext("2d");
+      if (!ctx) return reject("Canvas context not available");
+
+      canvas.width = img.width;
+      canvas.height = img.height;
+      ctx.drawImage(img, 0, 0);
+
+      const corners = [
+        ctx.getImageData(0, 0, 1, 1).data,
+        ctx.getImageData(img.width - 1, 0, 1, 1).data,
+        ctx.getImageData(0, img.height - 1, 1, 1).data,
+        ctx.getImageData(img.width - 1, img.height - 1, 1, 1).data,
+      ];
+
+      const avg = corners.reduce(
+        (acc, data) => {
+          acc.r += data[0];
+          acc.g += data[1];
+          acc.b += data[2];
+          return acc;
+        },
+        { r: 0, g: 0, b: 0 },
+      );
+
+      const r = Math.round(avg.r / 4);
+      const g = Math.round(avg.g / 4);
+      const b = Math.round(avg.b / 4);
+      resolve(rgbToHex(r, g, b));
+    };
+
+    img.onerror = () => reject("Image loading error");
+  });
+}
+function rgbToHex(r: number, g: number, b: number): string {
+  return (
+    "#" +
+    [r, g, b]
+      .map((x) => {
+        const hex = x.toString(16);
+        return hex.length === 1 ? "0" + hex : hex;
+      })
+      .join("")
+  );
+}
+
+function getContrastColor(hexColor: string): string {
+  const r = parseInt(hexColor.substring(1, 3), 16);
+  const g = parseInt(hexColor.substring(3, 5), 16);
+  const b = parseInt(hexColor.substring(5, 7), 16);
+
+  const luminance = (0.299 * r + 0.587 * g + 0.114 * b) / 255;
+  return luminance > 0.5 ? "#000000" : "#FFFFFF";
+}
+
+// Оновлення кольорів після змін у списку файлів
+watch(files, async (newFiles) => {
+  const colors = await Promise.all(newFiles.map((file) => getIconColor(file)));
+  iconColors.value = colors;
+});
 </script>

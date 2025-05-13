@@ -31,25 +31,28 @@
         class="font-inter hidden lg:flex items-center space-x-10 h-full"
         aria-label="Main navigation"
       >
-        <a href="#premium" class="hover:text-purple-700 font-normal nav-link"
-          >Premium</a
-        >
-        <a href="#support" class="hover:text-purple-700 font-normal nav-link"
-          >Support</a
+        <router-link
+          to="/support"
+          class="hover:text-purple-700 font-normal nav-link"
+          >Support</router-link
         >
         <div class="w-px h-6 bg-white" aria-hidden="true"></div>
-        <a href="#guest" class="hover:text-purple-700 font-normal nav-link"
-          >Guest mode</a
+        <router-link
+          to="/guest"
+          class="hover:text-purple-700 font-normal nav-link"
+          >Guest mode</router-link
         >
-        <a href="#sign-in" class="hover:text-purple-700 font-normal nav-link"
-          >Log in</a
+        <router-link
+          to="/login"
+          class="hover:text-purple-700 font-normal nav-link"
+          >Log in</router-link
         >
-        <a
-          href="#sign-up"
+        <router-link
+          to="/sign-up"
           class="flex items-center justify-center bg-white text-blue-900 font-semibold rounded-full hover:bg-purple-700 hover:text-white duration-300 sign-up-button"
         >
           Sign up
-        </a>
+        </router-link>
       </nav>
     </div>
 
@@ -65,11 +68,21 @@
         z-index: 9999;
       "
     >
-      <a href="#premium" class="block hover:text-purple-700">Premium</a>
-      <a href="#support" class="block hover:text-purple-700">Support</a>
-      <a href="#guest" class="block hover:text-purple-700">Guest mode</a>
-      <a href="#login" class="block hover:text-purple-700">Log in</a>
-      <a href="#signup" class="block hover:text-purple-700">Sign up</a>
+      <router-link to="/premium" class="block hover:text-purple-700">
+        Premium
+      </router-link>
+      <router-link to="/support" class="block hover:text-purple-700">
+        Support
+      </router-link>
+      <router-link to="/guest" class="block hover:text-purple-700">
+        Guest mode
+      </router-link>
+      <router-link to="/login" class="block hover:text-purple-700">
+        Log in
+      </router-link>
+      <router-link to="/sign-up" class="block hover:text-purple-700">
+        Sign up
+      </router-link>
     </div>
   </header>
 </template>

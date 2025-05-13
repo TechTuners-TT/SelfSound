@@ -1,11 +1,15 @@
 <template>
-  <div class="2xl:m-[40px] xl:m-[30px] m-[20px]">
+  <div
+    class="2xl:m-[40px] xl:m-[35px] lg:m-[33px] md:m-[32px] sm:m-[30px] m-[28px]"
+  >
     <!-- Контейнер для кнопки-закрити та заголовка -->
-    <div class="flex items-center">
+    <div
+      class="flex items-center 2xl:gap-[46px] xl:gap-[42px] lg:gap-[38px] md:gap-[35px] sm:gap-[32px] gap-[28px]"
+    >
       <!-- Контейнер для іконки з відступами, але без зміни її розміру -->
-      <button class="2xl:mr-[40px] xl:mr-[30px] mr-[20px] p-0">
+      <button @click="goBack" class="p-0">
         <CloseIcon
-          class="2xl:w-[24px] 2xl:h-[24px] xl:w-[20px] xl:h-[20px] lg:w-[18px] lg:h-[18px] w-[16px] h-[16px]"
+          class="cursor-pointer 2xl:w-[25px] 2xl:h-[25px] xl:w-[22px] xl:h-[22px] lg:w-[20px] lg:h-[20px] md:w-[18px] md:h-[18px] sm:w-[16px] sm:h-[16px] w-[14px] h-[14px]"
         />
       </button>
       <!-- Заголовок -->
@@ -25,6 +29,10 @@
 
 <script setup lang="ts">
 import CloseIcon from "../../SVG/AddPosts_Icons/CloseIcon.vue";
+
+function goBack() {
+  window.history.back();
+}
 </script>
 
 <style scoped>
@@ -32,19 +40,5 @@ import CloseIcon from "../../SVG/AddPosts_Icons/CloseIcon.vue";
 .flex {
   display: flex;
   align-items: center; /* Вертикальне вирівнювання по центру */
-}
-
-.mr-[20px] {
-  margin-right: 20px; /* Відступ між іконкою та заголовком */
-}
-
-.py-[20px] {
-  padding-top: 20px; /* Відступ зверху для іконки */
-  padding-bottom: 20px; /* Відступ знизу для іконки */
-}
-
-.px-[20px] {
-  padding-left: 20px; /* Відступ зліва для іконки */
-  padding-right: 20px; /* Відступ справа для іконки */
 }
 </style>
