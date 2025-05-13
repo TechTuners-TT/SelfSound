@@ -77,7 +77,7 @@
       <router-link to="/guest" class="block hover:text-purple-700">
         Guest mode
       </router-link>
-      <router-link to="/login" class="block hover:text-purple-700">
+      <router-link to="/sign-in" class="block hover:text-purple-700">
         Log in
       </router-link>
       <router-link to="/sign-up" class="block hover:text-purple-700">
