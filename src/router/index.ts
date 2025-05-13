@@ -1,4 +1,4 @@
-import { createRouter, createWebHistory } from "vue-router";
+import { createRouter, createWebHashHistory } from "vue-router";
 
 import AboutView from "../views/AboutView.vue";
 
@@ -15,7 +15,7 @@ import CreatePostMediaView from "../views/AddPosts/CreatePostMediaView.vue";
 import CreatePostMusicXMLView from "../views/AddPosts/CreatePostMusicXML.vue";
 
 const router = createRouter({
-  history: createWebHistory(import.meta.env.BASE_URL),
+  history: createWebHashHistory(import.meta.env.BASE_URL),
   routes: [
     {
       path: "/about-selfsound",
