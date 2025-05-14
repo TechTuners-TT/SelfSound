@@ -15,7 +15,7 @@
           type="email"
           v-model="email"
           :error="errors.email"
-          placeholder="enter email"
+          placeholder="Enter email"
         />
 
         <LoginFormInput
@@ -24,10 +24,10 @@
           type="password"
           v-model="password"
           :error="errors.password"
-          placeholder="enter password"
+          placeholder="Enter password"
         />
 
-        <LoginFormButton type="submit" marginClass="mb-4.5 , mt-7.5">
+        <LoginFormButton type="submit" marginClass="mb-4.5 mt-7.5">
           Sign In
         </LoginFormButton>
 
@@ -52,9 +52,10 @@
           <router-link
             to="/sign-up"
             @click.prevent="handleSignUp"
-            class="hover:#6D01D0;"
-            >Don't have a profile? Sign up here!</router-link
+            class="hover:text-indigo-600"
           >
+            Don't have a profile? Sign up here!
+          </router-link>
         </p>
       </form>
     </section>
@@ -80,7 +81,6 @@ export default defineComponent({
     const email = ref("");
     const password = ref("");
 
-    // Changed from Email/Password to lowercase email/password to match the field names
     const errors = reactive({
       email: "",
       password: "",
@@ -89,11 +89,9 @@ export default defineComponent({
     const validateForm = (): boolean => {
       let isValid = true;
 
-      // Reset errors
       errors.email = "";
       errors.password = "";
 
-      // Validate email
       if (!email.value) {
         errors.email = "Email is required";
         isValid = false;
@@ -102,12 +100,8 @@ export default defineComponent({
         isValid = false;
       }
 
-      // Validate password
       if (!password.value) {
         errors.password = "Password is required";
-        isValid = false;
-      } else if (password.value.length < 6) {
-        errors.password = "Password must be at least 6 characters";
         isValid = false;
       }
 
@@ -120,23 +114,19 @@ export default defineComponent({
           email: email.value,
           password: password.value,
         });
-        // Here you would typically call an authentication service
       }
     };
 
     const handleGoogleLogin = () => {
       console.log("Google login clicked");
-      // Implement Google OAuth login
     };
 
     const handleGuestLogin = () => {
       console.log("Guest login clicked");
-      // Implement guest login logic
     };
 
     const handleSignUp = () => {
       console.log("Sign up clicked");
-      // Navigate to sign up page or show sign up modal
     };
 
     return {

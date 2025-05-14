@@ -21,9 +21,22 @@
         <component :is="passwordVisible ? 'EyeIcon' : 'EyeOffIcon'" />
       </button>
     </div>
-    <p v-if="error" class="text-sm text-red-500 -mt-2 max-h-[10px]">
-      {{ error }}
-    </p>
+
+    <!-- Password Strength Indicator (Health Bar Design) -->
+    <div v-if="type === 'password'" class="mt-2">
+      <div class="flex gap-1 mb-1">
+        <div
+          v-for="stage in 3"
+          :key="stage"
+          class="h-1 rounded-full flex-1 transition-all"
+          :class="getStrengthClass(stage)"
+        />
+      </div>
+
+      <p class="text-sm max-h-[10px] font-bold" :class="strengthColorClass">
+        {{ strengthLabel }}
+      </p>
+    </div>
   </div>
 </template>
 
@@ -33,43 +46,29 @@ import EyeIcon from "../SVG/Authentication/Sign_Up_In_Show_password_button.vue";
 import EyeOffIcon from "../SVG/Authentication/Sign_Up_In_Not_show_password_button.vue.vue";
 
 export default defineComponent({
-  name: "InputField",
+  name: "SignUpInput",
   components: {
     EyeIcon,
     EyeOffIcon,
   },
   props: {
-    label: {
-      type: String,
-      required: true,
-    },
-    type: {
-      type: String,
-      default: "text",
-    },
-    modelValue: {
-      type: String,
-      default: "",
-    },
-    error: {
-      type: String,
-      default: "",
-    },
-    placeholder: {
-      type: String,
-      default: "",
-    },
+    label: { type: String, required: true },
+    type: { type: String, default: "text" },
+    modelValue: { type: String, default: "" },
+    error: { type: String, default: "" },
+    placeholder: { type: String, default: "" },
   },
   emits: ["update:modelValue"],
   setup(props, { emit }) {
     const passwordVisible = ref(false);
 
-    const inputType = computed(() => {
-      if (props.type === "password") {
-        return passwordVisible.value ? "text" : "password";
-      }
-      return props.type;
-    });
+    const inputType = computed(() =>
+      props.type === "password"
+        ? passwordVisible.value
+          ? "text"
+          : "password"
+        : props.type,
+    );
 
     const id = computed(
       () =>
@@ -87,12 +86,37 @@ export default defineComponent({
       passwordVisible.value = !passwordVisible.value;
     };
 
+    const getStrengthClass = (stage: number) => {
+      const length = props.modelValue.length;
+      if (length === 0) return "bg-white/30";
+      return length >= stage * 3 ? "bg-indigo-600" : "bg-white/30";
+    };
+
+    const strengthLabel = computed(() => {
+      const length = props.modelValue.length;
+      if (length === 0) return "";
+      if (length < 6) return "Weak password";
+      if (length < 9) return "Ok password";
+      return "Strong password";
+    });
+
+    const strengthColorClass = computed(() => {
+      const length = props.modelValue.length;
+      if (length === 0) return "text-white";
+      if (length < 6) return "text-red-500";
+      if (length < 9) return "text-yellow-400";
+      return "text-green-500";
+    });
+
     return {
       id,
       updateValue,
       passwordVisible,
       togglePasswordVisibility,
       inputType,
+      getStrengthClass,
+      strengthLabel,
+      strengthColorClass,
     };
   },
 });
