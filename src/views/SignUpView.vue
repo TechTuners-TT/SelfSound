@@ -11,7 +11,7 @@
         type="text"
         v-model="formData.name"
         :error="errors.name"
-        placeholder="enter name"
+        placeholder="Enter name"
       />
 
       <SignUpInput
@@ -19,7 +19,7 @@
         type="email"
         v-model="formData.email"
         :error="errors.email"
-        placeholder="enter email"
+        placeholder="Enter email"
       />
 
       <SignUpInput
@@ -28,7 +28,7 @@
         v-model="formData.password"
         :error="errors.password"
         class="mb-7.5"
-        placeholder="enter password"
+        placeholder="Enter password"
       />
 
       <button
