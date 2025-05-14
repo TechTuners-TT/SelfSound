@@ -103,9 +103,9 @@ export default defineComponent({
     const strengthColorClass = computed(() => {
       const length = props.modelValue.length;
       if (length === 0) return "text-white";
-      if (length < 6) return "text-red-500";
-      if (length < 9) return "text-yellow-400";
-      return "text-green-500";
+      if (length < 6) return "text-[#D0202F]";
+      if (length < 9) return "text-[#F2C849]";
+      return "text-[#3BAA5F]";
     });
 
     return {
