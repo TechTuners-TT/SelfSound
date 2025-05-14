@@ -7,10 +7,11 @@
       class="flex items-center 2xl:gap-[46px] xl:gap-[42px] lg:gap-[38px] md:gap-[35px] sm:gap-[32px] gap-[28px]"
     >
       <!-- Контейнер для іконки з відступами, але без зміни її розміру -->
-      <button @click="goBack" class="p-0">
-        <CloseIcon
-          class="cursor-pointer 2xl:w-[25px] 2xl:h-[25px] xl:w-[22px] xl:h-[22px] lg:w-[20px] lg:h-[20px] md:w-[18px] md:h-[18px] sm:w-[16px] sm:h-[16px] w-[14px] h-[14px]"
-        />
+      <button class="p-0">
+        <a href="#home">
+          <CloseIcon
+            class="cursor-pointer 2xl:w-[25px] 2xl:h-[25px] xl:w-[22px] xl:h-[22px] lg:w-[20px] lg:h-[20px] md:w-[18px] md:h-[18px] sm:w-[16px] sm:h-[16px] w-[14px] h-[14px]"
+        /></a>
       </button>
       <!-- Заголовок -->
       <h1
@@ -29,10 +30,12 @@
 
 <script setup lang="ts">
 import CloseIcon from "../../SVG/AddPosts_Icons/CloseIcon.vue";
-
+/*
+@click="goBack"
 function goBack() {
   window.history.back();
 }
+  */
 </script>
 
 <style scoped>

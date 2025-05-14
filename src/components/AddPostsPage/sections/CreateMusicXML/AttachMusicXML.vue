@@ -98,7 +98,7 @@
         @click="submitPost"
         class="cursor-pointer w-[75px] sm:w-[80px] md:w-[85px] lg:w-[95px] xl:w-[105px] 2xl:w-[119px] 2xl:h-[37px] bg-[#6D01D0]/20 xl:h-[32px] lg:h-[28px] md:h-[24px] sm:h-[20px] h-[18px] 2xl:rounded-[10px] rounded-[5px] transition font-bold text-xl flex items-center justify-center text-[#6D01D0] inter-font 2xl:text-[24px] xl:text-[20px] lg:text-[18px] text-[16px]"
       >
-        <p @click="goBack">Publish</p>
+        <a href="#home"> <p>Publish</p></a>
       </button>
     </div>
   </div>
@@ -186,8 +186,5 @@ const submitPost = () => {
 // Відкриття файлу при натисканні на елемент
 const openFile = (preview: string) => {
   window.open(preview, "_blank"); // Відкриває файл в новій вкладці
-};
-const goBack = () => {
-  window.history.back();
 };
 </script>

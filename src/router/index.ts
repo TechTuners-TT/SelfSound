@@ -13,6 +13,7 @@ import CreatePostAudioView from "../views/AddPosts/CreatePostAudioView.vue";
 import CreatePostLyricsView from "../views/AddPosts/CreatePostLyricsView.vue";
 import CreatePostMediaView from "../views/AddPosts/CreatePostMediaView.vue";
 import CreatePostMusicXMLView from "../views/AddPosts/CreatePostMusicXML.vue";
+import AnotherUserProfile from "@/views/AnotherUserProfile.vue";
 
 const router = createRouter({
   history: createWebHashHistory(import.meta.env.BASE_URL),
@@ -41,6 +42,11 @@ const router = createRouter({
       path: "/profile",
       name: "profile",
       component: UserProfile,
+    },
+    {
+      path: "/another-user-rofile",
+      name: "another-user-rofile",
+      component: AnotherUserProfile,
     },
     {
       path: "/settings",
