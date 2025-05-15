@@ -1,5 +1,4 @@
 <template>
-  <!-- From Uiverse.io by catraco -->
   <label class="container size-var">
     <input v-model="isChecked" type="checkbox" />
     <svg
@@ -18,18 +17,14 @@
 
 <script setup lang="ts">
 import { ref } from "vue";
-
-// Створюємо реактивну змінну для стану чекбоксу
-const isChecked = ref(true); // або false
+const isChecked = ref(true);
 </script>
 
 <style scoped>
-/* From Uiverse.io by catraco */
-/*------ Settings ------*/
 .container {
   --color: #a5a5b0;
-  /*--size: 30px;*/
-  display: flex;
+  --size: 20px; /* Зменшив розмір */
+  display: inline-flex; /* inline-flex щоб не розтягувався */
   justify-content: center;
   align-items: center;
   position: relative;
@@ -37,6 +32,7 @@ const isChecked = ref(true); // або false
   font-size: var(--size);
   user-select: none;
   fill: var(--color);
+  width: auto; /* щоб не займав всю ширину */
 }
 
 .container .chevron-down {
@@ -44,13 +40,11 @@ const isChecked = ref(true); // або false
   animation: keyframes-return 0.5s;
 }
 
-/* ------ On check event ------ */
 .container input:checked ~ .chevron-down {
   animation: keyframes-rotate 0.5s;
   transform: rotate(180deg);
 }
 
-/* ------ Hide the default checkbox ------ */
 .container input {
   position: absolute;
   opacity: 0;
@@ -59,13 +53,11 @@ const isChecked = ref(true); // або false
   width: 0;
 }
 
-/* ------ Animation ------ */
 @keyframes keyframes-rotate {
   0% {
     transform: rotate(0deg);
     opacity: 0;
   }
-
   100% {
     transform: rotate(-180deg);
   }
@@ -76,7 +68,6 @@ const isChecked = ref(true); // або false
     transform: rotate(-180deg);
     opacity: 0;
   }
-
   100% {
     transform: rotate(0deg);
   }
