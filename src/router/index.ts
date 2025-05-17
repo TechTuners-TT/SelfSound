@@ -14,6 +14,7 @@ import CreatePostLyricsView from "../views/AddPosts/CreatePostLyricsView.vue";
 import CreatePostMediaView from "../views/AddPosts/CreatePostMediaView.vue";
 import CreatePostMusicXMLView from "../views/AddPosts/CreatePostMusicXML.vue";
 import AnotherUserProfile from "@/views/AnotherUserProfile.vue";
+import NotificationsViev from "@/views/NotificationsViev.vue";
 
 const router = createRouter({
   history: createWebHashHistory(import.meta.env.BASE_URL),
@@ -78,6 +79,11 @@ const router = createRouter({
       path: "/search",
       name: "search",
       component: SearchView,
+    },
+    {
+      path: "/notifications",
+      name: "notifications",
+      component: NotificationsViev,
     },
 
     //{

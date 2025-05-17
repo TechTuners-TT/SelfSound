@@ -17,13 +17,13 @@
 
     <div class="flex flex-col gap-1 sm:gap-2.5 text-left">
       <p
-        class="font-bold text-white h-[24px] sm:h-[30px] text-[20px] sm:text-[24px] xl:text-[22px] 2xl:text-[30px] inter-font"
+        class="font-bold text-white h-[24px] sm:h-[30px] text-[18px] sm:text-[20px] xl:text-[22px] 2xl:text-[30px] inter-font"
         style="font-weight: 700"
       >
         {{ user.name }}
       </p>
       <p
-        class="text-base font-medium text-white h-[12px] text-[13px] sm:text-[14px] md:text-[14px] xl:text-[15px] 2xl:text-[16px] inter-font"
+        class="text-base font-medium text-white h-[12px] text-[11px] sm:text-[12px] md:text-[13px] xl:text-[14px] 2xl:text-[16px] inter-font"
         style="font-weight: 500"
       >
         {{ user.login }}
@@ -41,7 +41,7 @@
       <div
         v-if="showModal"
         ref="modalRef"
-        class="absolute z-50 w-[90px] sm:w-[95px] md:w-[100px] lg:w-[105px] xl:w-[110px] 2xl:w-[120px] bg-black rounded-[5px] shadow-md flex flex-col justify-center items-center pl-[10px] pr-[8px] py-[3px] xl:py-[8px] lg:py-[6.5px] md:py-[5.5px] sm:py-[3.5px] gap-[5px] border border-[1px] border-white/50"
+        class="absolute z-50 w-[90px] sm:w-[95px] md:w-[100px] lg:w-[105px] xl:w-[110px] 2xl:w-[120px] bg-[#060310] rounded-[5px] shadow-md flex flex-col justify-center items-center pl-[10px] pr-[8px] py-[3px] xl:py-[8px] lg:py-[6.5px] md:py-[5.5px] sm:py-[3.5px] gap-[5px] border-[1px] border-white/50"
         :style="modalStyles"
       >
         <button
@@ -85,7 +85,7 @@
     </div>
 
     <p
-      class="grow m-auto text-white text-[12px] sm:text-[13px] md:text-[14px] xl:text-[15px] 2xl:text-[16px] inter-font biographyinput"
+      class="grow m-auto text-white text-[11px] sm:text-[12px] md:text-[13px] xl:text-[14px] 2xl:text-[16px] inter-font biographyinput"
       style="font-weight: 400; line-height: 1.125"
     >
       {{ user.biography }}
