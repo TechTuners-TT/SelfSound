@@ -2,7 +2,7 @@
   <!-- Log out button -->
   <div class="m-[20px]">
     <button
-      class="relative text-white font-bold inter-font text-[16px] px-[16px] py-[12px] rounded-md bg-[#000C9C]/40"
+      class="relative text-white font-bold inter-font text-[16px] px-[16px] py-[12px] rounded-md bg-[#000C9C]/40 hover:bg-[#6D01D0]/50"
     >
       Log out
     </button>

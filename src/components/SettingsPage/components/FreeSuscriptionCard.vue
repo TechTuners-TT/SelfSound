@@ -2,28 +2,28 @@
   <!-- From Uiverse.io by pajenri -->
   <div class="card">
     <div class="pricing-block-content">
-      <p class="pricing-plan lg:text-[20px] text-[16px]">Starter</p>
+      <p class="pricing-plan sm:text-[18px] text-[16px]">Starter</p>
       <div
         data-currency-simple="USD"
         data-currency="$ USD"
-        class="price-value lg:text-[24px] text-[20px]"
+        class="price-value sm:text-[20px] text-[18px]"
       >
         <p class="price-number">$ <span class="price-integer">0</span></p>
 
         <div id="priceDiscountCent">/mo</div>
       </div>
 
-      <div class="pricing-note lg:text-[16px] text-[14px]">free forever</div>
+      <div class="pricing-note sm:text-[16px] text-[14px]">free forever</div>
       <ul role="list" class="check-list">
-        <li class="check-list-item lg:text-[16px] text-[14px]">
+        <li class="check-list-item sm:text-[14px] text-[12px]">
           <svg
-            style="color: rgb(102, 78, 255)"
+            style="color: rgb(255, 255, 255)"
             xmlns="http://www.w3.org/2000/svg"
             xmlns:xlink="http://www.w3.org/1999/xlink"
-            width="16"
+            width="12"
             zoomAndPan="magnify"
             viewBox="0 0 30 30.000001"
-            height="16"
+            height="12"
             preserveAspectRatio="xMidYMid meet"
             version="1.0"
           >
@@ -32,13 +32,13 @@
                 <path
                   d="M 2.328125 4.222656 L 27.734375 4.222656 L 27.734375 24.542969 L 2.328125 24.542969 Z M 2.328125 4.222656"
                   clip-rule="nonzero"
-                  fill="#664eff"
+                  fill="#ffffff"
                 ></path>
               </clipPath>
             </defs>
             <g clip-path="url(#id1)">
               <path
-                fill="#664eff"
+                fill="#ffffff"
                 d="M 27.5 7.53125 L 24.464844 4.542969 C 24.15625 4.238281 23.65625 4.238281 23.347656 4.542969 L 11.035156 16.667969 L 6.824219 12.523438 C 6.527344 12.230469 6 12.230469 5.703125 12.523438 L 2.640625 15.539062 C 2.332031 15.84375 2.332031 16.335938 2.640625 16.640625 L 10.445312 24.324219 C 10.59375 24.472656 10.796875 24.554688 11.007812 24.554688 C 11.214844 24.554688 11.417969 24.472656 11.566406 24.324219 L 27.5 8.632812 C 27.648438 8.488281 27.734375 8.289062 27.734375 8.082031 C 27.734375 7.875 27.648438 7.679688 27.5 7.53125 Z M 27.5 7.53125"
                 fill-opacity="1"
                 fill-rule="nonzero"
@@ -46,15 +46,15 @@
             </g></svg
           >4 types of post
         </li>
-        <li class="check-list-item lg:text-[16px] text-[14px]">
+        <li class="check-list-item sm:text-[14px] text-[12px]">
           <svg
-            style="color: rgb(102, 78, 255)"
+            style="color: rgb(255, 255, 255)"
             xmlns="http://www.w3.org/2000/svg"
             xmlns:xlink="http://www.w3.org/1999/xlink"
-            width="16"
+            width="12"
             zoomAndPan="magnify"
             viewBox="0 0 30 30.000001"
-            height="16"
+            height="12"
             preserveAspectRatio="xMidYMid meet"
             version="1.0"
           >
@@ -63,13 +63,13 @@
                 <path
                   d="M 2.328125 4.222656 L 27.734375 4.222656 L 27.734375 24.542969 L 2.328125 24.542969 Z M 2.328125 4.222656"
                   clip-rule="nonzero"
-                  fill="#664eff"
+                  fill="#ffffff"
                 ></path>
               </clipPath>
             </defs>
             <g clip-path="url(#id1)">
               <path
-                fill="#664eff"
+                fill="#ffffff"
                 d="M 27.5 7.53125 L 24.464844 4.542969 C 24.15625 4.238281 23.65625 4.238281 23.347656 4.542969 L 11.035156 16.667969 L 6.824219 12.523438 C 6.527344 12.230469 6 12.230469 5.703125 12.523438 L 2.640625 15.539062 C 2.332031 15.84375 2.332031 16.335938 2.640625 16.640625 L 10.445312 24.324219 C 10.59375 24.472656 10.796875 24.554688 11.007812 24.554688 C 11.214844 24.554688 11.417969 24.472656 11.566406 24.324219 L 27.5 8.632812 C 27.648438 8.488281 27.734375 8.289062 27.734375 8.082031 C 27.734375 7.875 27.648438 7.679688 27.5 7.53125 Z M 27.5 7.53125"
                 fill-opacity="1"
                 fill-rule="nonzero"
@@ -77,15 +77,15 @@
             </g></svg
           >Tag role
         </li>
-        <li class="check-list-item lg:text-[16px] text-[14px]">
+        <li class="check-list-item sm:text-[14px] text-[12px]">
           <svg
-            style="color: rgb(102, 78, 255)"
+            style="color: rgb(255, 255, 255)"
             xmlns="http://www.w3.org/2000/svg"
             xmlns:xlink="http://www.w3.org/1999/xlink"
-            width="16"
+            width="12"
             zoomAndPan="magnify"
             viewBox="0 0 30 30.000001"
-            height="16"
+            height="12"
             preserveAspectRatio="xMidYMid meet"
             version="1.0"
           >
@@ -94,13 +94,13 @@
                 <path
                   d="M 2.328125 4.222656 L 27.734375 4.222656 L 27.734375 24.542969 L 2.328125 24.542969 Z M 2.328125 4.222656"
                   clip-rule="nonzero"
-                  fill="#664eff"
+                  fill="#ffffff"
                 ></path>
               </clipPath>
             </defs>
             <g clip-path="url(#id1)">
               <path
-                fill="#664eff"
+                fill="#ffffff"
                 d="M 27.5 7.53125 L 24.464844 4.542969 C 24.15625 4.238281 23.65625 4.238281 23.347656 4.542969 L 11.035156 16.667969 L 6.824219 12.523438 C 6.527344 12.230469 6 12.230469 5.703125 12.523438 L 2.640625 15.539062 C 2.332031 15.84375 2.332031 16.335938 2.640625 16.640625 L 10.445312 24.324219 C 10.59375 24.472656 10.796875 24.554688 11.007812 24.554688 C 11.214844 24.554688 11.417969 24.472656 11.566406 24.324219 L 27.5 8.632812 C 27.648438 8.488281 27.734375 8.289062 27.734375 8.082031 C 27.734375 7.875 27.648438 7.679688 27.5 7.53125 Z M 27.5 7.53125"
                 fill-opacity="1"
                 fill-rule="nonzero"
@@ -117,13 +117,15 @@
 /* From Uiverse.io by pajenri */
 /*Neo Brutalism pricing card*/
 .card {
+  aspect-ratio: 1 / 1;
   width: 100%;
-  height: 100%;
+  max-width: 100%;
   background: #000c9c66;
   padding: 1rem;
+  padding-top: 0.8rem;
   border-radius: 1rem;
   border: 0.5vmin solid #ffffff;
-  box-shadow: 0.4rem 0.4rem #ffffff;
+  box-shadow: 0.2rem 0.2rem #ffffff;
   overflow: hidden;
   color: rgb(255, 255, 255);
 }
@@ -133,7 +135,7 @@
   display: flex;
   height: 100%;
   flex-direction: column;
-  gap: 0.5rem;
+  gap: 0.1rem;
 }
 
 .pricing-plan {
@@ -160,8 +162,8 @@
 .check-list {
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
-  margin-top: 0.5rem;
+  gap: 0rem;
+  margin-top: 0.1rem;
 }
 
 .check-list-item {
