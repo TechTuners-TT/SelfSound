@@ -50,7 +50,7 @@
           Block user
         </button>
         <button
-          class="w-full text-white cursor-pointer py-[1.25px] xl:py-[4.25px] lg:py-[2.5px] sm:py-[2px] text-sm text-left font-semibold"
+          class="w-full text-white cursor-pointer py-[1.25px] xl:py-[4.25px] lg:py-[2.5px] sm:py-[2px] text-sm text-left font-medium"
           @click="showModal = false"
         >
           Cancel

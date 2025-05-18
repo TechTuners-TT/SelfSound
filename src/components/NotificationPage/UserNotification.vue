@@ -23,7 +23,7 @@
   <!-- User List -->
   <div class="space-y-[5px]">
     <div
-      v-for="user in visibleUsers"
+      v-for="user in users"
       :key="user.id"
       class="flex justify-between items-center text-white"
     >
@@ -106,21 +106,21 @@ const users = ref<Notification[]>([
     name: "John Doe",
     username: "john_doe",
     message: "now listens you",
-    timestamp: new Date(new Date().getTime() - 5 * 60 * 1000),
+    timestamp: new Date(new Date().getTime() - 3600 * 60 * 1000),
   },
   {
     id: 5,
     name: "Old_-1 Notification",
     username: "old-1_user",
     message: "now listens you",
-    timestamp: new Date(new Date().getTime() - 29 * 60 * 1000), // старше == 30 хв — зникне
+    timestamp: new Date(new Date().getTime() - 120 * 60 * 1000),
   },
   {
     id: 6,
     name: "Old Notification",
     username: "old_user",
     message: "now listens you",
-    timestamp: new Date(new Date().getTime() - 30 * 60 * 1000), //  30 хв — зникне
+    timestamp: new Date(new Date().getTime() - 61 * 60 * 1000),
   },
 ]);
 
@@ -134,20 +134,18 @@ onMounted(() => {
   onUnmounted(() => clearInterval(interval));
 });
 
-const visibleUsers = computed(() => {
-  const thirtyMinutesAgo = currentTime.value - 30 * 60 * 1000;
-  return users.value.filter(
-    (user) => user.timestamp.getTime() > thirtyMinutesAgo,
-  );
-});
-
 function formatTime(timestamp: Date): string {
   const diffMs = currentTime.value - timestamp.getTime();
   const diffMin = Math.floor(diffMs / (60 * 1000));
+
   if (diffMin < 1) return "just now";
   if (diffMin < 60) return `${diffMin}m ago`;
+
   const diffHr = Math.floor(diffMin / 60);
-  return `${diffHr}h ago`;
+  if (diffHr < 24) return `${diffHr}h ago`;
+
+  const diffDays = Math.floor(diffHr / 24);
+  return `${diffDays} day${diffDays > 1 ? "s" : ""} ago`;
 }
 
 function goToTaggedPost(user: Notification) {
