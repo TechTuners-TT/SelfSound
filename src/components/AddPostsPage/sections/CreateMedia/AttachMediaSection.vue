@@ -265,4 +265,17 @@ watch(files, async (newFiles) => {
   const colors = await Promise.all(newFiles.map((file) => getIconColor(file)));
   iconColors.value = colors;
 });
+
+defineExpose({
+  fileInput,
+  files,
+  modalPreview,
+  zoomInstance,
+  iconColors,
+  triggerFileInput,
+  handleFileChange,
+  removeFile,
+  submitPost,
+  previewFile,
+});
 </script>

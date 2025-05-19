@@ -248,6 +248,12 @@ const formatTime = (time: number) => {
 const submitPost = () => {
   console.log("Submitting post with files:", files.value);
 };
+
+defineExpose({
+  submitPost,
+  triggerFileInput,
+  files,
+});
 </script>
 
 <style scoped>
