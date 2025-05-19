@@ -187,4 +187,16 @@ const submitPost = () => {
 const openFile = (preview: string) => {
   window.open(preview, "_blank"); // Відкриває файл в новій вкладці
 };
+
+defineExpose({
+  fileInput,
+  files,
+  triggerFileInput,
+  handleFileChange,
+  getUsedMemoryInBytes,
+  fileSizeInKB,
+  removeFile,
+  submitPost,
+  openFile,
+});
 </script>

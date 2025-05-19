@@ -177,6 +177,14 @@ const submitLyrics = () => {
   console.log("Submitting lyrics:", lyricsData);
   // Тут можна додати реальний запит на сервер
 };
+
+defineExpose({
+  submitLyrics,
+  canSubmit,
+  songTitle,
+  artistName,
+  parts,
+});
 </script>
 
 <style scoped>
