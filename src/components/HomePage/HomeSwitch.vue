@@ -4,7 +4,7 @@
   >
     <div class="flex justify-end flex-1">
       <h1
-        class="2xl:text-[24px] xl:text-[24px] lg:text-[20px] md:text-[16px] text-[14px] font-semibold text-white inter-font"
+        class="2xl:text-[24px] xl:text-[20px] lg:text-[18px] md:text-[16px] sm:text-[14px] text-[13px] font-semibold text-white inter-font"
         :class="['tab', activeTab === 'forYou' ? 'active' : '']"
         @click="$emit('update:activeTab', 'forYou')"
       >
@@ -17,7 +17,7 @@
     </div>
     <div class="flex justify-start flex-1">
       <h1
-        class="2xl:text-[24px] xl:text-[24px] lg:text-[20px] md:text-[16px] text-[14px] font-semibold text-white inter-font"
+        class="2xl:text-[24px] xl:text-[20px] lg:text-[18px] md:text-[16px] sm:text-[14px] text-[13px] font-semibold text-white inter-font"
         :class="['tab', activeTab === 'listened' ? 'active' : '']"
         @click="$emit('update:activeTab', 'listened')"
       >
