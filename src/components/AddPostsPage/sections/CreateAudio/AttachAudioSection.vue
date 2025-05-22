@@ -91,6 +91,7 @@
               :max="item.duration || 0"
               :value="item.currentTime || 0"
               @input="(e) => seekAudio(item, e)"
+              :style="getFillStyle(item)"
             />
             <span>{{ formatTime(item.duration || 0) }}</span>
           </div>
@@ -243,6 +244,16 @@ const formatTime = (time: number) => {
   const secs = Math.floor(time % 60);
   return `${mins}:${secs < 10 ? "0" : ""}${secs}`;
 };
+
+// для зафарбовування програного часу
+function getFillStyle(item: AudioFile) {
+  const dur = item.duration || 1;
+  const cur = item.currentTime || 0;
+  const pct = Math.min(100, Math.max(0, (cur / dur) * 100));
+  return {
+    background: `linear-gradient(to right, #6d01d0 0%, #6d01d0 ${pct}%, #ffffff ${pct}%, #ffffff 100%)`,
+  };
+}
 
 // Функція для надсилання посту
 const submitPost = () => {
