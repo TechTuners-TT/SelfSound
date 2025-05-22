@@ -91,6 +91,7 @@
               :max="item.duration || 0"
               :value="item.currentTime || 0"
               @input="(e) => seekAudio(item, e)"
+              :style="getFillStyle(item)"
             />
             <span>{{ formatTime(item.duration || 0) }}</span>
           </div>
@@ -127,7 +128,7 @@
         @click="submitPost"
         class="cursor-pointer w-[75px] sm:w-[80px] md:w-[85px] lg:w-[95px] xl:w-[105px] 2xl:w-[119px] 2xl:h-[37px] bg-[#6D01D0]/20 xl:h-[32px] lg:h-[28px] md:h-[24px] sm:h-[20px] h-[18px] 2xl:rounded-[10px] rounded-[5px] transition font-bold text-xl flex items-center justify-center text-[#6D01D0] inter-font 2xl:text-[24px] xl:text-[20px] lg:text-[18px] text-[16px]"
       >
-        <p @click="goBack">Publish</p>
+        <a href="#home"> <p>Publish</p></a>
       </button>
     </div>
   </div>
@@ -244,15 +245,26 @@ const formatTime = (time: number) => {
   return `${mins}:${secs < 10 ? "0" : ""}${secs}`;
 };
 
+// для зафарбовування програного часу
+function getFillStyle(item: AudioFile) {
+  const dur = item.duration || 1;
+  const cur = item.currentTime || 0;
+  const pct = Math.min(100, Math.max(0, (cur / dur) * 100));
+  return {
+    background: `linear-gradient(to right, #6d01d0 0%, #6d01d0 ${pct}%, #ffffff ${pct}%, #ffffff 100%)`,
+  };
+}
+
 // Функція для надсилання посту
 const submitPost = () => {
   console.log("Submitting post with files:", files.value);
 };
 
-// Функція для повернення на попередню сторінку
-const goBack = () => {
-  window.history.back();
-};
+defineExpose({
+  submitPost,
+  triggerFileInput,
+  files,
+});
 </script>
 
 <style scoped>

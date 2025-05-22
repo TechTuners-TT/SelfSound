@@ -35,3 +35,5 @@ jobs:
         run: npm run build
       - name: Solve code style issues
         run: npx lint-staged
+      - name: Run unit tests
+        run: npm test
