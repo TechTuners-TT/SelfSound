@@ -137,7 +137,7 @@
 import AddIcon from "../../../SVG/AddPosts_Icons/AddIcon.vue";
 import MediaClose11 from "@/components/SVG/AddPosts_Icons/AudioClose11.vue";
 import PlayPauseIcon from "@/components/SVG/AddPosts_Icons/PlayPauseIcon.vue";
-import AudioPost from "@/components/SVG/AddPosts_Icons/AudioPost.vue";
+import AudioPost from "@/components/SVG/AddPosts_Icons/AudioCover.vue";
 import { ref, nextTick } from "vue";
 
 // Опис структури даних для файлів
