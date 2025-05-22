@@ -67,7 +67,7 @@
 <script lang="ts" setup>
 import { ref, onMounted } from "vue";
 import PlayPauseIcon from "@/components/SVG/AddPosts_Icons/PlayPauseIcon.vue";
-import AudioCover from "@/components/SVG/AddPosts_Icons/AudioPost.vue";
+import AudioCover from "@/components/SVG/AddPosts_Icons/AudioCover.vue";
 
 interface AudioTrack {
   title: string;
