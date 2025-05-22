@@ -1,13 +1,15 @@
 <template>
   <!-- From Uiverse.io by pajenri -->
-  <div class="card">
-    <div class="block-content">
-      <p class="block-font sm:text-[20px] text-[18px]">
-        Learn about <br />
-        Premium
-      </p>
+  <router-link to="/premium">
+    <div class="card">
+      <div class="block-content">
+        <p class="block-font sm:text-[20px] text-[18px]">
+          Learn about <br />
+          Premium
+        </p>
+      </div>
     </div>
-  </div>
+  </router-link>
 </template>
 
 <style scoped>
