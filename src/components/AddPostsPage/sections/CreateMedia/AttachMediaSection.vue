@@ -46,10 +46,10 @@
 
         <button
           @click.stop="removeFile(idx)"
-          class="cursor-pointer absolute top-[10px] right-[10px] text-white text-[20px] rounded-full w-[20px] h-[20px] flex items-center justify-center"
+          class="bg-[#000000]/50 cursor-pointer absolute top-[8px] right-[8px] text-white text-[20px] rounded-[5px] w-[20px] h-[20px] sm:w-[22px] sm:h-[22px] md:w-[24px] md:h-[24px] xl:w-[26px] xl:h-[26px] flex items-center justify-center"
         >
           <!--bg-white-->
-          <MediaClose :style="{ color: iconColors[idx] || '#FFFFFF' }" />
+          <MediaClose />
         </button>
       </div>
     </div>
@@ -185,84 +185,15 @@ const setupZoom = () => {
 onMounted(setupZoom);
 watch(files, setupZoom);
 
-// ===================== Кольори =====================
-const iconColors = ref<string[]>([]);
-
-async function getIconColor(file: {
-  preview: string;
-  file: File;
-  type: string;
-}): Promise<string> {
-  if (!file.type.startsWith("image/")) return "#FFFFFF";
-  const cornerColor = await getAverageCornerColor(file.preview);
-  return getContrastColor(cornerColor);
-}
-
-async function getAverageCornerColor(imageUrl: string): Promise<string> {
-  const img = new Image();
-  img.crossOrigin = "anonymous";
-  img.src = imageUrl;
-
-  return new Promise((resolve, reject) => {
-    img.onload = () => {
-      const canvas = document.createElement("canvas");
-      const ctx = canvas.getContext("2d");
-      if (!ctx) return reject("Canvas context not available");
-
-      canvas.width = img.width;
-      canvas.height = img.height;
-      ctx.drawImage(img, 0, 0);
-
-      const corners = [
-        ctx.getImageData(0, 0, 1, 1).data,
-        ctx.getImageData(img.width - 1, 0, 1, 1).data,
-        ctx.getImageData(0, img.height - 1, 1, 1).data,
-        ctx.getImageData(img.width - 1, img.height - 1, 1, 1).data,
-      ];
-
-      const avg = corners.reduce(
-        (acc, data) => {
-          acc.r += data[0];
-          acc.g += data[1];
-          acc.b += data[2];
-          return acc;
-        },
-        { r: 0, g: 0, b: 0 },
-      );
-
-      const r = Math.round(avg.r / 4);
-      const g = Math.round(avg.g / 4);
-      const b = Math.round(avg.b / 4);
-      resolve(rgbToHex(r, g, b));
-    };
-
-    img.onerror = () => reject("Image loading error");
-  });
-}
-function rgbToHex(r: number, g: number, b: number): string {
-  return (
-    "#" +
-    [r, g, b]
-      .map((x) => {
-        const hex = x.toString(16);
-        return hex.length === 1 ? "0" + hex : hex;
-      })
-      .join("")
-  );
-}
-
-function getContrastColor(hexColor: string): string {
-  const r = parseInt(hexColor.substring(1, 3), 16);
-  const g = parseInt(hexColor.substring(3, 5), 16);
-  const b = parseInt(hexColor.substring(5, 7), 16);
-
-  const luminance = (0.299 * r + 0.587 * g + 0.114 * b) / 255;
-  return luminance > 0.5 ? "#000000" : "#FFFFFF";
-}
-
-// Оновлення кольорів після змін у списку файлів
-watch(files, async (newFiles) => {
-  const colors = await Promise.all(newFiles.map((file) => getIconColor(file)));
-  iconColors.value = colors;
+defineExpose({
+  fileInput,
+  files,
+  modalPreview,
+  zoomInstance,
+  triggerFileInput,
+  handleFileChange,
+  removeFile,
+  submitPost,
+  previewFile,
 });
 </script>

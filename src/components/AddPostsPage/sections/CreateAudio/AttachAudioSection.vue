@@ -259,6 +259,12 @@ function getFillStyle(item: AudioFile) {
 const submitPost = () => {
   console.log("Submitting post with files:", files.value);
 };
+
+defineExpose({
+  submitPost,
+  triggerFileInput,
+  files,
+});
 </script>
 
 <style scoped>

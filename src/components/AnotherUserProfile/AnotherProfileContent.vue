@@ -13,7 +13,7 @@
         }"
         @click="toggleButton"
       >
-        {{ isClicked ? "Listen" : "Listened" }}
+        {{ isClicked ? "Listened" : "Listen" }}
       </button>
     </div>
 
