@@ -31,7 +31,7 @@
       </div>
 
       <div
-        class="mt-[50px] sm:mt-[60px]md:mt-[70px] lg:mt-[80px] xl:mt-[90px] 2xl:mt-[106px] ml-[51.7px] sm:ml-[59.4px] md:ml-[67px] lg:ml-[74.7px] xl:ml-[82.4px] 2xl:ml-[90px] mr-[53.7px] sm:mr-[61.4px] md:mr-[69px] lg:mr-[76.7px] xl:mr-[84.4px] 2xl:mr-[92px]"
+        class="mt-[50px] sm:mt-[60px]md:mt-[70px] lg:mt-[80px] xl:mt-[90px] 2xl:mt-[106px] mx-[51.7px] sm:mx-[59.4px] md:mx-[67px] lg:mx-[74.7px] xl:mx-[82.4px] 2xl:mx-[90px]"
       >
         <div
           class="inter-font text-white font-semibold leading-[30px] text-[20px] sm:leading-[36px] sm:text-[24px] md:leading-[42px] md:text-[28px] lg:leading-[51px] lg:text-[34px] xl:leading-[57px] xl:text-[38px] 2xl:leading-[63px] 2xl:text-[42px]"
