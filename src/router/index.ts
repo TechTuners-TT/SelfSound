@@ -23,6 +23,8 @@ import TermsOfUseView from "@/views/TermsOfUseView.vue";
 import SocialsInstagramView from "@/views/SocialsInstagramView.vue";
 import SocialsDiscordView from "@/views/SocialsDiscordView.vue";
 import PrivacyPolicyView from "@/views/PrivacyPolicyView.vue";
+import AdminComplainsView from "@/views/AdminAnalytics/AdminComplainsView.vue";
+import AdminAnalyticsView from "@/views/AdminAnalytics/AdminAnalyticsView.vue";
 import PremiumView from "@/views/PremiumView.vue";
 
 const router = createRouter({
@@ -133,6 +135,16 @@ const router = createRouter({
       path: "/privacy",
       name: "privacy",
       component: PrivacyPolicyView,
+    },
+    {
+      path: "/admin/a",
+      name: "admin/a",
+      component: AdminAnalyticsView,
+    },
+    {
+      path: "/admin/c",
+      name: "admin/c",
+      component: AdminComplainsView,
     },
     {
       path: "/your_premium",
