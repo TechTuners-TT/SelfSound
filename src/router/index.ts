@@ -25,6 +25,7 @@ import SocialsDiscordView from "@/views/SocialsDiscordView.vue";
 import PrivacyPolicyView from "@/views/PrivacyPolicyView.vue";
 import AdminComplainsView from "@/views/AdminAnalytics/AdminComplainsView.vue";
 import AdminAnalyticsView from "@/views/AdminAnalytics/AdminAnalyticsView.vue";
+import PremiumView from "@/views/PremiumView.vue";
 
 const router = createRouter({
   history: createWebHashHistory(import.meta.env.BASE_URL),
@@ -144,6 +145,11 @@ const router = createRouter({
       path: "/admin/c",
       name: "admin/c",
       component: AdminComplainsView,
+    },
+    {
+      path: "/your_premium",
+      name: "your_premium",
+      component: PremiumView,
     },
 
     //{
