@@ -1,6 +1,6 @@
 <template>
   <!-- From Uiverse.io by pajenri -->
-  <router-link to="/premium">
+  <router-link to="/your_premium">
     <div class="card">
       <div class="block-content">
         <p class="block-font sm:text-[20px] text-[18px]">
