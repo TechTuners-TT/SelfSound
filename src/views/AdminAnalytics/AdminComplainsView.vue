@@ -4,11 +4,11 @@
     <nav
       class="bg-[#02033D]/50 p-[20px] text-white w-full md:w-[200px] h-auto md:h-full shrink-0 z-[3]"
     >
-      <h1 class="text-xl font-bold mb-[8px]">Admin Panel</h1>
+      <h1 class="text-xl inter-font font-bold mb-[8px]">Admin Panel</h1>
       <ul class="flex flex-col gap-2 w-full">
         <router-link to="/admin/a">
           <li
-            class="hover:bg-[#000C9C]/40 rounded-md px-[14px] py-[12px] flex items-center gap-2"
+            class="hover:bg-[#000C9C]/40 rounded-md inter-font px-[14px] py-[12px] flex items-center gap-2"
           >
             <analyticsSVG />
             <p>Analytics</p>
@@ -16,7 +16,7 @@
         </router-link>
         <router-link to="/admin/c">
           <li
-            class="bg-[#6D01D0] rounded-md px-[14px] py-[12px] flex items-center gap-2"
+            class="bg-[#6D01D0] rounded-md inter-font px-[14px] py-[12px] flex items-center gap-2"
           >
             <complaintsSVG />
             <p>Complaints</p>
@@ -28,7 +28,7 @@
     <!-- Головний контент -->
     <main class="flex-1 overflow-y-auto p-[25px] py-[30px] relative">
       <div class="bg-[#02033D]/30 rounded-md text-white p-5">
-        <h1 class="text-lg font-bold mb-4">User Complaints</h1>
+        <h1 class="text-lg font-bold inter-font mb-4">User Complaints</h1>
 
         <div class="grid grid-cols-1 gap-4 place-items-center">
           <div
@@ -37,8 +37,8 @@
             class="bg-[#02033D]/50 w-full rounded-sm p-4 flex justify-between items-center"
           >
             <div class="text-left">
-              <p class="text-sm pb-1">{{ report.title }}</p>
-              <p class="text-sm">{{ report.data }}</p>
+              <p class="text-sm pb-1 inter-font">{{ report.title }}</p>
+              <p class="text-sm inter-font">{{ report.data }}</p>
             </div>
 
             <button
@@ -67,10 +67,10 @@
           class="bg-[#060310] border-2 border-[#000C9C]/40 rounded-2xl p-[20px] w-[80%] md:w-[60%] text-white relative z-[9999]"
         >
           <div class="flex justify-between items-center w-full mb-4">
-            <h2 class="text-xl font-bold">Complaint Details</h2>
+            <h2 class="text-xl inter-font font-bold">Complaint Details</h2>
 
             <button
-              class="flex items-center justify-center w-[32px] h-[32px] rounded-full hover:bg-white/10 transition"
+              class="flex items-center inter-font justify-center w-[32px] h-[32px] rounded-full hover:bg-white/10 transition"
               @click="closeModal"
               aria-label="Close modal"
             >
@@ -82,28 +82,40 @@
 
           <!-- Тут можеш додати більше деталей -->
           <div class="mb-4">
-            <p class="text-md text-white/50 mb-2">Reporter ID</p>
-            <p class="text-md">{{ currentReport.reporter_id }}</p>
+            <p class="text-md inter-font text-white/50 mb-2">Reporter ID</p>
+            <p class="text-md inter-font">{{ currentReport.reporter_id }}</p>
           </div>
           <div class="mb-4">
-            <p class="text-md text-white/50 mb-2">Post ID</p>
-            <p class="text-md">{{ currentReport.post_id }}</p>
+            <p class="text-md inter-font text-white/50 mb-2">Post ID</p>
+            <p class="text-md inter-font">{{ currentReport.post_id }}</p>
           </div>
           <div class="mb-4">
-            <p class="text-md text-white/50 mb-2">Reason</p>
-            <p class="text-md">{{ currentReport.reason }}</p>
+            <p class="text-md inter-font text-white/50 mb-2">Reason</p>
+            <p class="text-md inter-font">{{ currentReport.reason }}</p>
           </div>
           <div class="mb-4">
-            <p class="text-md text-white/50 mb-2">Post Link</p>
+            <p class="text-md inter-font text-white/50 mb-2">Post Link</p>
 
             <a
               :href="currentReport.post_link"
               target="_blank"
               rel="noopener noreferrer"
-              class="text-md text-blue-400 underline hover:text-blue-300 transition"
+              class="text-md text-blue-400 inter-font underline hover:text-blue-300 transition"
             >
               {{ currentReport.post_link }}
             </a>
+          </div>
+          <div class="flex justify-end gap-[12px]">
+            <button
+              class="relative text-white inter-font text-md px-[16px] py-[8px] rounded-sm bg-[#D0202F] hover:bg-[#D0202F]/70"
+            >
+              Delete Post
+            </button>
+            <button
+              class="relative text-white inter-font text-md px-[16px] py-[8px] rounded-sm bg-[#000C9C]/40 hover:bg-[#000C9C]/20"
+            >
+              Ignore
+            </button>
           </div>
         </div>
       </div>
