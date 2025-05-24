@@ -43,7 +43,7 @@
           >Guest mode</router-link
         >
         <router-link
-          to="/login"
+          to="/sign-in"
           class="hover:text-purple-700 font-normal nav-link"
           >Log in</router-link
         >
