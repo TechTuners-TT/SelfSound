@@ -32,6 +32,12 @@
         aria-label="Main navigation"
       >
         <router-link
+          to="/premium"
+          class="hover:text-purple-700 font-normal nav-link"
+        >
+          Premium
+        </router-link>
+        <router-link
           to="/support"
           class="hover:text-purple-700 font-normal nav-link"
           >Support</router-link
