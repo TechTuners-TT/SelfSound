@@ -50,7 +50,7 @@
   </div>
 </template>
 <script setup lang="ts">
-import close_premium from "../SVG/Nav_Bar_Icon/Premium_Close/close_premium.vue";
+import close_premium from "../SVG/Premium_Close/close_premium.vue";
 </script>
 
 <style scoped>
