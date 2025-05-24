@@ -75,6 +75,12 @@
 function goBack() {
   window.history.back();
 }
+
+import { onMounted } from "vue";
+
+onMounted(() => {
+  window.scrollTo({ top: 0, behavior: "auto" });
+});
 </script>
 <style scoped>
 .inter-font {
