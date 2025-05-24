@@ -117,31 +117,44 @@ import analyticsSVG from "../../components/SVG/AdminPage/analyticsSVG.vue";
 import complaintsSVG from "../../components/SVG/AdminPage/complaintsSVG.vue";
 import CloseIcon from "../../components/SVG/AddPosts_Icons/CloseIcon.vue";
 
-// Дані звітів
-const reports = ref(
+/* ---------- тип репорта ---------- */
+interface Report {
+  id: number;
+  title: string;
+  data: string;
+  reporter_id: string;
+  post_id: string;
+  reason: string;
+  post_link: string;
+}
+
+/* ---------- «порожній» обʼєкт-заглушка ---------- */
+const EMPTY_REPORT: Report = {
+  id: 0,
+  title: "",
+  data: "",
+  reporter_id: "",
+  post_id: "",
+  reason: "",
+  post_link: "",
+};
+
+/* ---------- мок-дані (заміниш на бекенд) ---------- */
+const reports = ref<Report[]>(
   Array.from({ length: 9 }, (_, i) => ({
     id: i + 1,
     title: `Report #${i + 1}`,
     data: `2024-01-0${i + 1} 14:30`,
-    reporter_id: `${i}`,
-    post_id: `${i}`,
-    reason: `hate speech`,
-    post_link: `https://google.com/${i}`,
+    reporter_id: `${1000 + i}`,
+    post_id: `${2000 + i}`,
+    reason: "hate speech",
+    post_link: `https://example.com/post/${i + 1}`,
   })),
 );
 
+/* ---------- логіка модалки ---------- */
 const showModal = ref(false);
 const activeReportId = ref<number | null>(null);
-
-// Поточний звіт по id (для модалки)
-const currentReport = computed(() => {
-  return (
-    reports.value.find((r) => r.id === activeReportId.value) || {
-      title: "",
-      data: "",
-    }
-  );
-});
 
 function openModal(id: number) {
   activeReportId.value = id;
@@ -152,4 +165,10 @@ function closeModal() {
   showModal.value = false;
   activeReportId.value = null;
 }
+
+/* ---------- репорт, що показується у модалці ---------- */
+const currentReport = computed<Report>(
+  () =>
+    reports.value.find((r) => r.id === activeReportId.value) ?? EMPTY_REPORT,
+);
 </script>
