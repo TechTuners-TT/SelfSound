@@ -26,6 +26,7 @@ import PrivacyPolicyView from "@/views/PrivacyPolicyView.vue";
 import AdminComplainsView from "@/views/AdminAnalytics/AdminComplainsView.vue";
 import AdminAnalyticsView from "@/views/AdminAnalytics/AdminAnalyticsView.vue";
 import PremiumView from "@/views/PremiumView.vue";
+import VerifyPage from "@/views/VerifyPageView.vue";
 import PostPage from "@/components/Posts_Feed_Components/PostPage.vue";
 
 const router = createRouter({
@@ -157,6 +158,11 @@ const router = createRouter({
       path: "/your_premium",
       name: "your_premium",
       component: PremiumView,
+    },
+    {
+      path: "/verify",
+      name: "verify",
+      component: VerifyPage,
     },
 
     //{

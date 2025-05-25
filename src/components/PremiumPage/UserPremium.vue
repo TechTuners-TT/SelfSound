@@ -1,9 +1,7 @@
 <template>
-  <div
-    class="mb-[25px] sm:mb-[30px] md:mb-[35px] lg:mb-[40px] xl:mb-[45px] 2xl:mb-[50px]"
-  >
+  <div class="mb-[20px]">
     <div
-      class="flex items-center mt-[15px] sm:mt-[20px] md:mt-[28px] lg:mt-[32px] xl:mt-[38px] 2xl:mt-[43px] 2xl:gap-[46px] xl:gap-[42px] lg:gap-[38px] md:gap-[35px] sm:gap-[32px] gap-[28px]"
+      class="flex items-center mt-[20px] [@media(min-width:1537px)]:gap-[46px] xl:gap-[40px] lg:gap-[36px] md:gap-[34px] sm:gap-[30px] gap-[26px]"
     >
       <button class="p-0">
         <a href="#settings">
@@ -20,7 +18,7 @@
     </div>
     <!-- Divider -->
     <div
-      class="mt-[20px] sm:mt-[24px] md:mt-[28px] lg:mt-[32px] xl:mt-[35px] 2xl:mt-[40px] -mx-[10px] sm:-mx-[50px] md:-mx-[20px] lg:-mx-[30px] xl:-mx-[30px] 2xl:-mx-[40px]"
+      class="mt-[20px] -mx-[10px] sm:-mx-[50px] md:-mx-[20px] lg:-mx-[30px] xl:-mx-[30px] 2xl:-mx-[40px]"
     >
       <hr class="border-t-1 border-white/50" />
     </div>
