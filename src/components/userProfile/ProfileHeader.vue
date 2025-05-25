@@ -1,6 +1,6 @@
 <template>
   <div
-    class="mb-[10px] flex gap-10 iteam-centere mt-10 sm:gap-15 md:gap-[46px] lg:gap-[76px] xl:gap-[56px] 2xl:gap-[76px] sm:mb-[12px] md:mb-[14px] lg:mb-[16px] xl:mb-[18px] 2xl:mb-[20px]"
+    class="mb-[10px] flex gap-10 iteam-centere mt-10 sm:gap-15 md:gap-[46px] lg:gap-[76px] xl:gap-[56px] [@media(min-width:1537px)]:gap-[76px] sm:mb-[12px] md:mb-[14px] lg:mb-[16px] xl:mb-[18px] [@media(min-width:1537px)]:mb-[20px]"
   >
     <div
       class="relative w-[84px] h-[84px] max-sm:w-[60px] max-sm:h-[60px] sm:w-[64px] sm:h-[64px] md:w-[68px] md:h-[68px] lg:w-[72px] lg:h-[72px] xl:w-[84px] xl:h-[84px]"
@@ -16,13 +16,13 @@
     </div>
     <div class="flex flex-col gap-1 sm:gap-2.5 text-left">
       <p
-        class="font-bold text-white h-[24px] sm:h-[30px] text-[20px] sm:text-[24px] xl:text-[22px] 2xl:text-[30px] inter-font"
+        class="font-bold text-white h-[24px] sm:h-[30px] text-[18px] sm:text-[20px] xl:text-[24px] [@media(min-width:1537px)]:text-[30px] inter-font"
         style="font-weight: 700"
       >
         {{ user.name }}
       </p>
       <p
-        class="text-base font-medium text-white h-[12px] text-[13px] sm:text-[14px] md:text-[14px] xl:text-[15px] 2xl:text-[16px] inter-font"
+        class="text-base font-medium text-white h-[12px] text-[11px] sm:text-[12px] md:text-[13px] xl:text-[14px] [@media(min-width:1537px)]:text-[16px] inter-font"
         style="font-weight: 500"
       >
         {{ user.login }}
@@ -31,13 +31,13 @@
   </div>
 
   <div
-    class="flex items-center gap-10 min-h-[34px] sm:gap-15 md:gap-[46px] lg:gap-[76px] xl:gap-[56px] 2xl:gap-[60px]"
+    class="flex items-center gap-10 min-h-[34px] sm:gap-15 md:gap-[46px] lg:gap-[76px] xl:gap-[56px] [@media(min-width:1537px)]:gap-[60px]"
   >
     <div
-      class="flex-shrink-0 min-w-[60px] max-w-[100px] w-[100px] 2xl:w-[100px] xl:w-[84px] lg:w-[72px] md:w-[68px] sm:w-[64px] max-sm:w-[60px]"
+      class="flex-shrink-0 min-w-[60px] max-w-[100px] w-[100px] [@media(min-width:1537px)]:w-[100px] xl:w-[84px] lg:w-[72px] md:w-[68px] sm:w-[64px] max-sm:w-[60px]"
     >
       <div
-        class="h-[26px] w-full sm:h-[32px] text-sm sm:text-base text-white rounded-[5px] text-[11px] sm:text-[12px] md:text-[13px] lg:text-[14px] xl:text-[15px] 2xl:text-[16px] inter-font flex items-center justify-center"
+        class="h-[26px] w-full sm:h-[32px] text-sm sm:text-base text-white rounded-[5px] text-[11px] sm:text-[12px] md:text-[13px] lg:text-[14px] xl:text-[15px] [@media(min-width:1537px)]:text-[16px] inter-font flex items-center justify-center"
         :style="{
           fontWeight: '400',
           backgroundColor:
@@ -56,7 +56,7 @@
     </div>
 
     <p
-      class="grow m-auto text-white text-[12px] sm:text-[13px] md:text-[14px] xl:text-[15px] 2xl:text-[16px] inter-font biographyinput"
+      class="grow m-auto text-white text-[11px] sm:text-[12px] md:text-[13px] xl:text-[14px] [@media(min-width:1537px)]:text-[16px] inter-font biographyinput"
       style="font-weight: 400; line-height: 1.125"
     >
       {{ user.biography }}
@@ -64,10 +64,10 @@
   </div>
 
   <div
-    class="flex items-center h-[12px] mt-[15px] sm:mt-[20px] md:mt-[25px] lg:mt-[30px] xl:mt-[35px] 2xl:mt-[40px] gap-6.5 sm:gap-12.5 md:gap-[40px] lg:gap-[60px] xl:gap-[50px] 2xl:gap-[60px]"
+    class="flex items-center h-[12px] mt-[15px] sm:mt-[20px] md:mt-[25px] lg:mt-[30px] xl:mt-[35px] [@media(min-width:1537px)]:mt-[40px] gap-6.5 sm:gap-12.5 md:gap-[40px] lg:gap-[60px] xl:gap-[50px] [@media(min-width:1537px)]:gap-[60px]"
   >
     <div
-      class="flex-shrink-0 min-w-[60px] max-w-[100px] w-[100px] 2xl:w-[100px] xl:w-[90px] lg:w-[88px] md:w-[74px] sm:w-[74px] max-sm:w-[74px]"
+      class="flex-shrink-0 min-w-[60px] max-w-[100px] w-[100px] [@media(min-width:1537px)]:w-[100px] xl:w-[90px] lg:w-[88px] md:w-[74px] sm:w-[74px] max-sm:w-[74px]"
     >
       <div
         class="h-[26px] w-full sm:h-[32px] text-sm sm:text-base text-white rounded-[5px] text-[16px] inter-font flex items-center justify-center"
@@ -76,22 +76,22 @@
     </div>
 
     <section
-      class="flex gap-[20px] sm:gap-[40px] md:gap-[30px] lg:gap-[40px] xl:gap-[20px] 2xl:gap-[40px] mb-1.25 inter-font font-medium h-[12px] justify-end"
+      class="flex gap-[20px] sm:gap-[40px] md:gap-[30px] lg:gap-[40px] xl:gap-[20px] [@media(min-width:1537px)]:gap-[40px] mb-1.25 inter-font font-medium h-[12px] justify-end"
     >
       <p
-        class="font-medium text-white inter-font text-[10px] sm:text-[9px] md:text-[10px] xl:text-[11px] 2xl:text-[12px] h-[12px]"
+        class="font-medium text-white inter-font text-[10px] sm:text-[10px] md:text-[10px] xl:text-[11px] [@media(min-width:1537px)]:text-[12px] h-[12px]"
         style="font-weight: 500"
       >
         {{ stats.posts }} posts
       </p>
       <p
-        class="font-medium text-white inter-font text-[10px] sm:text-[10px] md:text-[10px] xl:text-[11px] 2xl:text-[12px] h-[12px]"
+        class="font-medium text-white inter-font text-[10px] sm:text-[10px] md:text-[10px] xl:text-[11px] [@media(min-width:1537px)]:text-[12px] h-[12px]"
         style="font-weight: 500"
       >
         Listeners: {{ stats.listeners }}
       </p>
       <p
-        class="font-medium text-white inter-font text-[10px] sm:text-[10px] md:text-[10px] xl:text-[11px] 2xl:text-[12px] h-[12px]"
+        class="font-medium text-white inter-font text-[10px] sm:text-[10px] md:text-[10px] xl:text-[11px] [@media(min-width:1537px)]:text-[12px] h-[12px]"
         style="font-weight: 500"
       >
         Listened to: {{ stats.listenedTo }}

@@ -32,6 +32,12 @@
         aria-label="Main navigation"
       >
         <router-link
+          to="/premium"
+          class="hover:text-purple-700 font-normal nav-link"
+        >
+          Premium
+        </router-link>
+        <router-link
           to="/support"
           class="hover:text-purple-700 font-normal nav-link"
           >Support</router-link
@@ -43,7 +49,7 @@
           >Guest mode</router-link
         >
         <router-link
-          to="/login"
+          to="/sign-in"
           class="hover:text-purple-700 font-normal nav-link"
           >Log in</router-link
         >

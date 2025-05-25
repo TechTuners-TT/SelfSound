@@ -15,6 +15,19 @@ import CreatePostMediaView from "../views/AddPosts/CreatePostMediaView.vue";
 import CreatePostMusicXMLView from "../views/AddPosts/CreatePostMusicXML.vue";
 import AnotherUserProfile from "@/views/AnotherUserProfile.vue";
 import NotificationsViev from "@/views/NotificationsViev.vue";
+import PremiumAboutView from "@/views/PremiumAboutView.vue";
+import SupportView from "@/views/SupportView.vue";
+import AboutUsView from "@/views/AboutUsView.vue";
+import ForAdvertisersView from "@/views/ForAdvertisersView.vue";
+import TermsOfUseView from "@/views/TermsOfUseView.vue";
+import SocialsInstagramView from "@/views/SocialsInstagramView.vue";
+import SocialsDiscordView from "@/views/SocialsDiscordView.vue";
+import PrivacyPolicyView from "@/views/PrivacyPolicyView.vue";
+import AdminComplainsView from "@/views/AdminAnalytics/AdminComplainsView.vue";
+import AdminAnalyticsView from "@/views/AdminAnalytics/AdminAnalyticsView.vue";
+import PremiumView from "@/views/PremiumView.vue";
+import VerifyPage from "@/views/VerifyPageView.vue";
+import PostPage from "@/components/Posts_Feed_Components/PostPage.vue";
 
 const router = createRouter({
   history: createWebHashHistory(import.meta.env.BASE_URL),
@@ -38,6 +51,12 @@ const router = createRouter({
       path: "/home",
       name: "home",
       component: HomeView,
+    },
+
+    {
+      path: "/post-page",
+      name: "post-page",
+      component: PostPage,
     },
     {
       path: "/profile",
@@ -84,6 +103,66 @@ const router = createRouter({
       path: "/notifications",
       name: "notifications",
       component: NotificationsViev,
+    },
+    {
+      path: "/premium",
+      name: "premium",
+      component: PremiumAboutView,
+    },
+    {
+      path: "/support",
+      name: "support",
+      component: SupportView,
+    },
+    {
+      path: "/about-us",
+      name: "about-us",
+      component: AboutUsView,
+    },
+    {
+      path: "/advertisers",
+      name: "advertisers",
+      component: ForAdvertisersView,
+    },
+    {
+      path: "/terms",
+      name: "terms",
+      component: TermsOfUseView,
+    },
+    {
+      path: "/socials/instagram",
+      name: "socials/instagram",
+      component: SocialsInstagramView,
+    },
+    {
+      path: "/socials/discord",
+      name: "socials/discord",
+      component: SocialsDiscordView,
+    },
+    {
+      path: "/privacy",
+      name: "privacy",
+      component: PrivacyPolicyView,
+    },
+    {
+      path: "/admin/a",
+      name: "admin/a",
+      component: AdminAnalyticsView,
+    },
+    {
+      path: "/admin/c",
+      name: "admin/c",
+      component: AdminComplainsView,
+    },
+    {
+      path: "/your_premium",
+      name: "your_premium",
+      component: PremiumView,
+    },
+    {
+      path: "/verify",
+      name: "verify",
+      component: VerifyPage,
     },
 
     //{
