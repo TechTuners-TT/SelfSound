@@ -18,7 +18,7 @@ import jHope from "@/assets/06.  Airplane.mp3";
 
 interface PostBase {
   id: string;
-  userId: string; // ✅ Required by PostCard.vue
+  userId: string;
   username: string;
   displayName: string;
   role: "Musician" | "Listener" | "Learner";

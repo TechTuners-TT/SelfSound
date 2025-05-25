@@ -26,6 +26,7 @@ import PrivacyPolicyView from "@/views/PrivacyPolicyView.vue";
 import AdminComplainsView from "@/views/AdminAnalytics/AdminComplainsView.vue";
 import AdminAnalyticsView from "@/views/AdminAnalytics/AdminAnalyticsView.vue";
 import PremiumView from "@/views/PremiumView.vue";
+import PostPage from "@/components/Posts_Feed_Components/PostPage.vue";
 
 const router = createRouter({
   history: createWebHashHistory(import.meta.env.BASE_URL),
@@ -49,6 +50,12 @@ const router = createRouter({
       path: "/home",
       name: "home",
       component: HomeView,
+    },
+
+    {
+      path: "/post-page",
+      name: "post-page",
+      component: PostPage,
     },
     {
       path: "/profile",
