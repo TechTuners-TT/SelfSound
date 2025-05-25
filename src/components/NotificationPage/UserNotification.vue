@@ -1,27 +1,23 @@
 <template>
-  <div
-    class="mb-[25px] sm:mb-[30px] md:mb-[35px] lg:mb-[40px] xl:mb-[45px] 2xl:mb-[50px]"
-  >
-    <div
-      class="flex items-center mt-[15px] sm:mt-[20px] md:mt-[28px] lg:mt-[32px] xl:mt-[38px] 2xl:mt-[43px]"
-    >
+  <div class="mb-[20px]">
+    <div class="flex items-center mt-[20px]">
       <!-- Заголовок -->
       <h1
-        class="2xl:text-[24px] xl:text-[20px] lg:text-[18px] text-[16px] font-bold text-white inter-font"
+        class="[@media(min-width:1537px)]:text-[24px] xl:text-[20px] lg:text-[18px] text-[16px] font-bold text-white inter-font"
       >
         Notifications
       </h1>
     </div>
     <!-- Divider -->
     <div
-      class="mt-[20px] sm:mt-[24px] md:mt-[28px] lg:mt-[32px] xl:mt-[35px] 2xl:mt-[40px] -mx-[10px] sm:-mx-[50px] md:-mx-[20px] lg:-mx-[30px] xl:-mx-[30px] 2xl:-mx-[40px]"
+      class="mt-[20px] -mx-[10px] sm:-mx-[50px] md:-mx-[20px] lg:-mx-[30px] xl:-mx-[30px] 2xl:-mx-[40px]"
     >
       <hr class="border-t-1 border-white/50" />
     </div>
   </div>
 
   <!-- User List -->
-  <div class="space-y-[5px]">
+  <div class="space-y-[3px]">
     <div
       v-for="user in users"
       :key="user.id"
@@ -29,7 +25,7 @@
     >
       <!-- Контейнер повідомлення -->
       <div
-        class="flex items-center justify-between w-full h-[25px] sm:h-[28px] md:h-[32px] lg:h-[36px] xl:h-[40px] 2xl:h-[45px]"
+        class="flex items-center justify-between w-full h-[20px] md:h-[22px] xl:h-[24px]"
       >
         <span>
           <svg width="6" height="7" fill="none" viewBox="0 0 6 7">
