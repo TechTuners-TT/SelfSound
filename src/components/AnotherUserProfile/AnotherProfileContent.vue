@@ -4,7 +4,7 @@
       class="px-[10px] sm:px-[40px] md:px-[20px] lg:px-[30px] xl:px-[20px] 2xl:px-[40px]"
     >
       <button
-        class="cursor-pointer w-full h-8 text-sm sm:text-base text-white rounded-[5px] shadow-sm mx-auto block inter-font"
+        class="cursor-pointer w-full h-8 text-[12px] sm:text-[13px] xl:text-[14px] [@media(min-width:1537px)]:text-[16px] text-white rounded-[5px] shadow-sm mx-auto block inter-font"
         :style="{
           backgroundColor: isClicked
             ? 'rgba(109, 1, 208,0.5)'
@@ -19,7 +19,7 @@
 
     <div class="w-full h-px border border-[rgba(255,255,255,0.5)]"></div>
     <p
-      class="mt-10 sm:mt-47.5 text-sm sm:text-base text-white text-center inter-font text_size"
+      class="mt-10 sm:mt-47.5 text-[12px] sm:text-[13px] xl:text-[14px] [@media(min-width:1537px)]:text-[16px] text-white text-center inter-font text_size"
       style="font-weight: 400"
     >
       There's nothing here yet, add your first post!
