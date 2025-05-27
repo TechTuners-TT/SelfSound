@@ -54,23 +54,57 @@
           what’s profitable. <br />Our team:
           <br />
           <br /><span class="font-bold">Diana</span> – Team lead / frontend
-          developer / designer. <br />https://github.com/ReyValt - on GitHub
-          <br />Focuses on product direction, interface design, and building UI
-          components.
+          developer / designer. <br />
+          <a
+            href="https://github.com/ReyValt"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="break-words inline-block"
+          >
+            https://github.com/ReyValt
+          </a>
+          – on GitHub <br />Focuses on product direction, interface design, and
+          building UI components.
           <br />
           <br /><span class="font-bold">Vlad</span> – Backend developer
-          <br />https://www.linkedin.com/in/%D0%B2%D0%BB%D0%B0%D0%B4-%D1%80%D0%B8%D0%B1%D1%87-a52802336/
-          - on Linkedin <br />Handles core logic, API structure, database, and
-          system behavior.
+          <br />
+          <a
+            href="https://www.linkedin.com/in/%D0%B2%D0%BB%D0%B0%D0%B4-%D1%80%D0%B8%D0%B1%D1%87-a52802336/"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="break-words inline-block"
+          >
+            https://www.linkedin.com/in/Vlad/
+          </a>
+          - on LinkedIn
+
+          <br />Handles core logic, API structure, database, and system
+          behavior.
           <br />
           <br /><span class="font-bold">Yura</span> – Frontend developer
-          <br />https://github.com/Yura0508 - on GitHub <br />Focuses on
-          implementing UI logic and refining user experience.
+          <br />
+          <a
+            href="https://github.com/Yura0508"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="break-words inline-block"
+          >
+            https://github.com/Yura0508
+          </a>
+          – on GitHub <br />Focuses on implementing UI logic and refining user
+          experience.
           <br />
           <br /><span class="font-bold">Ivan</span> – DevOps & frontend
-          developer. <br />https://github.com/p-i-r-u-m - on GitHub <br />Works
-          across deployment, system reliability, and contributes to frontend
-          features.
+          developer. <br /><a
+            href="https://github.com/p-i-r-u-m"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="break-words inline-block"
+          >
+            https://github.com/p-i-r-u-m
+          </a>
+          – on GitHub <br />Works across deployment, system reliability, and
+          contributes to frontend features.
           <br />
           <br />Our background is technical, but we care about the experience —
           how things feel, how people use them, and how they grow over time.
