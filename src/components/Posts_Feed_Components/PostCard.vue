@@ -30,22 +30,12 @@
             class="leading-tight flex flex-col cursor-pointer"
           >
             <div
-              class="text-white font-semibold"
-              style="
-                font-family: &quot;Inter&quot;, sans-serif;
-                font-size: clamp(12px, 0.833vw, 16px);
-              "
+              class="text-white font-semibold text-[clamp(12px,0.833vw,16px)] font-inter"
             >
               {{ post.displayName }}
             </div>
             <div
-              class="text-white"
-              style="
-                font-family: &quot;Inter&quot;, sans-serif;
-                font-weight: 400;
-                font-size: clamp(10px, 0.729vw, 14px);
-                margin-top: 4px;
-              "
+              class="text-white font-normal text-[clamp(10px,0.729vw,14px)] mt-[4px] font-inter"
             >
               @{{ post.username }}
             </div>

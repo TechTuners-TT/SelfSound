@@ -1,11 +1,9 @@
 <template>
-  <div
-    class="2xl:m-[40px] xl:m-[35px] lg:m-[33px] md:m-[32px] sm:m-[30px] m-[28px]"
-  >
+  <div class="m-[20px]">
     <!-- Заголовок -->
     <div class="flex items-center mb-6">
       <h1
-        class="2xl:text-[24px] xl:text-[20px] lg:text-[18px] text-[16px] font-semibold text-white inter-font"
+        class="[@media(min-width:1537px)]:text-[24px] xl:text-[20px] lg:text-[18px] text-[16px] font-semibold text-white inter-font"
       >
         Attach MusicXML files
       </h1>
@@ -54,13 +52,13 @@
 
             <div class="flex flex-col text-white w-3/5">
               <p
-                class="font-bold truncate max-w-xs text-[15px] sm:text-[16px] md:text-[18px] lg:text-[20px] xl:text-[22px] 2xl:text-[24px]"
+                class="font-bold truncate max-w-xs text-[15px] sm:text-[16px] md:text-[18px] lg:text-[20px] xl:text-[22px] [@media(min-width:1537px)]:text-[24px]"
               >
                 {{ item.title }}
               </p>
               <!-- Додано w-full для обрізання -->
               <p
-                class="text-[11px] sm:text-[12px] md:text-[13px] lg:text-[14px] xl:text-[15px] 2xl:text-[16px]"
+                class="text-[11px] sm:text-[12px] md:text-[13px] lg:text-[14px] xl:text-[15px] [@media(min-width:1537px)]:text-[16px]"
               >
                 {{ fileSizeInKB(item.file) }} KB
               </p>
@@ -96,7 +94,7 @@
     <div v-if="files.length > 0" class="flex justify-end mb-6">
       <button
         @click="submitPost"
-        class="cursor-pointer w-[75px] sm:w-[80px] md:w-[85px] lg:w-[95px] xl:w-[105px] 2xl:w-[119px] 2xl:h-[37px] bg-[#6D01D0]/20 xl:h-[32px] lg:h-[28px] md:h-[24px] sm:h-[20px] h-[18px] 2xl:rounded-[10px] rounded-[5px] transition font-bold text-xl flex items-center justify-center text-[#6D01D0] inter-font 2xl:text-[24px] xl:text-[20px] lg:text-[18px] text-[16px]"
+        class="cursor-pointer w-[75px] sm:w-[80px] md:w-[85px] lg:w-[95px] xl:w-[105px] 2xl:w-[119px] 2xl:h-[37px] bg-[#6D01D0]/20 xl:h-[32px] lg:h-[28px] md:h-[24px] sm:h-[20px] h-[18px] 2xl:rounded-[10px] rounded-[5px] transition font-bold text-xl flex items-center justify-center text-[#6D01D0] inter-font [@media(min-width:1537px)]:text-[24px] xl:text-[20px] lg:text-[18px] text-[16px]"
       >
         <a href="#home"> <p>Publish</p></a>
       </button>

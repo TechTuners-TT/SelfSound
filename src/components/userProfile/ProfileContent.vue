@@ -1,10 +1,10 @@
 <template>
   <section class="flex flex-col gap-15 mx-auto section_1">
     <div
-      class="px-[10px] sm:px-[50px] md:px-[20px] lg:px-[30px] xl:px-[30px] 2xl:px-[40px]"
+      class="px-[10px] sm:px-[40px] md:px-[20px] lg:px-[30px] xl:px-[20px] 2xl:px-[40px]"
     >
       <button
-        class="cursor-pointer w-full h-8 text-sm sm:text-base text-white rounded-[5px] shadow-sm mx-auto block inter-font"
+        class="cursor-pointer w-full h-8 text-[12px] sm:text-[13px] xl:text-[14px] [@media(min-width:1537px)]:text-[16px] text-white rounded-[5px] shadow-sm mx-auto block inter-font"
         style="background-color: rgba(0, 12, 156, 0.4); font-weight: 500"
         @click="isModalOpen = true"
       >
@@ -14,7 +14,7 @@
 
     <div class="w-full h-px border border-[rgba(255,255,255,0.5)]"></div>
     <p
-      class="mt-10 sm:mt-47.5 text-sm sm:text-base text-white text-center inter-font text_size"
+      class="mt-10 sm:mt-47.5 text-[12px] sm:text-[13px] xl:text-[14px] [@media(min-width:1537px)]:text-[16px] text-white text-center inter-font text_size"
       style="font-weight: 400"
     >
       There's nothing here yet, add your first post!
@@ -129,7 +129,7 @@
             Tag:
           </div>
           <div
-            class="flex gap-[14px] sm:gap-[14px] md:gap-[14px] lg:gap-[16px] xl:gap-[18px] 2xl:gap-[20px] flex-nowrap w-full"
+            class="flex gap-[14px] sm:gap-[14px] md:gap-[14px] lg:gap-[16px] xl:gap-[18px] [@media(min-width:1537px)]:gap-[20px] flex-nowrap w-full"
           >
             <div
               :class="[
@@ -137,7 +137,7 @@
                 formData.selectedTag === 'Listener'
                   ? 'ring-2 ring-[#6D01D0]'
                   : '',
-                'max-md:h-[30px] max-md:text-[10px] md:text-[12px] lg:text-[14px] xl:text-[14px] 2xl:text-[16px]',
+                'max-md:h-[30px] max-md:text-[10px] md:text-[12px] lg:text-[14px] xl:text-[14px] [@media(min-width:1537px)]:text-[16px]',
               ]"
               @click="selectTag('Listener')"
             >
@@ -147,7 +147,7 @@
               :class="[
                 'flex-1 max-w-[100px] h-[32px] leading-[32px] py-0 px-0 rounded-[5px] inter-font cursor-pointer text-center text-white bg-[#6D01D0] select-none tag_type',
                 formData.selectedTag === 'Musician' ? 'ring-2 ring-white ' : '',
-                'max-md:h-[30px] max-md:text-[10px] md:text-[12px] lg:text-[14px] xl:text-[14px] 2xl:text-[16px]',
+                'max-md:h-[30px] max-md:text-[10px] md:text-[12px] lg:text-[14px] xl:text-[14px] [@media(min-width:1537px)]:text-[16px]',
               ]"
               @click="selectTag('Musician')"
             >
@@ -157,7 +157,7 @@
               :class="[
                 'flex-1 max-w-[100px] h-[32px] leading-[32px] py-0 px-0 rounded-[5px] inter-font cursor-pointer text-center text-white bg-[#000C9C] select-none tag_type',
                 formData.selectedTag === 'Learner' ? 'ring-2 ring-white' : '',
-                'max-md:h-[30px] max-md:text-[10px] md:text-[12px] lg:text-[14px] xl:text-[14px] 2xl:text-[16px]',
+                'max-md:h-[30px] max-md:text-[10px] md:text-[12px] lg:text-[14px] xl:text-[14px] [@media(min-width:1537px)]:text-[16px]',
               ]"
               @click="selectTag('Learner')"
             >
@@ -168,7 +168,7 @@
 
         <!-- Save Button -->
         <div
-          class="self-end 2xl:mb-[45px] xl:mb-[45px] lg:mb-[40px] md:mb-[35px] sm:mb-[30px] mb-[30px] font-bold cursor-pointer text-white hover:text-[#6D01D0] text-[12px] sm:text-[12px] md:text-[13px] lg:text-[14px] xl:text-[15px] 2xl:text-[16px]"
+          class="self-end [@media(min-width:1537px)]:mb-[45px] xl:mb-[45px] lg:mb-[40px] md:mb-[35px] sm:mb-[30px] mb-[30px] font-bold cursor-pointer text-white hover:text-[#6D01D0] text-[12px] sm:text-[12px] md:text-[13px] lg:text-[14px] xl:text-[15px] [@media(min-width:1537px)]:text-[16px]"
           @click="saveChanges"
         >
           Save changes

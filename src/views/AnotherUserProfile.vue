@@ -18,7 +18,7 @@
           >
             <!-- Section 1 -->
             <section
-              class="px-[10px] sm:px-[50px] md:px-[20px] lg:px-[30px] xl:px-[30px] 2xl:px-[40px]"
+              class="px-[10px] sm:px-[40px] md:px-[20px] lg:px-[30px] xl:px-[20px] 2xl:px-[40px]"
             >
               <AnotherProfileHeader :user="user" :stats="stats" />
             </section>
