@@ -86,27 +86,76 @@ export default defineComponent({
       passwordVisible.value = !passwordVisible.value;
     };
 
-    const getStrengthClass = (stage: number) => {
+    // Advanced password validation logic
+    const hasUppercase = (s: string): boolean => /[A-Z]/.test(s);
+    const hasLowercase = (s: string): boolean => /[a-z]/.test(s);
+    const hasNumber = (s: string): boolean => /\d/.test(s);
+    const hasSpecial = (s: string): boolean => /[^A-Za-z0-9]/.test(s);
+    const uniqueChars = (s: string): number => new Set(s).size;
+
+    const baseRequirementsMet = computed(() => {
+      const p = props.modelValue;
+      return (
+        p.length >= 6 &&
+        hasUppercase(p) &&
+        hasLowercase(p) &&
+        hasNumber(p) &&
+        hasSpecial(p)
+      );
+    });
+
+    const passwordStrength = computed(() => {
+      if (!baseRequirementsMet.value) return "invalid";
       const length = props.modelValue.length;
-      if (length === 0) return "bg-white/30";
-      return length >= stage * 3 ? "bg-indigo-600" : "bg-white/30";
-    };
+      const unique = uniqueChars(props.modelValue);
+      if (length >= 12 && unique >= 6) return "strong";
+      if (length >= 12 || unique >= 6) return "ok";
+      return "weak";
+    });
 
     const strengthLabel = computed(() => {
-      const length = props.modelValue.length;
-      if (length === 0) return "";
-      if (length < 6) return "Weak password";
-      if (length < 9) return "Ok password";
-      return "Strong password";
+      switch (passwordStrength.value) {
+        case "invalid":
+          return "";
+        case "weak":
+          return "Weak password";
+        case "ok":
+          return "Ok password";
+        case "strong":
+          return "Strong password";
+        default:
+          return "";
+      }
     });
 
     const strengthColorClass = computed(() => {
-      const length = props.modelValue.length;
-      if (length === 0) return "text-white";
-      if (length < 6) return "text-[#D0202F]";
-      if (length < 9) return "text-[#F2C849]";
-      return "text-[#3BAA5F]";
+      switch (passwordStrength.value) {
+        case "invalid":
+        case "weak":
+          return "text-[#D0202F]"; // red
+        case "ok":
+          return "text-[#F2C849]"; // yellow
+        case "strong":
+          return "text-[#3BAA5F]"; // green
+        default:
+          return "text-white";
+      }
     });
+
+    const getStrengthClass = (stage: number): string => {
+      switch (passwordStrength.value) {
+        case "invalid":
+          return "bg-white/30";
+        case "weak":
+          return stage === 1 ? "bg-[#D0202F]" : "bg-white/30";
+        case "ok":
+          return stage <= 2 ? "bg-[#F2C849]" : "bg-white/30";
+        case "strong":
+          return "bg-[#3BAA5F]";
+        default:
+          return "bg-white/30";
+      }
+    };
 
     return {
       id,

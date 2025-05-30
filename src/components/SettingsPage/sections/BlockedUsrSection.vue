@@ -5,7 +5,7 @@
         Blocked users
       </h1>
       <label class="container size-var cursor-pointer">
-        <input type="checkbox" v-model="isChecked" />
+        <input type="checkbox" v-model="isChecked" @change="toggleSection" />
         <svg
           style="width: var(--size); height: var(--size); fill: var(--color)"
           viewBox="0 0 512 512"
@@ -20,34 +20,70 @@
       </label>
     </div>
 
+    <!-- Loading state -->
+    <div v-if="isChecked && isLoading" class="text-white text-center py-4">
+      Loading blocked users...
+    </div>
+
+    <!-- Error state -->
+    <div v-if="isChecked && error" class="text-red-400 text-center py-4">
+      {{ error }}
+    </div>
+
+    <!-- Empty state -->
+    <div
+      v-if="isChecked && !isLoading && !error && blockedUsers.length === 0"
+      class="text-gray-400 text-center py-4"
+    >
+      No blocked users
+    </div>
+
     <!-- Список заблокованих користувачів -->
-    <div v-if="isChecked" class="space-y-4 max-w-[600px]">
+    <div
+      v-if="isChecked && !isLoading && !error && blockedUsers.length > 0"
+      class="space-y-4 max-w-[600px]"
+    >
       <div
         v-for="user in blockedUsers"
-        :key="user.username"
+        :key="user.id"
         class="flex items-center justify-between bg-transparent"
       >
-        <div class="flex items-center gap-4 min-w-0 cursor-pointer">
+        <div
+          class="flex items-center gap-4 min-w-0 cursor-pointer"
+          @click="navigateToProfile(user.id)"
+        >
           <!-- Аватар -->
           <div
-            class="w-[60px] h-[60px] flex-shrink-0 bg-gray-300 rounded-full flex items-center justify-center text-[10px] text-gray-500"
+            class="w-[60px] h-[60px] flex-shrink-0 rounded-full overflow-hidden bg-gray-600 flex items-center justify-center"
           >
-            {{ user.name.charAt(0) }}
+            <img
+              v-if="user.avatar_url"
+              :src="user.avatar_url"
+              :alt="user.name"
+              class="w-full h-full object-cover"
+              @error="handleImageError"
+            />
+            <span v-else class="text-white text-xl font-bold">
+              {{ user.name.charAt(0).toUpperCase() }}
+            </span>
           </div>
           <!-- Інформація -->
           <div class="min-w-0">
             <p class="text-white font-medium leading-5 truncate">
-              {{ user.name }}
+              {{ user.name || "Unknown User" }}
             </p>
-            <p class="text-gray-400 text-sm truncate">@{{ user.username }}</p>
+            <p class="text-gray-400 text-sm truncate">
+              @{{ user.login || "unknown" }}
+            </p>
           </div>
         </div>
         <!-- Кнопка розблокування -->
         <button
-          @click="toggleBlock(user.username)"
-          class="text-white px-5 py-1 rounded-md bg-[#D0202F] cursor-pointer"
+          @click="unblockUser(user.id)"
+          :disabled="unblockingUsers.has(user.id)"
+          class="text-white px-5 py-1 rounded-md bg-[#D0202F] cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
         >
-          Unblock
+          {{ unblockingUsers.has(user.id) ? "Unblocking..." : "Unblock" }}
         </button>
       </div>
     </div>
@@ -55,25 +91,117 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from "vue";
+import { ref, onMounted } from "vue";
+import { useRouter } from "vue-router";
 
+// Get API URL from environment variable
+const API_URL = import.meta.env.VITE_API_URL;
+
+interface BlockedUser {
+  id: string;
+  name: string;
+  login: string;
+  avatar_url?: string;
+  description?: string;
+  tag_id?: string;
+}
+
+const router = useRouter();
 const isChecked = ref(false);
+const blockedUsers = ref<BlockedUser[]>([]);
+const isLoading = ref(false);
+const error = ref("");
+const unblockingUsers = ref(new Set<string>());
 
-// Масив користувачів
-const users = ref([
-  { name: "Marcus Chen", username: "mchen", blocked: true },
-  { name: "Elena Rodriguez", username: "elenarodz", blocked: true },
-  { name: "Some User", username: "someuser", blocked: true },
-]);
+// Fetch blocked users from backend
+async function fetchBlockedUsers() {
+  isLoading.value = true;
+  error.value = "";
 
-// Всі заблоковані
-const blockedUsers = computed(() => users.value.filter((u) => u.blocked));
+  try {
+    console.log("Fetching blocked users...");
+    const res = await fetch(`${API_URL}/profiles/blocks`, {
+      credentials: "include",
+    });
 
-// Функція розблокування
-const toggleBlock = (username: string) => {
-  const user = users.value.find((u) => u.username === username);
-  if (user) user.blocked = false;
-};
+    if (!res.ok) {
+      if (res.status === 401) {
+        throw new Error("Please sign in to view blocked users");
+      }
+      throw new Error(`Failed to fetch blocked users: ${res.statusText}`);
+    }
+
+    const data = await res.json();
+    console.log("Blocked users data:", data);
+
+    blockedUsers.value = data || [];
+  } catch (err) {
+    console.error("Error fetching blocked users:", err);
+    error.value =
+      err instanceof Error ? err.message : "Failed to load blocked users";
+  } finally {
+    isLoading.value = false;
+  }
+}
+
+// Unblock a user
+async function unblockUser(userId: string) {
+  if (unblockingUsers.value.has(userId)) return;
+
+  unblockingUsers.value.add(userId);
+
+  try {
+    console.log(`Unblocking user: ${userId}`);
+    const res = await fetch(`${API_URL}/profiles/blocks/${userId}`, {
+      method: "DELETE",
+      credentials: "include",
+    });
+
+    if (!res.ok) {
+      const errorData = await res.json();
+      throw new Error(errorData.detail || "Failed to unblock user");
+    }
+
+    // Remove user from blocked list
+    blockedUsers.value = blockedUsers.value.filter(
+      (user) => user.id !== userId,
+    );
+
+    console.log("User unblocked successfully");
+  } catch (err) {
+    console.error("Error unblocking user:", err);
+    alert(
+      `Failed to unblock user: ${err instanceof Error ? err.message : "Unknown error"}`,
+    );
+  } finally {
+    unblockingUsers.value.delete(userId);
+  }
+}
+
+// Navigate to user profile
+function navigateToProfile(userId: string) {
+  router.push(`/user/${userId}`);
+}
+
+// Handle image loading errors
+function handleImageError(event: Event) {
+  const img = event.target as HTMLImageElement;
+  img.style.display = "none";
+}
+
+// Toggle section and load data if needed
+function toggleSection() {
+  if (isChecked.value && blockedUsers.value.length === 0) {
+    fetchBlockedUsers();
+  }
+}
+
+// Load blocked users on component mount if section is already open
+onMounted(() => {
+  if (isChecked.value) {
+    fetchBlockedUsers();
+  }
+});
 </script>
 
 <style scoped>
@@ -127,5 +255,9 @@ const toggleBlock = (username: string) => {
   100% {
     transform: rotate(0deg);
   }
+}
+
+.inter-font {
+  font-family: "Inter", sans-serif;
 }
 </style>

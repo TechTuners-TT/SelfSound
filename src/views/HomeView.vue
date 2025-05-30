@@ -14,8 +14,10 @@
               />
             </section>
             <section>
+              <!-- Use PostsFeed for "For You" tab -->
               <Feed v-if="activeTab === 'forYou'" feedType="forYou" />
-              <Feed v-else feedType="listened" />
+              <!-- Use ListenedToFeed for "Listened To" tab -->
+              <ListenedToFeed v-else />
             </section>
           </div>
         </div>
@@ -30,6 +32,7 @@ import { ref } from "vue";
 import NavBar from "../components/Navigation/NavBar.vue";
 import HomeSwitch from "@/components/HomePage/HomeSwitch.vue";
 import Feed from "@/components/Posts_Feed_Components/PostsFeed.vue";
+import ListenedToFeed from "@/components/Posts_Feed_Components/ListenedToFeed.vue";
 
 const activeTab = ref("forYou");
 </script>
