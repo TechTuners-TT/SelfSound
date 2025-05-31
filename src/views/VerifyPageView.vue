@@ -1,9 +1,7 @@
 <template>
-  <main
-    class="flex flex-col justify-center items-center px-3 w-full min-h-screen overflow-hidden"
-  >
+  <main class="flex justify-center items-center w-full h-screen px-4">
     <div
-      class="bg-[#02033D] text-white flex flex-col justify-center items-center p-8 rounded-lg w-full sm:w-1/2 xl:w-4/10 sm:aspect-square"
+      class="bg-[#02033D] text-white flex flex-col justify-center items-center p-8 rounded-lg aspect-square w-full max-w-[480px]"
     >
       <svg
         class="mb-6"

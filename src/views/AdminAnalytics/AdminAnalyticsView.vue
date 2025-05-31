@@ -4,7 +4,7 @@
     <!-- Navigation panel: horizontal top on mobile, vertical left on md+ -->
     <!-- Навігаційна панель -->
     <nav
-      class="bg-[#02033D]/50 p-[20px] text-white flex flex-col w-full md:w-[200px] h-auto md:h-full p-4 shrink-0"
+      class="bg-[#02033D]/50 text-white flex flex-col w-full md:w-[200px] h-auto md:h-full p-4 shrink-0"
     >
       <!-- Назва завжди видна -->
       <h1 class="text-left text-xl mb-[8px] font-bold">Admin Panel</h1>
