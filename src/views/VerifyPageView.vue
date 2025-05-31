@@ -1,10 +1,9 @@
 <template>
-  <main
-    class="flex flex-col justify-center items-center px-3 w-full min-h-screen overflow-hidden"
-    style="background-color: rgba(6, 3, 16, 1)"
-  >
+  =======
+  <main class="flex justify-center items-center w-full h-screen px-4">
+    >>>>>>> 8a65ad71f880d5831656d2a922542b7d61ae3cc9
     <div
-      class="bg-[#02033D] text-white flex flex-col justify-center items-center p-8 rounded-lg w-full sm:w-1/2 xl:w-4/10 sm:aspect-square"
+      class="bg-[#02033D] text-white flex flex-col justify-center items-center p-8 rounded-lg aspect-square w-full max-w-[480px]"
     >
       <svg
         class="mb-6"

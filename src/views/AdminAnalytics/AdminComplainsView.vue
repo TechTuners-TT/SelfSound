@@ -91,18 +91,18 @@
         @click.self="closeModal"
       >
         <div
-          class="bg-[#060310] border-2 border-[#000C9C]/40 rounded-2xl p-[20px] w-[80%] md:w-[60%] text-white relative z-[9999]"
+          class="bg-[#060310] border-2 border-[#000C9C]/40 rounded-2xl p-[20px] w-[90%] md:w-[50%] lg:w-[30%] text-white relative z-[9999]"
         >
           <div class="flex justify-between items-center w-full mb-4">
             <h2 class="text-xl inter-font font-bold">Complaint Details</h2>
 
             <button
-              class="flex items-center inter-font justify-center w-[32px] h-[32px] rounded-full hover:bg-white/10 transition"
+              class="flex items-center inter-font justify-center w-[32px] h-[32px] transition"
               @click="closeModal"
               aria-label="Close modal"
             >
               <CloseIcon
-                class="w-[16px] h-[16px] sm:w-[18px] sm:h-[18px] md:w-[20px] md:h-[20px] lg:w-[22px] lg:h-[22px]"
+                class="w-[14px] h-[14px] sm:w-[16px] sm:h-[16px] md:w-[18px] md:h-[18px] lg:w-[20px] lg:h-[20px]"
               />
             </button>
           </div>

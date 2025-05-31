@@ -11,6 +11,7 @@
         :class="{ 'border-red-500': error }"
         :placeholder="placeholder"
       />
+
       <button
         v-if="type === 'password'"
         type="button"

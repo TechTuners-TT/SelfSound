@@ -2,7 +2,7 @@
   <div class="flex flex-col md:flex-row h-screen">
     <!-- Navigation panel -->
     <nav
-      class="bg-[#02033D]/50 p-[20px] text-white flex flex-col w-full md:w-[200px] h-auto md:h-full p-4 shrink-0"
+      class="bg-[#02033D]/50 text-white flex flex-col w-full md:w-[200px] h-auto md:h-full p-4 shrink-0"
     >
       <h1 class="text-left text-xl mb-[8px] font-bold">Admin Panel</h1>
 
