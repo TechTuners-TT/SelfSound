@@ -18,5 +18,5 @@ export default defineConfig({
     },
   },
 
-  base: "/frontend/", // or simply remove this line (defaults to '/')
+  base: "/SelfSound/", // or simply remove this line (defaults to '/')
 });
