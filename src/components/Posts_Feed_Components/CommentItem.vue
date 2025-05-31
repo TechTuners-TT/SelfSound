@@ -38,9 +38,10 @@
     <div class="flex mt-2.5">
       <div
         class="text-white text-sm leading-relaxed break-words whitespace-pre-line flex-1"
-        v-html="formattedText"
         @click="handleTextClick"
-      ></div>
+      >
+        {{ formattedText }}
+      </div>
     </div>
 
     <!-- Enhanced mentioned users section -->
