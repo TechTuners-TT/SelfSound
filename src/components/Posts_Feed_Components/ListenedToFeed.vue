@@ -8,7 +8,7 @@
       <div
         class="animate-spin rounded-full h-8 w-8 border-b-2 border-[#6D01D0] mx-auto mb-4"
       ></div>
-      Loading posts...
+      Loading posts from users you're listening to...
     </div>
 
     <!-- Error State -->
@@ -22,13 +22,38 @@
       </button>
     </div>
 
-    <!-- Empty State -->
+    <!-- Empty State - Not Following Anyone -->
     <div
       v-if="!isLoading && !error && posts.length === 0"
-      class="text-gray-400 text-center py-8"
+      class="flex flex-col items-center justify-center py-16 px-6"
     >
-      <p class="text-lg mb-2">No posts yet</p>
-      <p class="text-sm">Be the first to share something!</p>
+      <div class="text-gray-400 text-center mb-6">
+        <svg
+          class="w-16 h-16 mx-auto mb-4 opacity-50"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"
+          ></path>
+        </svg>
+        <h3 class="text-lg font-semibold mb-2">No posts from followed users</h3>
+        <p class="text-sm max-w-sm mx-auto mb-6">
+          You're not following anyone yet, or the people you follow haven't
+          posted anything. Start following musicians, learners, and listeners to
+          see their posts here!
+        </p>
+      </div>
+      <router-link
+        to="/search"
+        class="bg-[#6D01D0] hover:bg-[#5a0ba8] text-white px-6 py-2 rounded-full font-medium transition-colors"
+      >
+        Discover Users
+      </router-link>
     </div>
 
     <!-- Posts -->
@@ -44,12 +69,20 @@
         {{ isLoadingMore ? "Loading..." : "Load More" }}
       </button>
     </div>
+
+    <!-- End of Feed Message -->
+    <div
+      v-if="!hasMore && posts.length > 0"
+      class="text-center py-6 text-gray-400 text-sm"
+    >
+      You've reached the end of your listened to feed
+    </div>
   </div>
 </template>
 
 <script lang="ts" setup>
 import { ref, onMounted } from "vue";
-import PostCard from "@/components/Posts_Feed_Components/PostCard.vue";
+import PostCard from "./PostCard.vue";
 
 // Get API URL from environment variable
 const API_URL = import.meta.env.VITE_API_URL;
@@ -94,7 +127,7 @@ interface BackendPost {
   };
 }
 
-// Keep your existing interfaces - they're perfect!
+// Use the same interfaces as your PostFeed component
 interface PostBase {
   id: string;
   userId: string;
@@ -153,11 +186,6 @@ interface LyricsPost extends PostBase {
 
 type FeedPost = AudioPost | XmlPost | MediaPost | LyricsPost;
 
-// Props for filtering posts by user
-const props = defineProps<{
-  userId?: string; // If provided, fetch posts for specific user only
-}>();
-
 const posts = ref<FeedPost[]>([]);
 const isLoading = ref(false);
 const isLoadingMore = ref(false);
@@ -166,7 +194,7 @@ const hasMore = ref(true);
 const limit = 10;
 const offset = ref(0);
 
-// Map backend user roles to your role system
+// Copy the same utility functions from your PostFeed component
 const mapUserRole = (
   tagId: string | null,
 ): "Musician" | "Listener" | "Learner" => {
@@ -178,7 +206,6 @@ const mapUserRole = (
   return roleMap[tagId || ""] || "Listener";
 };
 
-// Format timestamp
 const formatTimestamp = (dateString: string): string => {
   const date = new Date(dateString);
   const now = new Date();
@@ -195,7 +222,7 @@ const formatTimestamp = (dateString: string): string => {
   return date.toLocaleDateString();
 };
 
-// Transform backend post to your format
+// Copy the same transformation logic from your PostFeed
 const transformBackendPost = (backendPost: BackendPost): FeedPost | null => {
   try {
     const basePost = {
@@ -238,9 +265,9 @@ const transformBackendPost = (backendPost: BackendPost): FeedPost | null => {
         content: backendPost.audio.map((item) => ({
           title: item.title,
           artist: item.artist,
-          coverUrl: item.cover_url || "", // Cover image URL from backend
-          duration: item.duration || "0:00", // Duration from backend
-          url: item.file_url, // Audio file URL
+          coverUrl: item.cover_url || "",
+          duration: item.duration || "0:00",
+          url: item.file_url,
         })),
       } as AudioPost;
     }
@@ -253,9 +280,9 @@ const transformBackendPost = (backendPost: BackendPost): FeedPost | null => {
         ...basePost,
         type: "musicxml",
         content: backendPost.musicxml.map((item) => ({
-          fileName: item.title, // Use title as fileName for display
+          fileName: item.title,
           composer: item.composer,
-          downloadUrl: item.file_url, // Direct download URL
+          downloadUrl: item.file_url,
         })),
       } as XmlPost;
     }
@@ -275,7 +302,6 @@ const transformBackendPost = (backendPost: BackendPost): FeedPost | null => {
       } as LyricsPost;
     }
 
-    // Unsupported post type
     console.log("⚠️ Unsupported post type:", backendPost.type);
     return null;
   } catch (error) {
@@ -284,7 +310,7 @@ const transformBackendPost = (backendPost: BackendPost): FeedPost | null => {
   }
 };
 
-// Fetch posts from backend
+// Fetch posts from the listened-to endpoint
 const fetchPosts = async (loadMore = false) => {
   if (loadMore) {
     isLoadingMore.value = true;
@@ -296,30 +322,34 @@ const fetchPosts = async (loadMore = false) => {
   error.value = "";
 
   try {
-    // Fetch real posts from backend
-    const endpoint = props.userId
-      ? `${API_URL}/posts/user/${props.userId}?limit=${limit}&offset=${offset.value}`
-      : `${API_URL}/posts/feed?limit=${limit}&offset=${offset.value}`;
+    // THE KEY DIFFERENCE: Use the listened-to endpoint
+    const endpoint = `${API_URL}/posts/feed/listened-to?limit=${limit}&offset=${offset.value}`;
 
-    console.log("Fetching posts from:", endpoint);
+    console.log("🎯 Fetching listened-to posts from:", endpoint);
 
     const response = await fetch(endpoint, {
       credentials: "include",
     });
+
+    if (response.status === 401) {
+      // User is not authenticated
+      error.value = "Authentication required. Please sign in.";
+      return;
+    }
 
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`);
     }
 
     const backendPosts: BackendPost[] = await response.json();
-    console.log("Fetched backend posts:", backendPosts);
+    console.log("Fetched listened-to posts:", backendPosts);
 
-    // Transform backend posts (only real data, no mock data)
+    // Transform backend posts
     const transformedPosts = backendPosts
       .map(transformBackendPost)
       .filter(Boolean) as FeedPost[];
 
-    console.log("Transformed posts:", transformedPosts);
+    console.log("Transformed listened-to posts:", transformedPosts);
 
     if (loadMore) {
       posts.value.push(...transformedPosts);
@@ -330,10 +360,12 @@ const fetchPosts = async (loadMore = false) => {
     hasMore.value = backendPosts.length === limit;
     offset.value += backendPosts.length;
   } catch (err) {
-    console.error("Error fetching posts:", err);
-    error.value = err instanceof Error ? err.message : "Failed to load posts";
+    console.error("Error fetching listened-to posts:", err);
+    error.value =
+      err instanceof Error
+        ? err.message
+        : "Failed to load posts from followed users";
 
-    // Don't fallback to mock data - show error instead
     if (!loadMore) {
       posts.value = [];
     }
@@ -361,6 +393,9 @@ const handleRetry = () => {
 };
 
 onMounted(() => {
+  // DEBUG: Confirm this component is loading
+  console.log("🚨 ListenedToFeed component mounted!");
+  console.log('🚨 This should show "listened-to" endpoint');
   fetchPosts();
 });
 
