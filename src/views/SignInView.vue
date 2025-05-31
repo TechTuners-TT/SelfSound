@@ -81,9 +81,6 @@ import LoginFormButton from "@/components/Authentication/LoginFormButton.vue";
 import LoginFormDivider from "@/components/Authentication/LoginFormDivider.vue";
 import GoogleIcon from "@/components/SVG/Authentication/Sign_Up_In_If_button_Google.vue";
 
-// Get API URL from environment variable
-const API_URL = import.meta.env.VITE_API_URL;
-
 export default defineComponent({
   name: "LoginForm",
   components: {
@@ -93,8 +90,8 @@ export default defineComponent({
     GoogleIcon,
   },
   setup() {
+    const API_URL = import.meta.env.VITE_API_URL;
     const router = useRouter();
-
     const email = ref("");
     const password = ref("");
     const isLoading = ref(false);
@@ -182,7 +179,7 @@ export default defineComponent({
     const handleGuestLogin = async () => {
       isLoading.value = true;
       try {
-        await fetch(`${API_URL}/authorization/logout`, {
+        await fetch(`${API_URL}/auth/logout`, {
           method: "POST",
           credentials: "include",
         });

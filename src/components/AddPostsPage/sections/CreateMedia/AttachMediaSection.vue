@@ -1,6 +1,6 @@
 <template>
   <div class="m-[20px]">
-    <!-- Заголовок -->
+    <!-- Title -->
     <div class="flex items-center mb-6">
       <h1
         class="[@media(min-width:1537px)]:text-[24px] xl:text-[20px] lg:text-[18px] text-[16px] font-semibold text-white inter-font"
@@ -9,7 +9,7 @@
       </h1>
     </div>
 
-    <!-- Інпут для файлів -->
+    <!-- Hidden file input -->
     <input
       ref="fileInput"
       type="file"
@@ -19,7 +19,7 @@
       @change="handleFileChange"
     />
 
-    <!-- Прев'ю файлів з підтримкою зуму -->
+    <!-- File preview with zoom support -->
     <div class="space-y-6 mb-6">
       <div
         v-for="(item, idx) in files"
@@ -27,7 +27,7 @@
         class="relative group cursor-pointer"
         @click="previewFile(item)"
       >
-        <!-- Прев'ю зображення -->
+        <!-- Image preview -->
         <img
           v-if="item.type.startsWith('image/')"
           :src="item.preview"
@@ -35,7 +35,7 @@
           class="zoomable-media w-full object-contain h-full rounded-lg"
         />
 
-        <!-- Прев'ю відео -->
+        <!-- Video preview -->
         <video
           v-else
           :src="item.preview"
@@ -92,7 +92,7 @@
       <p class="text-sm text-gray-400">Uploading... {{ uploadProgress }}%</p>
     </div>
 
-    <!-- Кнопка додавання -->
+    <!-- Add button -->
     <button
       @click="triggerFileInput"
       :disabled="files.length >= 10 || isUploading"
@@ -108,7 +108,7 @@
       />
     </button>
 
-    <!-- Кнопка сабміту (відображається тільки якщо є файли) -->
+    <!-- Submit button (only shows when files are selected) -->
     <div v-if="files.length > 0" class="flex justify-end mb-6">
       <button
         @click="submitPost"
@@ -124,17 +124,17 @@
       </button>
     </div>
 
-    <!-- Модалка з підтримкою зуму -->
+    <!-- Modal with zoom support -->
     <div
       v-if="modalPreview"
       class="fixed inset-0 z-50 bg-black/80 flex items-center justify-center overflow-auto"
       @click.self="modalPreview = null"
     >
-      <!-- Модалка, адаптивні розміри для екранів -->
+      <!-- Modal with responsive sizes for screens -->
       <div
         class="relative max-w-[90%] max-h-[90%] xl:w-[50vw] xl:h-[50vh] overflow-auto p-4"
       >
-        <!-- Прев'ю зображення -->
+        <!-- Image preview -->
         <img
           v-if="modalPreview?.type.startsWith('image/')"
           :src="modalPreview.preview"
@@ -142,7 +142,7 @@
           class="zoomable-media object-contain w-full h-full transform hover:scale-150 transition duration-300"
         />
 
-        <!-- Прев'ю відео -->
+        <!-- Video preview -->
         <video
           v-else
           :src="modalPreview.preview"
@@ -158,7 +158,6 @@
 <script setup lang="ts">
 import MediaClose from "@/components/SVG/AddPosts_Icons/MediaClose.vue";
 import AddIcon from "@/components/SVG/AddPosts_Icons/AddIcon.vue";
-
 import { ref, onMounted, watch, nextTick, onUnmounted } from "vue";
 import { useRouter } from "vue-router";
 import mediumZoom from "medium-zoom";
@@ -205,7 +204,7 @@ const MAX_VIDEO_SIZE = 100 * 1024 * 1024; // 100MB
 const MAX_TOTAL_SIZE = 200 * 1024 * 1024; // 200MB
 const MAX_FILES = 10;
 
-// Тригер для вибору файлів
+// Trigger file selection
 const triggerFileInput = () => {
   if (files.value.length < MAX_FILES && !isUploading.value) {
     fileInput.value?.click();
@@ -230,7 +229,7 @@ const validateFile = (file: File): string | null => {
   return null;
 };
 
-// Обробник для зміни файлів
+// Handle file change
 const handleFileChange = (event: Event) => {
   const target = event.target as HTMLInputElement;
   const selectedFiles = target.files;
@@ -292,7 +291,7 @@ const handleFileChange = (event: Event) => {
   target.value = "";
 };
 
-// Видалення файлів з переліку
+// Remove file from list
 const removeFile = (idx: number) => {
   const item = files.value[idx];
   if (item && previewUrls.has(item.preview)) {
@@ -308,7 +307,7 @@ const cleanupPreviewUrls = () => {
   previewUrls.clear();
 };
 
-// Подача файлів до backend
+// Submit files to backend
 const submitPost = async () => {
   if (files.value.length === 0 || isUploading.value) return;
 
@@ -378,7 +377,7 @@ const submitPost = async () => {
   }
 };
 
-// Показ прев'ю у модалці
+// Show preview in modal
 const previewFile = (item: { preview: string; file: File; type: string }) => {
   modalPreview.value = item;
   if (item.type.startsWith("image/") && !zoomInstance.value) {
@@ -390,7 +389,7 @@ const previewFile = (item: { preview: string; file: File; type: string }) => {
   }
 };
 
-// Ініціалізація zoom
+// Initialize zoom
 const setupZoom = () => {
   nextTick(() => {
     if (!zoomInstance.value) {
@@ -403,7 +402,7 @@ const setupZoom = () => {
   });
 };
 
-// Перезапуск zoom кожного разу, коли файли оновлюються
+// Restart zoom every time files are updated
 onMounted(setupZoom);
 watch(files, setupZoom);
 
@@ -427,3 +426,9 @@ defineExpose({
   previewFile,
 });
 </script>
+
+<style scoped>
+.inter-font {
+  font-family: "Inter", sans-serif;
+}
+</style>

@@ -22,26 +22,118 @@
       </button>
     </div>
 
-    <!-- Password Strength Indicator (Health Bar Design) -->
-    <div v-if="type === 'password'" class="mt-2">
-      <div class="flex gap-1 mb-1">
-        <div
-          v-for="stage in 3"
-          :key="stage"
-          class="h-1 rounded-full flex-1 transition-all"
-          :class="getStrengthClass(stage)"
-        />
+    <!-- Password Requirements (show when user starts typing) -->
+    <div
+      v-if="type === 'password' && modelValue.length > 0"
+      class="mt-3 p-3 bg-white/10 rounded-md"
+    >
+      <p class="text-sm text-white/70 mb-2">Password must contain:</p>
+      <div class="space-y-1">
+        <div class="flex items-center gap-2">
+          <div
+            :class="requirements.minLength ? 'text-green-400' : 'text-red-400'"
+          >
+            {{ requirements.minLength ? "✓" : "✗" }}
+          </div>
+          <span
+            :class="requirements.minLength ? 'text-green-400' : 'text-white/70'"
+            class="text-sm"
+          >
+            At least 6 characters
+          </span>
+        </div>
+
+        <div class="flex items-center gap-2">
+          <div
+            :class="
+              requirements.hasUppercase ? 'text-green-400' : 'text-red-400'
+            "
+          >
+            {{ requirements.hasUppercase ? "✓" : "✗" }}
+          </div>
+          <span
+            :class="
+              requirements.hasUppercase ? 'text-green-400' : 'text-white/70'
+            "
+            class="text-sm"
+          >
+            One uppercase letter (A-Z)
+          </span>
+        </div>
+
+        <div class="flex items-center gap-2">
+          <div
+            :class="
+              requirements.hasLowercase ? 'text-green-400' : 'text-red-400'
+            "
+          >
+            {{ requirements.hasLowercase ? "✓" : "✗" }}
+          </div>
+          <span
+            :class="
+              requirements.hasLowercase ? 'text-green-400' : 'text-white/70'
+            "
+            class="text-sm"
+          >
+            One lowercase letter (a-z)
+          </span>
+        </div>
+
+        <div class="flex items-center gap-2">
+          <div
+            :class="requirements.hasNumber ? 'text-green-400' : 'text-red-400'"
+          >
+            {{ requirements.hasNumber ? "✓" : "✗" }}
+          </div>
+          <span
+            :class="requirements.hasNumber ? 'text-green-400' : 'text-white/70'"
+            class="text-sm"
+          >
+            One number (0-9)
+          </span>
+        </div>
+
+        <div class="flex items-center gap-2">
+          <div
+            :class="requirements.hasSpecial ? 'text-green-400' : 'text-red-400'"
+          >
+            {{ requirements.hasSpecial ? "✓" : "✗" }}
+          </div>
+          <span
+            :class="
+              requirements.hasSpecial ? 'text-green-400' : 'text-white/70'
+            "
+            class="text-sm"
+          >
+            One special character (!@#$%^&*)
+          </span>
+        </div>
       </div>
 
-      <p class="text-sm max-h-[10px] font-bold" :class="strengthColorClass">
-        {{ strengthLabel }}
-      </p>
+      <!-- Password Strength Indicator (Health Bar Design) -->
+      <div class="mt-3">
+        <div class="flex gap-1 mb-1">
+          <div
+            v-for="stage in 3"
+            :key="stage"
+            class="h-1 rounded-full flex-1 transition-all"
+            :class="getStrengthClass(stage)"
+          />
+        </div>
+
+        <p class="text-sm max-h-[10px] font-bold" :class="strengthColorClass">
+          {{ strengthLabel }}
+        </p>
+      </div>
     </div>
+
+    <!-- Show error message if any -->
+    <p v-if="error" class="text-red-400 text-sm mt-1">{{ error }}</p>
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent, computed, ref } from "vue";
+import { defineComponent, computed, ref, reactive, watch } from "vue";
 import EyeIcon from "../SVG/Authentication/Sign_Up_In_Show_password_button.vue";
 import EyeOffIcon from "../SVG/Authentication/Sign_Up_In_Not_show_password_button.vue.vue";
 
@@ -61,6 +153,30 @@ export default defineComponent({
   emits: ["update:modelValue"],
   setup(props, { emit }) {
     const passwordVisible = ref(false);
+
+    // Password requirements tracking
+    const requirements = reactive({
+      minLength: false,
+      hasUppercase: false,
+      hasLowercase: false,
+      hasNumber: false,
+      hasSpecial: false,
+    });
+
+    // Watch for password changes and update requirements
+    watch(
+      () => props.modelValue,
+      (newPassword) => {
+        if (props.type === "password") {
+          requirements.minLength = newPassword.length >= 6;
+          requirements.hasUppercase = /[A-Z]/.test(newPassword);
+          requirements.hasLowercase = /[a-z]/.test(newPassword);
+          requirements.hasNumber = /\d/.test(newPassword);
+          requirements.hasSpecial = /[!@#$%^&*(),.?":{}|<>]/.test(newPassword);
+        }
+      },
+      { immediate: true },
+    );
 
     const inputType = computed(() =>
       props.type === "password"
@@ -86,7 +202,7 @@ export default defineComponent({
       passwordVisible.value = !passwordVisible.value;
     };
 
-    // Advanced password validation logic
+    // Advanced password validation logic (keeping your existing logic)
     const hasUppercase = (s: string): boolean => /[A-Z]/.test(s);
     const hasLowercase = (s: string): boolean => /[a-z]/.test(s);
     const hasNumber = (s: string): boolean => /\d/.test(s);
@@ -96,7 +212,7 @@ export default defineComponent({
     const baseRequirementsMet = computed(() => {
       const p = props.modelValue;
       return (
-        p.length >= 6 &&
+        p.length >= 6 && // Updated to match your requirements
         hasUppercase(p) &&
         hasLowercase(p) &&
         hasNumber(p) &&
@@ -166,6 +282,7 @@ export default defineComponent({
       getStrengthClass,
       strengthLabel,
       strengthColorClass,
+      requirements,
     };
   },
 });

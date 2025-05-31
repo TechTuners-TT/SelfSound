@@ -6,9 +6,10 @@
       class="relative w-[84px] h-[84px] max-sm:w-[60px] max-sm:h-[60px] sm:w-[64px] sm:h-[64px] md:w-[68px] md:h-[68px] lg:w-[72px] lg:h-[72px] xl:w-[84px] xl:h-[84px]"
     >
       <img
-        :src="user.avatarUrl"
-        :alt="user.name"
+        :src="user.avatarUrl || '/default-avatar.png'"
+        :alt="user.name || 'User avatar'"
         class="rounded-full object-cover w-full h-full"
+        @error="handleImageError"
       />
       <div
         class="absolute inset-0 rounded-full border border-[rgba(255,255,255,0.5)]"
@@ -20,13 +21,13 @@
         class="font-bold text-white h-[24px] sm:h-[30px] text-[21px] sm:text-[22px] xl:text-[24px] [@media(min-width:1537px)]:text-[30px] inter-font"
         style="font-weight: 700"
       >
-        {{ user.name }}
+        {{ user.name || "Unknown User" }}
       </p>
       <p
         class="text-base font-medium text-white h-[12px] text-[12px] sm:text-[13px] xl:text-[14px] [@media(min-width:1537px)]:text-[16px] inter-font"
         style="font-weight: 500"
       >
-        {{ user.login }}
+        @{{ user.login || "unknown" }}
       </p>
     </div>
     <div
@@ -37,7 +38,7 @@
         <ThreeShortOnes />
       </div>
 
-      <!-- Модальне вікно -->
+      <!-- Modal window -->
       <div
         v-if="showModal"
         ref="modalRef"
@@ -77,20 +78,9 @@
     >
       <div
         class="h-[26px] w-full sm:h-[32px] text-sm sm:text-base text-white rounded-[5px] text-[12px] sm:text-[13px] xl:text-[14px] [@media(min-width:1537px)]:text-[16px] inter-font flex items-center justify-center"
-        :style="{
-          fontWeight: '400',
-          backgroundColor:
-            user.tag === 'Listener'
-              ? 'white'
-              : user.tag === 'Musician'
-                ? '#6D01D0'
-                : user.tag === 'Learner'
-                  ? '#000C9C'
-                  : 'rgba(0, 12, 156, 0.4)',
-          color: user.tag === 'Listener' ? 'black' : 'white',
-        }"
+        :style="getTagStyles(user.tag)"
       >
-        {{ user.tag }}
+        {{ user.tag || "Add tag" }}
       </div>
     </div>
 
@@ -98,7 +88,7 @@
       class="grow m-auto text-white text-[12px] sm:text-[13px] xl:text-[14px] [@media(min-width:1537px)]:text-[16px] inter-font biographyinput"
       style="font-weight: 400; line-height: 1.125"
     >
-      {{ user.biography }}
+      {{ user.biography || "No biography available" }}
     </p>
   </div>
 
@@ -121,23 +111,22 @@
         class="font-medium text-white inter-font text-[12px] sm:text-[13px] xl:text-[14px] [@media(min-width:1537px)]:text-[16px]"
         style="font-weight: 500"
       >
-        {{ stats.posts }} posts
+        {{ stats.posts || 0 }} posts
       </p>
       <p
         class="font-medium text-white inter-font text-[12px] sm:text-[13px] xl:text-[14px] [@media(min-width:1537px)]:text-[16px]"
         style="font-weight: 500"
       >
-        Listeners: {{ stats.listeners }}
+        Listeners: {{ stats.listeners || 0 }}
       </p>
       <p
         class="font-medium text-white inter-font text-[12px] sm:text-[13px] xl:text-[14px] [@media(min-width:1537px)]:text-[16px]"
         style="font-weight: 500"
       >
-        Listened to: {{ stats.listenedTo }}
+        Listened to: {{ stats.listenedTo || 0 }}
       </p>
     </section>
   </div>
-  <!-- Статистика (після біографії) -->
 </template>
 
 <script setup lang="ts">
@@ -156,12 +145,13 @@ const API_URL = import.meta.env.VITE_API_URL;
 
 const props = defineProps<{
   user: {
-    id?: string;
+    id: string;
     name: string;
     login: string;
     avatarUrl: string;
     biography: string;
-    tag?: string | "add tag";
+    tag?: string;
+    role?: string;
   };
   stats: {
     posts: number;
@@ -173,6 +163,7 @@ const props = defineProps<{
 const emit = defineEmits<{
   (e: "userBlocked", userId: string): void;
   (e: "userUnblocked", userId: string): void;
+  (e: "stats-updated"): void;
 }>();
 
 const router = useRouter();
@@ -181,7 +172,61 @@ const showModal = ref(false);
 const containerRef = ref<HTMLElement | null>(null);
 const modalRef = ref<HTMLElement | null>(null);
 const isBlocking = ref(false);
-const isBlocked = ref<boolean | null>(null); // null = loading, true = blocked, false = not blocked
+const isBlocked = ref<boolean | null>(null);
+
+// Handle image loading errors
+const handleImageError = (event: Event) => {
+  const img = event.target as HTMLImageElement;
+  img.src = "/default-avatar.png"; // Set a default avatar
+};
+
+// Get tag styles based on role - same logic as your working ProfileContent
+const getTagStyles = (tag?: string) => {
+  const styles = {
+    fontWeight: "400",
+    backgroundColor: "rgba(0, 12, 156, 0.4)",
+    color: "white",
+  };
+
+  if (!tag) return styles;
+
+  // Handle both display names and UUIDs
+  let displayName = tag;
+
+  // If it's a UUID, convert to display name first
+  const roleMap: Record<string, string> = {
+    "146fb41a-2f3e-48c7-bef9-01de0279dfd7": "Listener",
+    "b361c6f9-9425-4548-8c07-cb408140c304": "Musician",
+    "5ee121a6-b467-4ead-b3f7-00e1ce6097d5": "Learner",
+  };
+
+  if (roleMap[tag]) {
+    displayName = roleMap[tag];
+  }
+
+  switch (displayName.toLowerCase()) {
+    case "listener":
+      return {
+        ...styles,
+        backgroundColor: "white",
+        color: "black",
+      };
+    case "musician":
+      return {
+        ...styles,
+        backgroundColor: "#6D01D0",
+        color: "white",
+      };
+    case "learner":
+      return {
+        ...styles,
+        backgroundColor: "#000C9C",
+        color: "white",
+      };
+    default:
+      return styles;
+  }
+};
 
 const modalStyles = computed(() => {
   if (!containerRef.value) return {};
@@ -211,8 +256,7 @@ const modalStyles = computed(() => {
 // Check if user is blocked when component mounts
 async function checkBlockStatus() {
   if (!props.user.id) {
-    console.log("No user ID available for block status check");
-    isBlocked.value = false; // Default to not blocked if no ID
+    console.warn("No user ID provided for block status check");
     return;
   }
 
@@ -234,12 +278,10 @@ async function checkBlockStatus() {
       console.log("Set isBlocked to:", isBlocked.value);
     } else {
       console.error("Failed to check block status:", res.status);
-      // Default to not blocked if API fails
       isBlocked.value = false;
     }
-  } catch {
-    console.error("Error checking block status");
-    // Default to not blocked if error occurs
+  } catch (error) {
+    console.error("Error checking block status:", error);
     isBlocked.value = false;
   }
 }
@@ -272,14 +314,8 @@ async function handleBlockUser() {
   console.log("Is blocking:", isBlocking.value);
   console.log("Is blocked:", isBlocked.value);
 
-  if (!props.user.id) {
-    console.error("No user ID provided!");
-    alert("Error: No user ID provided");
-    return;
-  }
-
-  if (isBlocking.value) {
-    console.log("Already processing, skipping...");
+  if (isBlocking.value || !props.user.id) {
+    console.log("Already processing or no user ID, skipping...");
     return;
   }
 
@@ -304,27 +340,24 @@ async function handleBlockUser() {
       console.log("Response data:", responseData);
 
       showModal.value = false;
+      isBlocked.value = !isBlocked.value;
 
-      // Only reload page when blocking (not unblocking) to refresh listening status
-      if (isBlocked.value === false) {
-        // We just blocked the user, reload to refresh all states
-        console.log("User blocked, reloading page to refresh states");
-        window.location.reload();
+      // Emit stats update
+      emit("stats-updated");
+
+      if (isBlocked.value) {
+        emit("userBlocked", props.user.id);
+        router.push("/");
       } else {
-        // We just unblocked the user, just update the state normally
-        isBlocked.value = false;
         emit("userUnblocked", props.user.id);
-        console.log("User unblocked");
       }
     } else {
-      // Handle authentication errors
       if (res.status === 401) {
         console.log("Authentication failed, redirecting to sign-in");
         router.push("/sign-in");
         return;
       }
 
-      // Get the error response
       let errorMessage = "Failed to update block status";
       try {
         const errorData = (await res.json()) as ApiErrorResponse;
@@ -340,7 +373,6 @@ async function handleBlockUser() {
   } catch (error: unknown) {
     console.error("Network/parsing error:", error);
 
-    // More detailed error information
     if (
       error instanceof TypeError &&
       (error as TypeError).message.includes("fetch")
@@ -361,17 +393,14 @@ async function handleBlockUser() {
   }
 }
 
-// Watch for user ID changes and check block status when it becomes available
+// Watch for user ID changes and check block status
 watch(
   () => props.user.id,
   (newId) => {
     console.log("User ID changed:", newId);
     if (newId) {
-      console.log("User ID became available, checking block status:", newId);
+      console.log("Checking block status for new user ID:", newId);
       checkBlockStatus();
-    } else {
-      console.log("No user ID, setting isBlocked to false");
-      isBlocked.value = false;
     }
   },
   { immediate: true },
@@ -379,6 +408,9 @@ watch(
 
 onMounted(() => {
   document.addEventListener("click", onClickOutside);
+  if (props.user.id) {
+    checkBlockStatus();
+  }
 });
 
 onBeforeUnmount(() => {
@@ -396,3 +428,9 @@ function onClickOutside(e: MouseEvent) {
   }
 }
 </script>
+
+<style scoped>
+.inter-font {
+  font-family: "Inter", sans-serif;
+}
+</style>

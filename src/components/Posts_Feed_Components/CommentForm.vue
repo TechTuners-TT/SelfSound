@@ -1,225 +1,557 @@
 <template>
-  <section class="flex flex-col gap-15 mx-auto section_1">
+  <div class="w-full bg-white/10 rounded-[5px] pl-4 pt-4 pb-5 relative">
+    <!-- Replace input with content-editable div -->
     <div
-      class="px-[10px] sm:px-[40px] md:px-[20px] lg:px-[30px] xl:px-[20px] 2xl:px-[40px]"
+      ref="commentInputRef"
+      contenteditable="true"
+      @input="onInput"
+      @keydown="onKeyDown"
+      @paste="onPaste"
+      class="w-full text-white text-sm outline-none bg-transparent min-h-[20px] max-h-[120px] overflow-y-auto"
+      data-placeholder="What's on your mind?"
+      :class="{ 'pointer-events-none': disabled }"
+    ></div>
+
+    <!-- Mention autocomplete dropdown -->
+    <div
+      v-if="showMentionDropdown && mentionSuggestions.length > 0"
+      ref="dropdownRef"
+      class="absolute z-50 bg-gray-800 border border-gray-600 rounded-lg shadow-lg max-h-48 overflow-y-auto"
+      :style="dropdownStyle"
     >
-      <button
-        @click="toggleListen"
-        :disabled="isLoading"
-        class="cursor-pointer w-full h-8 text-[12px] sm:text-[13px] xl:text-[14px] [@media(min-width:1537px)]:text-[16px] text-white rounded-[5px] shadow-sm mx-auto block inter-font disabled:opacity-50 disabled:cursor-not-allowed transition duration-300 ease-in-out"
-        :style="{
-          backgroundColor: isListening
-            ? 'rgba(109, 1, 208,0.5)'
-            : 'rgba(0, 12, 156,0.4)',
-          fontWeight: '500',
-        }"
+      <div
+        v-for="(user, index) in mentionSuggestions"
+        :key="user.id"
+        @click="selectMention(user)"
+        class="flex items-center gap-2 p-2 hover:bg-gray-700 cursor-pointer transition-colors"
+        :class="{ 'bg-gray-700': index === selectedSuggestionIndex }"
       >
-        {{ isLoading ? "Loading..." : isListening ? "Unlisten" : "Listen" }}
-      </button>
+        <img
+          :src="user.avatar_url || '/default-avatar.png'"
+          :alt="user.name"
+          class="w-6 h-6 rounded-full object-cover"
+          @error="handleAvatarError"
+        />
+        <div class="flex flex-col">
+          <span class="text-white text-sm font-medium">{{ user.name }}</span>
+          <span class="text-gray-400 text-xs">@{{ user.login }}</span>
+        </div>
+      </div>
     </div>
+  </div>
 
-    <div class="w-full h-px border border-[rgba(255,255,255,0.5)]"></div>
-
-    <!-- Simple message since posts are handled by parent -->
-    <p
-      class="mt-10 sm:mt-47.5 text-[12px] sm:text-[13px] xl:text-[14px] [@media(min-width:1537px)]:text-[16px] text-white text-center inter-font text_size"
-      style="font-weight: 400"
+  <div class="flex justify-end mt-[15px]">
+    <button
+      @click="submitComment"
+      :disabled="disabled || !hasContent"
+      class="px-2.5 py-1 text-lg font-bold bg-[#6D01D0]/20 text-[#6D01D0] rounded-[5px] cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed transition-opacity"
     >
-      Posts will appear below
-    </p>
-  </section>
+      {{ disabled ? "Publishing..." : "Publish" }}
+    </button>
+  </div>
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, nextTick } from "vue";
-import { useRoute, useRouter } from "vue-router";
-
-// Define interfaces for type safety
-interface ListenedUser {
-  id: string;
-  // Add other properties as needed
-}
-
-interface ApiErrorResponse {
-  detail?: string;
-  message?: string;
-}
+import { ref, nextTick, onUnmounted } from "vue";
 
 // Get API URL from environment variable
 const API_URL = import.meta.env.VITE_API_URL;
 
-const route = useRoute();
-const router = useRouter();
-const userId = route.params.userId as string;
+interface User {
+  id: string;
+  login: string;
+  name: string;
+  avatar_url: string;
+}
 
-const isListening = ref(false);
-const isLoading = ref(false);
-const isGuest = ref(false);
+interface Props {
+  disabled?: boolean;
+}
 
-// Add emit for stats update
+const props = withDefaults(defineProps<Props>(), {
+  disabled: false,
+});
+
 const emit = defineEmits<{
-  (e: "stats-updated"): void;
+  (e: "submit", commentText: string): void;
 }>();
 
-// Check if user is authenticated
-async function checkAuthStatus() {
-  try {
-    const res = await fetch(`${API_URL}/authorization/me`, {
-      method: "GET",
-      credentials: "include",
-    });
-    return res.ok;
-  } catch {
-    return false;
+// Refs
+const commentInputRef = ref<HTMLDivElement>();
+const dropdownRef = ref<HTMLElement>();
+
+// State
+const hasContent = ref(false);
+
+// Mention autocomplete state
+const showMentionDropdown = ref(false);
+const mentionSuggestions = ref<User[]>([]);
+const selectedSuggestionIndex = ref(0);
+const currentMentionQuery = ref("");
+const mentionStartPos = ref(0);
+const mentionEndPos = ref(0);
+
+// Dropdown positioning
+const dropdownStyle = ref({});
+
+let searchTimeout: ReturnType<typeof setTimeout> | null = null;
+
+// Cleanup
+onUnmounted(() => {
+  if (searchTimeout) {
+    clearTimeout(searchTimeout);
   }
-}
+});
 
-// Check if currently listening to this user
-async function checkListeningStatus() {
-  try {
-    console.log("Checking listening status for userId:", userId);
-    const res = await fetch(`${API_URL}/profiles/listened`, {
-      method: "GET",
-      credentials: "include",
-    });
+// Process mentions and make them purple (only for completed mentions)
+const processMentions = (element: HTMLDivElement) => {
+  const html = element.innerHTML;
 
-    if (!res.ok) {
-      console.log("Not authenticated, treating as guest");
-      isGuest.value = true;
-      return false;
+  // Only style mentions that are followed by a space or are at the end AND are complete usernames
+  const mentionRegex = /@([a-zA-Z0-9_-]{3,})(?=\s|$)(?!<\/span>)/g;
+  const newHtml = html.replace(mentionRegex, (match, username) => {
+    // Check if this mention is already styled
+    if (
+      html.includes(`<span class="mention-input" data-username="${username}"`)
+    ) {
+      return match; // Already styled, don't replace
     }
+    return `<span class="mention-input" data-username="${username}" contenteditable="false">@${username}</span>`;
+  });
 
-    const listenedUsers = (await res.json()) as ListenedUser[];
-    console.log("All listened users:", listenedUsers);
-    console.log("Looking for userId:", userId);
+  if (newHtml !== html) {
+    // Save cursor position
+    const selection = window.getSelection();
+    if (!selection || selection.rangeCount === 0) return;
 
-    const isCurrentlyListening = listenedUsers.some((user: ListenedUser) => {
-      console.log("Comparing:", user.id, "with", userId);
-      return user.id === userId;
-    });
+    const range = selection.getRangeAt(0);
+    const cursorPos = range.startOffset;
 
-    console.log("Currently listening to user:", isCurrentlyListening);
-    return isCurrentlyListening;
-  } catch (error) {
-    console.error("Error checking listening status:", error);
-    isGuest.value = true;
-    return false;
-  }
-}
+    // Update content
+    element.innerHTML = newHtml;
 
-// Function to refresh listening status (exposed to parent)
-const refreshListeningStatus = async () => {
-  console.log("Refreshing listening status...");
-  console.log("Current isListening before refresh:", isListening.value);
+    // Restore cursor position
+    try {
+      const newRange = document.createRange();
+      const walker = document.createTreeWalker(
+        element,
+        NodeFilter.SHOW_TEXT,
+        null,
+      );
 
-  try {
-    const newStatus = await checkListeningStatus();
-    console.log("New status from API:", newStatus);
+      let currentPos = 0;
+      let targetNode: Node = element;
+      let targetOffset = 0;
 
-    // Force reactivity update
-    isListening.value = false; // Reset first
-    await nextTick(); // Wait for DOM update
-    isListening.value = newStatus; // Then set the correct value
+      let node: Node | null;
+      while ((node = walker.nextNode())) {
+        const nodeLength = (node as Text).textContent?.length || 0;
+        if (currentPos + nodeLength >= cursorPos) {
+          targetNode = node as Text;
+          targetOffset = cursorPos - currentPos;
+          break;
+        }
+        currentPos += nodeLength;
+      }
 
-    console.log("Updated listening status:", isListening.value);
-  } catch (error) {
-    console.error("Error refreshing listening status:", error);
+      newRange.setStart(
+        targetNode,
+        Math.min(targetOffset, (targetNode as Text).textContent?.length || 0),
+      );
+      newRange.collapse(true);
+      selection.removeAllRanges();
+      selection.addRange(newRange);
+    } catch {
+      // Fallback: place cursor at end
+      const newRange = document.createRange();
+      newRange.selectNodeContents(element);
+      newRange.collapse(false);
+      selection.removeAllRanges();
+      selection.addRange(newRange);
+    }
   }
 };
 
-// Toggle listen/unlisten
-async function toggleListen() {
-  // Check if user is authenticated
-  const isAuthenticated = await checkAuthStatus();
+// Check for mention triggers (@username) for autocomplete
+const checkForMentions = () => {
+  if (!commentInputRef.value) return;
 
-  if (!isAuthenticated) {
-    console.log("User not authenticated, redirecting to sign-in");
-    router.push("/sign-in");
+  const selection = window.getSelection();
+  if (!selection || selection.rangeCount === 0) return;
+
+  const range = selection.getRangeAt(0);
+  const textContent = commentInputRef.value.textContent || "";
+
+  // Get cursor position in the text
+  let cursorPos = 0;
+  const walker = document.createTreeWalker(
+    commentInputRef.value,
+    NodeFilter.SHOW_TEXT,
+    null,
+  );
+
+  let node: Node | null;
+  while ((node = walker.nextNode())) {
+    if (node === range.startContainer) {
+      cursorPos += range.startOffset;
+      break;
+    }
+    cursorPos += (node as Text).textContent?.length || 0;
+  }
+
+  const textBeforeCursor = textContent.substring(0, cursorPos);
+
+  // Find the last @ symbol before cursor
+  const atIndex = textBeforeCursor.lastIndexOf("@");
+
+  if (atIndex === -1) {
+    hideMentionDropdown();
     return;
   }
 
-  if (isLoading.value) return;
-
-  isLoading.value = true;
-
-  try {
-    const method = isListening.value ? "DELETE" : "POST";
-    const url = `${API_URL}/profiles/listening/${userId}`;
-
-    console.log(`${method} ${url}`);
-
-    const response = await fetch(url, {
-      method: method,
-      credentials: "include",
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
-
-    if (!response.ok) {
-      const errorData = (await response.json()) as ApiErrorResponse;
-      console.error("API error:", errorData);
-
-      if (response.status === 401) {
-        // User not authenticated
-        router.push("/sign-in");
-        return;
-      }
-
-      if (response.status === 403) {
-        alert(
-          "Cannot listen to this user because either you have blocked them or they have blocked you.",
-        );
-        return;
-      }
-
-      throw new Error(errorData.detail || "Failed to update listening status");
-    }
-
-    // Toggle the state
-    isListening.value = !isListening.value;
-
-    const result = await response.json();
-    console.log("Success:", result.message);
-
-    // Emit event to update stats
-    emit("stats-updated");
-  } catch (error) {
-    console.error("Error toggling listen:", error);
-    // Only show generic error for non-403 errors
-    alert("Failed to update listening status. Please try again.");
-  } finally {
-    isLoading.value = false;
+  // Check if @ is at start or preceded by whitespace
+  const charBeforeAt = atIndex > 0 ? textBeforeCursor[atIndex - 1] : " ";
+  if (charBeforeAt !== " " && charBeforeAt !== "\n" && atIndex !== 0) {
+    hideMentionDropdown();
+    return;
   }
+
+  // Get the text after @ symbol
+  const textAfterAt = textBeforeCursor.substring(atIndex + 1);
+
+  // Check if there's whitespace in the mention query
+  if (textAfterAt.includes(" ") || textAfterAt.includes("\n")) {
+    hideMentionDropdown();
+    return;
+  }
+
+  // Update mention state
+  mentionStartPos.value = atIndex;
+  mentionEndPos.value = cursorPos;
+  currentMentionQuery.value = textAfterAt;
+
+  // Search for users if query is long enough
+  if (textAfterAt.length >= 1) {
+    searchUsers(textAfterAt);
+  } else {
+    hideMentionDropdown();
+  }
+};
+
+// Search users for mention autocomplete
+const searchUsers = async (query: string) => {
+  if (searchTimeout) {
+    clearTimeout(searchTimeout);
+  }
+
+  searchTimeout = setTimeout(async () => {
+    try {
+      console.log(`🔎 Searching users for mention: "${query}"`);
+
+      const response = await fetch(
+        `${API_URL}/posts/users/search?q=${encodeURIComponent(query)}&limit=10`,
+        {
+          credentials: "include",
+        },
+      );
+
+      if (!response.ok) {
+        console.error("Failed to search users:", response.statusText);
+        return;
+      }
+
+      const users = await response.json();
+      console.log(`🔎 Found ${users.length} users:`, users);
+
+      mentionSuggestions.value = users;
+      selectedSuggestionIndex.value = 0;
+
+      if (users.length > 0) {
+        showMentionDropdown.value = true;
+        await nextTick();
+        updateDropdownPosition();
+      } else {
+        hideMentionDropdown();
+      }
+    } catch (error) {
+      console.error("Error searching users:", error);
+      hideMentionDropdown();
+    }
+  }, 300); // Debounce search
+};
+
+// Update dropdown position
+const updateDropdownPosition = () => {
+  if (!commentInputRef.value || !dropdownRef.value) return;
+
+  const inputRect = commentInputRef.value.getBoundingClientRect();
+
+  // Position dropdown below the input
+  dropdownStyle.value = {
+    top: `${inputRect.height + 4}px`,
+    left: "0px",
+    width: "300px",
+    maxWidth: "100%",
+  };
+};
+
+// Hide mention dropdown
+const hideMentionDropdown = () => {
+  showMentionDropdown.value = false;
+  mentionSuggestions.value = [];
+  currentMentionQuery.value = "";
+};
+
+// Select a mention from dropdown
+const selectMention = (user: User) => {
+  if (!commentInputRef.value) return;
+
+  const textContent = commentInputRef.value.textContent || "";
+  const beforeMention = textContent.substring(0, mentionStartPos.value);
+  const afterMention = textContent.substring(mentionEndPos.value);
+
+  // Create new content with the mention
+  const newText = beforeMention + `@${user.login} ` + afterMention;
+
+  // Update the content
+  commentInputRef.value.textContent = newText;
+
+  // Process mentions to style the new one
+  processMentions(commentInputRef.value);
+
+  // Update content state
+  hasContent.value = newText.trim().length > 0;
+
+  // Set cursor position after the mention
+  const newCursorPos = mentionStartPos.value + user.login.length + 2; // +2 for @ and space
+
+  nextTick(() => {
+    if (commentInputRef.value) {
+      commentInputRef.value.focus();
+
+      // Set cursor position
+      const range = document.createRange();
+      const selection = window.getSelection();
+
+      try {
+        const walker = document.createTreeWalker(
+          commentInputRef.value,
+          NodeFilter.SHOW_TEXT,
+          null,
+        );
+
+        let currentPos = 0;
+        let targetNode: Node = commentInputRef.value;
+        let targetOffset = newCursorPos;
+
+        let node: Node | null;
+        while ((node = walker.nextNode())) {
+          const nodeLength = (node as Text).textContent?.length || 0;
+          if (currentPos + nodeLength >= newCursorPos) {
+            targetNode = node;
+            targetOffset = newCursorPos - currentPos;
+            break;
+          }
+          currentPos += nodeLength;
+        }
+
+        range.setStart(
+          targetNode,
+          Math.min(targetOffset, (targetNode as Text).textContent?.length || 0),
+        );
+        range.collapse(true);
+        selection?.removeAllRanges();
+        selection?.addRange(range);
+      } catch (e) {
+        console.error("Error setting cursor position:", e);
+      }
+    }
+  });
+
+  hideMentionDropdown();
+};
+
+// Handle input changes
+const onInput = async (event: Event) => {
+  const target = event.target as HTMLDivElement;
+  const content = target.innerHTML;
+
+  // Check if there's actual content
+  const textContent = target.textContent || target.innerText || "";
+  hasContent.value = textContent.trim().length > 0;
+
+  // Process mentions in real-time
+  await nextTick();
+  processMentions(target);
+  checkForMentions();
+};
+
+// Handle cursor position changes
+const _onCursorChange = async () => {
+  await nextTick();
+  checkForMentions();
+};
+
+// Handle paste events
+const onPaste = (event: ClipboardEvent) => {
+  event.preventDefault();
+  const text = event.clipboardData?.getData("text") || "";
+  document.execCommand("insertText", false, text);
+};
+
+// Handle keyboard navigation in dropdown
+const onKeyDown = (event: KeyboardEvent) => {
+  if (showMentionDropdown.value && mentionSuggestions.value.length > 0) {
+    switch (event.key) {
+      case "ArrowDown": {
+        event.preventDefault();
+        selectedSuggestionIndex.value = Math.min(
+          selectedSuggestionIndex.value + 1,
+          mentionSuggestions.value.length - 1,
+        );
+        break;
+      }
+
+      case "ArrowUp": {
+        event.preventDefault();
+        selectedSuggestionIndex.value = Math.max(
+          selectedSuggestionIndex.value - 1,
+          0,
+        );
+        break;
+      }
+
+      case "Enter": {
+        event.preventDefault();
+        const selectedUser =
+          mentionSuggestions.value[selectedSuggestionIndex.value];
+        if (selectedUser) {
+          selectMention(selectedUser);
+        }
+        return;
+      }
+
+      case "Escape": {
+        event.preventDefault();
+        hideMentionDropdown();
+        break;
+      }
+    }
+  }
+};
+
+function submitComment() {
+  if (!commentInputRef.value || !hasContent.value || props.disabled) return;
+
+  const content =
+    commentInputRef.value.textContent || commentInputRef.value.innerText;
+  if (!content.trim()) return;
+
+  emit("submit", content.trim());
+
+  // Clear input after submit
+  commentInputRef.value.innerHTML = "";
+  hasContent.value = false;
 }
 
-// Initialize component
-onMounted(async () => {
-  console.log("AnotherPersonContent mounted for userId:", userId);
+// Error handling for avatars
+const handleAvatarError = (event: Event) => {
+  const img = event.target as HTMLImageElement;
+  img.src = "/default-avatar.png";
+};
 
-  // Check current listening status
-  isListening.value = await checkListeningStatus();
-
-  console.log("Initial listening status:", isListening.value);
-  console.log("Is guest:", isGuest.value);
-});
-
-// Expose the refresh function to parent component
+// Expose methods for parent component
 defineExpose({
-  refreshListeningStatus,
+  clearComment: () => {
+    if (commentInputRef.value) {
+      commentInputRef.value.innerHTML = "";
+      hasContent.value = false;
+    }
+  },
+  focusInput: () => {
+    commentInputRef.value?.focus();
+  },
 });
 </script>
 
 <style scoped>
-/* Ignore any external margin from parent containers */
-section {
-  margin: 0 !important; /* Forces section to ignore any margins */
-}
-section .max-w {
-  max-width: 640px;
+/* Style for mentions in the input */
+:deep(.mention-input) {
+  color: #6d01d0 !important;
+  font-weight: 600;
+  background-color: rgba(109, 1, 208, 0.1);
+  padding: 1px 4px;
+  border-radius: 3px;
+  border: 1px solid rgba(109, 1, 208, 0.3);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-decoration: none;
+  display: inline-block;
+  margin: 0 1px;
 }
 
-.inter-font {
-  font-family: "Inter", sans-serif;
+:deep(.mention-input:hover) {
+  background-color: rgba(109, 1, 208, 0.2);
+  border-color: rgba(109, 1, 208, 0.5);
+  color: #8b4cd8 !important;
+  box-shadow: 0 0 4px rgba(109, 1, 208, 0.3);
+}
+
+/* Placeholder styling */
+[contenteditable]:empty:before {
+  content: attr(data-placeholder);
+  color: rgba(255, 255, 255, 0.5);
+  font-style: italic;
+}
+
+[contenteditable]:focus:before {
+  content: "";
+}
+
+/* Remove default focus outline */
+[contenteditable]:focus {
+  outline: none;
+}
+
+/* Custom scrollbar for input */
+[contenteditable] {
+  scrollbar-width: thin;
+  scrollbar-color: #6b7280 #374151;
+}
+
+[contenteditable]::-webkit-scrollbar {
+  width: 4px;
+}
+
+[contenteditable]::-webkit-scrollbar-track {
+  background: #374151;
+  border-radius: 2px;
+}
+
+[contenteditable]::-webkit-scrollbar-thumb {
+  background: #6b7280;
+  border-radius: 2px;
+}
+
+[contenteditable]::-webkit-scrollbar-thumb:hover {
+  background: #9ca3af;
+}
+
+/* Custom scrollbar for dropdown */
+:deep(.overflow-y-auto::-webkit-scrollbar) {
+  width: 4px;
+}
+
+:deep(.overflow-y-auto::-webkit-scrollbar-track) {
+  background: #374151;
+}
+
+:deep(.overflow-y-auto::-webkit-scrollbar-thumb) {
+  background: #6b7280;
+  border-radius: 2px;
+}
+
+:deep(.overflow-y-auto::-webkit-scrollbar-thumb:hover) {
+  background: #9ca3af;
 }
 </style>

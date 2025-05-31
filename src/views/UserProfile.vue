@@ -11,189 +11,104 @@
           <div
             class="gap-[20px] sm:gap-[20px] md:gap-[25px] lg:gap-[30px] xl:gap-[35px] 2xl:gap-10 relative w-full md:w-3/5 xl:w-1/3 bg-black/30 flex flex-col min-h-screen overflow-y-auto"
           >
-            <!-- Profile Header Section -->
-            <section
-              class="px-[10px] sm:px-[40px] md:px-[20px] lg:px-[30px] xl:px-[20px] 2xl:px-[40px]"
+            <!-- Loading state -->
+            <div
+              v-if="isLoading && !user.id"
+              class="flex justify-center items-center min-h-[400px]"
             >
-              <ProfileHeader :user="displayUser" :stats="stats" />
-            </section>
-
-            <!-- Edit Profile Section -->
-            <section
-              class="px-[10px] sm:px-[40px] md:px-[20px] lg:px-[30px] xl:px-[20px] 2xl:px-[40px]"
-            >
-              <button
-                class="cursor-pointer w-full h-8 text-[12px] sm:text-[13px] xl:text-[14px] [@media(min-width:1537px)]:text-[16px] text-white rounded-[5px] shadow-sm mx-auto block inter-font"
-                style="
-                  background-color: rgba(0, 12, 156, 0.4);
-                  font-weight: 500;
-                "
-                @click="openEditModal"
-              >
-                Edit profile
-              </button>
-            </section>
-
-            <!-- Posts Feed Section -->
-            <section>
               <div
-                class="w-full h-px border border-[rgba(255,255,255,0.5)]"
+                class="animate-spin rounded-full h-12 w-12 border-b-2 border-white"
               ></div>
+            </div>
 
-              <!-- Posts Feed -->
-              <div class="mt-4">
-                <!-- Loading State -->
+            <!-- Profile sections (only show when user data is loaded) -->
+            <template v-else>
+              <!-- Section 1 - Profile Header -->
+              <section
+                class="px-[10px] sm:px-[40px] md:px-[20px] lg:px-[30px] xl:px-[20px] 2xl:px-[40px]"
+              >
+                <ProfileHeader :user="displayUser" :stats="stats" />
+              </section>
+
+              <!-- Section 2 - Profile Content (includes edit modal and posts) -->
+              <section>
+                <ProfileContent :user="displayUser" @update:user="updateUser" />
+              </section>
+
+              <!-- Posts Feed Section -->
+              <section class="mt-4">
                 <div
-                  v-if="isLoading && posts.length === 0"
-                  class="text-white text-center py-8"
-                >
+                  class="w-full h-px border border-[rgba(255,255,255,0.5)]"
+                ></div>
+
+                <!-- Posts Feed -->
+                <div class="mt-4">
+                  <!-- Loading State -->
                   <div
-                    class="animate-spin rounded-full h-8 w-8 border-b-2 border-[#6D01D0] mx-auto mb-4"
-                  ></div>
-                  Loading posts...
-                </div>
-
-                <!-- Error State -->
-                <div v-if="error" class="text-red-400 text-center py-4 mb-4">
-                  {{ error }}
-                  <button
-                    @click="handleRetry"
-                    class="block mx-auto mt-2 text-[#6D01D0] hover:text-[#8B4CD8]"
+                    v-if="isLoadingPosts && posts.length === 0"
+                    class="text-white text-center py-8"
                   >
-                    Try Again
-                  </button>
-                </div>
+                    <div
+                      class="animate-spin rounded-full h-8 w-8 border-b-2 border-[#6D01D0] mx-auto mb-4"
+                    ></div>
+                    Loading posts...
+                  </div>
 
-                <!-- Empty State -->
-                <div
-                  v-if="!isLoading && !error && posts.length === 0"
-                  class="text-gray-400 text-center py-8"
-                >
-                  <p class="text-lg mb-2">No posts yet</p>
-                  <p class="text-sm">Be the first to share something!</p>
-                </div>
-
-                <!-- Posts -->
-                <PostCard v-for="post in posts" :key="post.id" :post="post" />
-
-                <!-- Load More Button -->
-                <div
-                  v-if="hasMore && posts.length > 0"
-                  class="text-center mt-8 pb-8"
-                >
-                  <button
-                    @click="handleLoadMore"
-                    :disabled="isLoadingMore"
-                    class="bg-[#6D01D0] hover:bg-[#5a0ba8] disabled:bg-gray-600 text-white px-6 py-2 rounded-lg transition-colors disabled:cursor-not-allowed"
+                  <!-- Error State -->
+                  <div
+                    v-if="postsError"
+                    class="text-red-400 text-center py-4 mb-4"
                   >
-                    {{ isLoadingMore ? "Loading..." : "Load More" }}
-                  </button>
+                    {{ postsError }}
+                    <button
+                      @click="handleRetry"
+                      class="block mx-auto mt-2 text-[#6D01D0] hover:text-[#8B4CD8]"
+                    >
+                      Try Again
+                    </button>
+                  </div>
+
+                  <!-- Empty State -->
+                  <div
+                    v-if="!isLoadingPosts && !postsError && posts.length === 0"
+                    class="text-gray-400 text-center py-8"
+                  >
+                    <p class="text-lg mb-2">No posts yet</p>
+                    <p class="text-sm">Be the first to share something!</p>
+                  </div>
+
+                  <!-- Posts -->
+                  <PostCard v-for="post in posts" :key="post.id" :post="post" />
+
+                  <!-- Load More Button -->
+                  <div
+                    v-if="hasMore && posts.length > 0"
+                    class="text-center mt-8 pb-8"
+                  >
+                    <button
+                      @click="handleLoadMore"
+                      :disabled="isLoadingMore"
+                      class="bg-[#6D01D0] hover:bg-[#5a0ba8] disabled:bg-gray-600 text-white px-6 py-2 rounded-lg transition-colors disabled:cursor-not-allowed"
+                    >
+                      {{ isLoadingMore ? "Loading..." : "Load More" }}
+                    </button>
+                  </div>
                 </div>
-              </div>
-            </section>
+              </section>
+            </template>
           </div>
         </div>
       </div>
     </main>
-
-    <!-- Modal for editing profile -->
-    <div
-      v-if="isModalOpen"
-      class="fixed inset-0 bg-black bg-opacity-70 flex justify-center items-center z-50"
-      @click.self="closeModal"
-    >
-      <div
-        class="bg-[#060310] border border-white/50 rounded-xl p-6 w-full max-w-md text-white"
-      >
-        <h2 class="text-2xl mb-4">Edit Profile</h2>
-
-        <!-- Error message display -->
-        <div v-if="errorMessage" class="mb-4 p-3 bg-red-600 text-white rounded">
-          {{ errorMessage }}
-        </div>
-
-        <form @submit.prevent="saveChanges" class="flex flex-col gap-4">
-          <input
-            v-model="formData.name"
-            type="text"
-            placeholder="Name"
-            class="input input-bordered bg-[#222] border-gray-600 p-2 rounded"
-            required
-          />
-          <input
-            v-model="formData.login"
-            type="text"
-            placeholder="Login"
-            class="input input-bordered bg-[#222] border-gray-600 p-2 rounded"
-            required
-          />
-
-          <!-- Avatar upload input and preview -->
-          <div>
-            <label class="block mb-1">Avatar:</label>
-            <input
-              type="file"
-              accept="image/*"
-              @change="onFileChange"
-              class="file-input file-input-bordered file-input-sm w-full max-w-xs bg-[#222] border-gray-600 rounded"
-            />
-          </div>
-
-          <div v-if="formData.avatarPreview" class="mt-2 mb-2">
-            <img
-              :src="formData.avatarPreview"
-              alt="Avatar Preview"
-              class="w-24 h-24 rounded-full object-cover border border-gray-600"
-            />
-          </div>
-
-          <textarea
-            v-model="formData.biography"
-            placeholder="Biography"
-            rows="4"
-            class="textarea textarea-bordered bg-[#222] border-gray-600 resize-none p-2 rounded"
-          ></textarea>
-
-          <div>
-            <label class="block mb-1">Tag:</label>
-            <select
-              v-model="formData.selectedTag"
-              class="select select-bordered bg-[#222] border-gray-600 w-full p-2 rounded"
-            >
-              <option value="Add tag">Add tag</option>
-              <option value="Listener">Listener</option>
-              <option value="Musician">Musician</option>
-              <option value="Learner">Learner</option>
-            </select>
-          </div>
-
-          <div class="flex justify-end gap-2 mt-4">
-            <button
-              type="button"
-              @click="closeModal"
-              class="btn btn-outline btn-sm"
-            >
-              Cancel
-            </button>
-            <button
-              type="submit"
-              class="btn btn-primary btn-sm"
-              :disabled="isSubmitting"
-            >
-              {{ isSubmitting ? "Saving..." : "Save" }}
-            </button>
-          </div>
-        </form>
-      </div>
-    </div>
   </div>
   <div class="max-md:pb-15"></div>
 </template>
 
 <script setup lang="ts">
-import { reactive, ref, watch, onMounted, computed } from "vue";
+import { reactive, ref, onMounted, computed } from "vue";
 import NavBar from "@/components/Navigation/NavBar.vue";
 import ProfileHeader from "@/components/userProfile/ProfileHeader.vue";
+import ProfileContent from "@/components/userProfile/ProfileContent.vue";
 import PostCard from "@/components/Posts_Feed_Components/PostCard.vue";
 
 // Get API URL from environment variable
@@ -338,7 +253,7 @@ const user = reactive<User>({
   tag: null,
 });
 
-// Computed property to handle tag display
+// Computed property to handle tag display for components
 const displayUser = computed(() => ({
   ...user,
   tag: user.tag && tagMap[user.tag] ? tagMap[user.tag] : "Add tag",
@@ -350,30 +265,17 @@ const stats = reactive<Stats>({
   listenedTo: 0,
 });
 
-// Posts state
-const posts = ref<FeedPost[]>([]);
+// Loading states
 const isLoading = ref(false);
+const isLoadingPosts = ref(false);
 const isLoadingMore = ref(false);
-const error = ref("");
+const postsError = ref("");
+const posts = ref<FeedPost[]>([]);
 const hasMore = ref(true);
 const limit = 10;
 const offset = ref(0);
 
-// Form data for editing
-const formData = reactive({
-  name: "",
-  login: "",
-  avatarFile: null as File | null,
-  avatarPreview: "",
-  biography: "",
-  selectedTag: "Add tag",
-});
-
-const isModalOpen = ref(false);
-const isSubmitting = ref(false);
-const errorMessage = ref("");
-
-// Post transformation functions (from PostFeed.vue)
+// Post transformation functions
 const mapUserRole = (
   tagId: string | null,
 ): "Musician" | "Listener" | "Learner" => {
@@ -481,6 +383,49 @@ const transformBackendPost = (backendPost: BackendPost): FeedPost | null => {
   }
 };
 
+// Fetch user stats from backend - FIXED to match your API
+const fetchUserStats = async () => {
+  try {
+    if (!user.id) {
+      console.warn("No user ID available for stats");
+      return;
+    }
+
+    console.log("🔍 Fetching user stats for user:", user.id);
+    // FIXED: Use the correct endpoint that matches your backend
+    const res = await fetch(`${API_URL}/profiles/${user.id}/stats`, {
+      credentials: "include",
+    });
+
+    if (!res.ok) {
+      console.error(`Stats API error: ${res.status} ${res.statusText}`);
+      throw new Error(`Failed to fetch user stats: ${res.statusText}`);
+    }
+
+    const data = await res.json();
+    console.log("✅ User stats loaded:", data);
+
+    // Your API returns exactly these field names
+    stats.posts = data.posts ?? 0;
+    stats.listeners = data.listeners ?? 0;
+    stats.listenedTo = data.listenedTo ?? 0;
+
+    console.log("📊 Final stats:", {
+      posts: stats.posts,
+      listeners: stats.listeners,
+      listenedTo: stats.listenedTo,
+    });
+  } catch (error) {
+    console.error("❌ Error fetching user stats:", error);
+    // Set default values on error but don't reset if we already have values
+    if (stats.posts === 0 && stats.listeners === 0 && stats.listenedTo === 0) {
+      stats.posts = 0;
+      stats.listeners = 0;
+      stats.listenedTo = 0;
+    }
+  }
+};
+
 // Fetch posts from backend
 const fetchPosts = async (loadMore = false) => {
   if (!user.id) return;
@@ -488,11 +433,11 @@ const fetchPosts = async (loadMore = false) => {
   if (loadMore) {
     isLoadingMore.value = true;
   } else {
-    isLoading.value = true;
+    isLoadingPosts.value = true;
     offset.value = 0;
   }
 
-  error.value = "";
+  postsError.value = "";
 
   try {
     const endpoint = `${API_URL}/posts/user/${user.id}?limit=${limit}&offset=${offset.value}`;
@@ -521,15 +466,21 @@ const fetchPosts = async (loadMore = false) => {
 
     hasMore.value = backendPosts.length === limit;
     offset.value += backendPosts.length;
+
+    // Update posts count in stats
+    if (!loadMore) {
+      stats.posts = backendPosts.length;
+    }
   } catch (err) {
     console.error("Error fetching posts:", err);
-    error.value = err instanceof Error ? err.message : "Failed to load posts";
+    postsError.value =
+      err instanceof Error ? err.message : "Failed to load posts";
 
     if (!loadMore) {
       posts.value = [];
     }
   } finally {
-    isLoading.value = false;
+    isLoadingPosts.value = false;
     isLoadingMore.value = false;
   }
 };
@@ -545,137 +496,12 @@ const handleRetry = () => {
   fetchPosts();
 };
 
-// Profile functions
-const openEditModal = () => {
-  isModalOpen.value = true;
-  errorMessage.value = "";
-  formData.name = user.name || "";
-  formData.login = user.login || "";
-  formData.biography = user.biography || "";
-  formData.selectedTag =
-    user.tag && tagMap[user.tag] ? tagMap[user.tag] : "Add tag";
-  formData.avatarFile = null;
-  formData.avatarPreview = user.avatarUrl || "";
-};
-
-const closeModal = () => {
-  isModalOpen.value = false;
-  errorMessage.value = "";
-};
-
-const onFileChange = (event: Event) => {
-  const target = event.target as HTMLInputElement;
-  const files = target.files;
-  if (files && files[0]) {
-    formData.avatarFile = files[0];
-    const reader = new FileReader();
-    reader.onload = (e) => {
-      formData.avatarPreview = e.target?.result as string;
-    };
-    reader.readAsDataURL(files[0]);
-  } else {
-    formData.avatarFile = null;
-    formData.avatarPreview = user.avatarUrl || "";
-  }
-};
-
-const uploadAvatar = async (): Promise<string | null> => {
-  if (!formData.avatarFile) return null;
-
-  const data = new FormData();
-  data.append("avatar", formData.avatarFile);
-
-  const res = await fetch(`${API_URL}/profile/me/avatar`, {
-    method: "PATCH",
-    credentials: "include",
-    body: data,
-  });
-
-  if (!res.ok) {
-    const err = await res.json();
-    throw new Error(err.detail || "Avatar upload failed");
-  }
-
-  const json = await res.json();
-  return json.avatar_url;
-};
-
-const fetchUserStats = async () => {
-  try {
-    if (!user.id) return;
-
-    const res = await fetch(`${API_URL}/profile/me/stats`, {
-      credentials: "include",
-    });
-
-    if (!res.ok) {
-      throw new Error(`Failed to fetch user stats: ${res.statusText}`);
-    }
-
-    const data = await res.json();
-    stats.posts = data.posts ?? 0;
-    stats.listeners = data.listeners ?? 0;
-    stats.listenedTo = data.listenedTo ?? 0;
-  } catch (error) {
-    console.error("Error fetching user stats:", error);
-    stats.posts = 0;
-    stats.listeners = 0;
-    stats.listenedTo = 0;
-  }
-};
-
-const saveChanges = async () => {
-  if (isSubmitting.value) return;
-  isSubmitting.value = true;
-  errorMessage.value = "";
-
-  try {
-    const tag_id =
-      formData.selectedTag === "Add tag"
-        ? null
-        : reverseTagMap[formData.selectedTag];
-
-    const profilePayload = {
-      name: formData.name,
-      login: formData.login,
-      description: formData.biography,
-      tag_id,
-    };
-
-    const resProfile = await fetch(`${API_URL}/profile/me`, {
-      method: "PATCH",
-      credentials: "include",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(profilePayload),
-    });
-
-    if (!resProfile.ok) {
-      const err = await resProfile.json();
-      throw new Error(err.detail || "Profile update failed");
-    }
-
-    if (formData.avatarFile) {
-      await uploadAvatar();
-    }
-
-    closeModal();
-    window.location.reload();
-  } catch (error: unknown) {
-    console.error("Error in saveChanges:", error);
-    let msg = "Unknown error occurred";
-    if (error instanceof Error) {
-      msg = error.message;
-    }
-    errorMessage.value = msg;
-  } finally {
-    isSubmitting.value = false;
-  }
-};
-
+// Load user profile from backend - ENHANCED
 const loadUserProfile = async () => {
+  isLoading.value = true;
+
   try {
+    console.log("🔍 Loading user profile...");
     const res = await fetch(`${API_URL}/profile/me/profile`, {
       credentials: "include",
       headers: { "Cache-Control": "no-cache" },
@@ -688,41 +514,58 @@ const loadUserProfile = async () => {
     }
 
     const data = await res.json();
+    console.log("✅ User profile loaded:", data);
 
     if (data && data.id) {
+      // Update user reactive object
       Object.assign(user, {
         id: data.id,
         name: data.name || "",
         login: data.login || "",
         biography: data.description || "",
-        avatarUrl: data.avatar_url || "",
+        avatarUrl: data.avatar_url || user.avatarUrl, // Keep default if no avatar
         tag: data.tag_id || null,
       });
 
+      console.log("👤 User object updated:", user);
+
+      // Load user stats and posts after profile is loaded
+      // Make sure to wait for stats before loading posts
       await fetchUserStats();
       await fetchPosts();
     }
   } catch (err) {
-    console.error("Error loading user profile:", err);
-    errorMessage.value = "Failed to load user profile";
+    console.error("❌ Error loading user profile:", err);
+  } finally {
+    isLoading.value = false;
   }
 };
 
-// Watch user changes to sync form data
-watch(
-  () => user,
-  (newUser) => {
-    formData.name = newUser.name || "";
-    formData.login = newUser.login || "";
-    formData.biography = newUser.biography || "";
-    formData.selectedTag =
-      newUser.tag && tagMap[newUser.tag] ? tagMap[newUser.tag] : "Add tag";
-    formData.avatarPreview = newUser.avatarUrl || "";
-    formData.avatarFile = null;
-  },
-  { deep: true, immediate: true },
-);
+// Update user function (called by ProfileContent component) - ENHANCED
+const updateUser = async (updatedUser: User) => {
+  console.log("🔄 Updating user:", updatedUser);
 
+  // Update the reactive user object
+  user.name = updatedUser.name;
+  user.login = updatedUser.login;
+  user.biography = updatedUser.biography;
+  user.avatarUrl = updatedUser.avatarUrl;
+
+  // Handle tag conversion from display name to UUID
+  if (updatedUser.tag && updatedUser.tag !== "Add tag") {
+    user.tag = reverseTagMap[updatedUser.tag] || updatedUser.tag;
+  } else {
+    user.tag = null;
+  }
+
+  console.log("👤 User updated to:", user);
+
+  // Refresh stats and posts after profile update
+  await fetchUserStats();
+  await fetchPosts();
+};
+
+// Load profile on component mount
 onMounted(() => {
   loadUserProfile();
 });
@@ -733,6 +576,7 @@ onMounted(() => {
   font-family: "Inter", sans-serif;
 }
 
+/* Center the content container */
 main {
   display: flex;
   justify-content: center;

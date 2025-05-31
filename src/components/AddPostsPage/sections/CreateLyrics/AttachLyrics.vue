@@ -1,31 +1,6 @@
 <template>
   <div class="m-[20px]">
-    <!-- Debug toggle (remove after testing) -->
-    <button
-      @click="showDebug = !showDebug"
-      class="fixed bottom-4 right-4 bg-purple-600 text-white px-3 py-1 rounded text-xs z-50"
-    >
-      Lyrics Debug
-    </button>
-
-    <!-- Debug info -->
-    <div
-      v-if="showDebug"
-      class="mb-4 p-3 bg-purple-900/30 rounded text-white text-sm"
-    >
-      <p><strong>LYRICS DEBUG:</strong></p>
-      <p>Song Title: "{{ songTitle }}"</p>
-      <p>Artist: "{{ artistName }}"</p>
-      <p>Parts: {{ parts.length }}</p>
-      <p>Can Submit: {{ canSubmit }}</p>
-      <p>Submitting: {{ isSubmitting }}</p>
-      <p v-if="submitError" class="text-red-400">Error: {{ submitError }}</p>
-      <p v-if="successMessage" class="text-green-400">
-        Success: {{ successMessage }}
-      </p>
-    </div>
-
-    <!-- Заголовок -->
+    <!-- Title -->
     <div class="flex items-center mb-6">
       <h1
         class="[@media(min-width:1537px)]:text-[24px] xl:text-[20px] lg:text-[18px] text-[16px] font-semibold text-white inter-font"
@@ -34,7 +9,7 @@
       </h1>
     </div>
 
-    <!-- Поля для вводу пісні -->
+    <!-- Song input fields -->
     <div
       class="mb-6 space-y-4 bg-[#000C9C]/40 p-3 pt-[18px] lg:p-4 lg:pt-[24px] 2xl:p-5 2xl:pt-[30px] rounded-[10px]"
     >
@@ -66,7 +41,7 @@
       />
     </div>
 
-    <!-- Список частин -->
+    <!-- Parts list -->
     <div
       v-for="(part, index) in parts"
       :key="index"
@@ -104,26 +79,18 @@
           <div
             class="pointer-events-none absolute right-1 top-1/2 transform -translate-y-1/2"
           >
-            <svg width="12" height="8" viewBox="0 0 12 8" fill="none">
-              <path
-                d="M1 1L6 6L11 1"
-                stroke="white"
-                stroke-width="2"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-              />
-            </svg>
+            <ArrowIcon />
           </div>
         </div>
 
-        <!-- Кнопка видалення частини -->
+        <!-- Remove part button -->
         <div class="flex justify-end">
           <button
             @click="removePart(index)"
             :disabled="isSubmitting"
-            class="absolute top-1/2 right-[0px] -translate-y-1/2 rounded-full h-[20px] w-[20px] flex items-center justify-center text-white hover:bg-red-500/20 disabled:opacity-50"
+            class="absolute top-1/2 right-[0px] -translate-y-1/2 rounded-full h-[10px] sm:h-[12px] md:h-[14px] lg:h-[16px] xl:h-[18px] 2xl:h-[20px] w-[10px] sm:w-[12px] md:w-[14px] lg:w-[16px] xl:w-[18px] 2xl:w-[20px] flex items-center justify-center text-white hover:bg-red-500/20 disabled:opacity-50"
           >
-            <span class="text-red-500 text-lg">×</span>
+            <MediaClose11 />
           </button>
         </div>
       </div>
@@ -138,7 +105,7 @@
       ></textarea>
     </div>
 
-    <!-- Кнопка додавання нової частини -->
+    <!-- Add new part button -->
     <button
       @click="addNewPart"
       :disabled="!canAddPart || isSubmitting"
@@ -191,7 +158,7 @@
       </div>
     </div>
 
-    <!-- Кнопка сабміту (відображається тільки якщо є частини) -->
+    <!-- Submit button (only shows when there are parts) -->
     <div v-if="parts.length > 0" class="flex justify-end text-center mb-6">
       <button
         @click="submitLyrics"
@@ -207,6 +174,8 @@
 <script setup lang="ts">
 import { ref, computed } from "vue";
 import { useRouter } from "vue-router";
+import MediaClose11 from "@/components/SVG/AddPosts_Icons/AudioClose11.vue";
+import ArrowIcon from "@/components/SVG/AddPosts_Icons/ArrowIcon.vue";
 
 // Get API URL from environment variable
 const API_URL = import.meta.env.VITE_API_URL;
@@ -221,9 +190,8 @@ const isSubmitting = ref(false);
 const submitError = ref("");
 const successMessage = ref("");
 const uploadProgress = ref(0);
-const showDebug = ref(false);
 
-// Варіанти частин пісні
+// Song part options
 const partOptions = [
   "intro",
   "verse",
@@ -248,7 +216,7 @@ const canSubmit = computed(() => {
   );
 });
 
-// Додаємо нову частину
+// Add new part
 const addNewPart = () => {
   if (canAddPart.value) {
     parts.value.push({ type: "", lyrics: "" });
@@ -256,14 +224,14 @@ const addNewPart = () => {
   }
 };
 
-// Видаляємо частину
+// Remove part
 const removePart = (index: number) => {
   console.log("🗑️ Removing lyrics part at index:", index);
   parts.value.splice(index, 1);
   console.log("Lyrics parts remaining:", parts.value.length);
 };
 
-// Сабміт тексту
+// Submit lyrics
 const submitLyrics = async () => {
   console.log("📝 === SUBMIT LYRICS POST ===");
   console.log("Song Title:", songTitle.value);
@@ -299,7 +267,7 @@ const submitLyrics = async () => {
       }
     }, 200);
 
-    console.log(` Making request to: ${API_URL}/posts/lyrics`);
+    console.log(`🌐 Making request to: ${API_URL}/posts/lyrics`);
 
     // Make API request
     const response = await fetch(`${API_URL}/posts/lyrics`, {
@@ -395,39 +363,26 @@ defineExpose({
 </script>
 
 <style scoped>
-/* Додаткові стилі за потреби */
 .custom-select {
-  color: white !important; /* Текст у селекті білий */
-  background-color: rgba(
-    109,
-    1,
-    208,
-    1
-  ) !important; /* Фон в селекті фіолетовий */
+  color: white !important;
+  background-color: rgba(109, 1, 208, 1) !important;
 }
 
 .custom-select option {
-  color: white !important; /* Текст у селекті білий */
-  background-color: rgba(
-    109,
-    1,
-    208,
-    0.5
-  ) !important; /* Фон в селекті фіолетовий */
+  color: white !important;
+  background-color: rgba(109, 1, 208, 0.5) !important;
 }
 
-/* Стиль тільки для placeholder (disabled) */
 .custom-select option:disabled {
-  color: rgba(255, 255, 255, 0.7) !important; /* трохи прозорий білий */
+  color: rgba(255, 255, 255, 0.7) !important;
   font-style: italic;
 }
 
 textarea::-webkit-scrollbar-thumb {
-  background-color: rgba(255, 255, 255, 0.3); /* світло-сірий */
+  background-color: rgba(255, 255, 255, 0.3);
   border-radius: 8px;
 }
 
-/* Для Firefox */
 textarea {
   scrollbar-color: rgba(255, 255, 255, 0.3) transparent;
 }

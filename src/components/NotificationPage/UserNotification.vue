@@ -42,9 +42,9 @@
     <div
       v-for="notification in notifications"
       :key="notification.id"
-      class="flex justify-between items-center text-white"
+      class="flex justify-between items-center text-white group hover:bg-white/5 rounded-lg p-2 transition-colors"
       :class="{ 'opacity-60': notification.read }"
-      @click="markAsRead(notification.id)"
+      @click="handleNotificationClick(notification)"
     >
       <!-- Контейнер повідомлення -->
       <div
@@ -56,52 +56,46 @@
               width="6"
               height="6"
               y=".5"
-              :fill="notification.read ? '#666' : '#6D01D0'"
+              :fill="
+                notification.read
+                  ? '#666'
+                  : getNotificationColor(notification.type)
+              "
               rx="3"
             />
           </svg>
         </span>
+
         <!-- Username -->
         <span
-          class="ml-[8px] md:ml-[10px] text-[#6D01D0] text-[12px] md:text-[13px] xl:text-[14px] font-medium truncate max-w-[120px]"
+          class="ml-[8px] md:ml-[10px] text-[#6D01D0] text-[12px] md:text-[13px] xl:text-[14px] font-medium truncate max-w-[120px] hover:text-[#8B4CD8] transition-colors"
           @click.stop="goToUserProfile(notification.sender_id)"
-          >{{ notification.username }}</span
         >
-
-        <!-- Message - Updated to handle backend mention messages -->
-        <span
-          v-if="
-            notification.type === 'mention' ||
-            notification.message.includes('mentioned you')
-          "
-          class="text-white text-[12px] md:text-[13px] xl:text-[14px] font-normal truncate flex-1 ml-[8px] underline underline-offset-2 decoration-white cursor-pointer"
-          @click.stop="goToTaggedPost(notification)"
-        >
-          {{ notification.message }}
+          {{ notification.username }}
         </span>
 
+        <!-- Enhanced Message with better handling -->
         <span
-          v-else-if="
-            notification.type === 'comment' ||
-            notification.message.includes('commented on')
-          "
-          class="text-white text-[12px] md:text-[13px] xl:text-[14px] font-normal truncate flex-1 ml-[8px] underline underline-offset-2 decoration-white cursor-pointer"
-          @click.stop="goToTaggedPost(notification)"
+          v-if="isClickableNotification(notification)"
+          class="text-white text-[12px] md:text-[13px] xl:text-[14px] font-normal truncate flex-1 ml-[8px] underline underline-offset-2 decoration-white cursor-pointer hover:text-gray-300 transition-colors"
+          @click.stop="handleNotificationAction(notification)"
         >
-          {{ notification.message }}
+          {{ getNotificationMessage(notification) }}
         </span>
 
         <span
           v-else
           class="text-white text-[12px] md:text-[13px] xl:text-[14px] font-normal truncate flex-1 ml-[8px]"
         >
-          {{ notification.message }}
+          {{ getNotificationMessage(notification) }}
         </span>
+
         <!-- Time -->
         <span
           class="text-white text-[10px] md:text-[11px] xl:text-[12px] font-normal whitespace-nowrap mr-[8px] md:mr-[10px] xl:mr-[12px]"
-          >{{ formatTime(notification.timestamp) }}</span
         >
+          {{ formatTime(notification.timestamp) }}
+        </span>
       </div>
     </div>
   </div>
@@ -154,6 +148,82 @@ const offset = ref(0);
 
 let timeInterval: ReturnType<typeof setTimeout> | null = null;
 
+// Get notification color based on type
+const getNotificationColor = (type: string): string => {
+  switch (type) {
+    case "mention":
+      return "#6D01D0"; // Purple for mentions
+    case "comment":
+      return "#000C9C"; // Blue for comments
+    case "listening":
+      return "#3BAA5F"; // Green for new listeners
+    default:
+      return "#6D01D0";
+  }
+};
+
+// Get formatted notification message
+const getNotificationMessage = (notification: Notification): string => {
+  // Handle different notification types with better formatting
+  switch (notification.type) {
+    case "mention":
+      return "mentioned you in a comment";
+    case "comment":
+      return "commented on your post";
+    case "listening":
+      return "now listens to you";
+    default:
+      return notification.message || "interacted with your content";
+  }
+};
+
+// Check if notification is clickable (mentions and comments)
+const isClickableNotification = (notification: Notification): boolean => {
+  return ["mention", "comment"].includes(notification.type);
+};
+
+// Handle notification click
+const handleNotificationClick = async (notification: Notification) => {
+  // Mark as read
+  await markAsRead(notification.id);
+
+  // Handle click action
+  handleNotificationAction(notification);
+};
+
+// Handle notification action based on type
+const handleNotificationAction = (notification: Notification) => {
+  console.log(`🔔 Handling notification action:`, notification);
+
+  switch (notification.type) {
+    case "mention":
+    case "comment":
+      // For mentions and comments, go to the user's profile who mentioned/commented
+      // This allows users to see who interacted with them
+      console.log(
+        `✅ Navigating to profile of user who ${notification.type}ed: ${notification.sender_id}`,
+      );
+      goToUserProfile(notification.sender_id);
+      break;
+
+    case "listening":
+      // For new listeners, go to their profile
+      console.log(
+        `✅ Navigating to new listener's profile: ${notification.sender_id}`,
+      );
+      goToUserProfile(notification.sender_id);
+      break;
+
+    default:
+      // Default action: go to sender's profile
+      console.log(
+        `✅ Default action - navigating to sender profile: ${notification.sender_id}`,
+      );
+      goToUserProfile(notification.sender_id);
+      break;
+  }
+};
+
 // Fetch notifications from backend
 async function fetchNotifications(loadMore: boolean = false) {
   if (loadMore) {
@@ -166,7 +236,7 @@ async function fetchNotifications(loadMore: boolean = false) {
   error.value = "";
 
   try {
-    console.log("Fetching notifications...");
+    console.log("🔔 Fetching notifications...");
     const res = await fetch(
       `${API_URL}/notifications?limit=${limit}&offset=${offset.value}`,
       {
@@ -182,7 +252,7 @@ async function fetchNotifications(loadMore: boolean = false) {
     }
 
     const data = await res.json();
-    console.log("Notifications data:", data);
+    console.log("🔔 Notifications data:", data);
 
     if (loadMore) {
       notifications.value.push(...data);
@@ -192,7 +262,7 @@ async function fetchNotifications(loadMore: boolean = false) {
 
     offset.value += limit;
   } catch (err) {
-    console.error("Error fetching notifications:", err);
+    console.error("❌ Error fetching notifications:", err);
     error.value =
       err instanceof Error ? err.message : "Failed to load notifications";
   } finally {
@@ -219,7 +289,7 @@ async function markAsRead(notificationId: string) {
       }
     }
   } catch (err) {
-    console.error("Error marking notification as read:", err);
+    console.error("❌ Error marking notification as read:", err);
   }
 }
 
@@ -230,7 +300,9 @@ function loadMore() {
 
 // Navigate to user profile
 function goToUserProfile(userId: string) {
-  router.push(`/user/${userId}`);
+  if (userId) {
+    router.push(`/user/${userId}`);
+  }
 }
 
 function formatTime(timestamp: string): string {
@@ -246,25 +318,6 @@ function formatTime(timestamp: string): string {
 
   const diffDays = Math.floor(diffHr / 24);
   return `${diffDays} day${diffDays > 1 ? "s" : ""} ago`;
-}
-
-async function goToTaggedPost(notification: Notification) {
-  console.log(`🔍 Navigating for notification:`, notification);
-
-  // For mentions and comments, navigate to the user's profile who mentioned/commented
-  // This way users can see who interacted with them and find the post in their feed
-
-  try {
-    console.log(
-      `✅ Navigating to profile of user who interacted: ${notification.sender_id}`,
-    );
-    router.push(`/user/${notification.sender_id}`);
-  } catch (error) {
-    console.error("❌ Error navigating to user profile:", error);
-    // Ultimate fallback: go to home feed
-    console.log(`ℹ️ Fallback: navigating to home feed`);
-    router.push("/");
-  }
 }
 
 // Update time every minute

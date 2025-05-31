@@ -81,8 +81,10 @@ import SignUpInput from "@/components/Authentication/SignUpInput.vue";
 import SignUpButton from "@/components/Authentication/SignUpButton.vue";
 import SignUpDivider from "@/components/Authentication/SignUpDivider.vue";
 
-// Get API URL from environment variable
-const API_URL = import.meta.env.VITE_API_URL;
+interface ValidationError {
+  loc: string[];
+  msg?: string;
+}
 
 interface FormData {
   name: string;
@@ -96,18 +98,6 @@ interface FormErrors {
   password: string;
 }
 
-// Interface for FastAPI validation error
-interface ValidationError {
-  loc: (string | number)[];
-  msg: string;
-  type: string;
-}
-
-// Interface for API error response
-interface ApiErrorResponse {
-  detail?: string | ValidationError[];
-}
-
 export default defineComponent({
   name: "SignUpForm",
   components: {
@@ -116,6 +106,7 @@ export default defineComponent({
     SignUpDivider,
   },
   setup() {
+    const API_URL = import.meta.env.VITE_API_URL;
     const router = useRouter();
 
     const formData = reactive<FormData>({
@@ -183,7 +174,7 @@ export default defineComponent({
       resetMessages();
 
       try {
-        // Use environment variable for API URL
+        // Use the correct endpoint that matches your backend
         const response = await fetch(`${API_URL}/authorization/signup`, {
           method: "POST",
           headers: {
@@ -196,32 +187,31 @@ export default defineComponent({
           }),
         });
 
-        const data = (await response.json()) as ApiErrorResponse;
+        const data = await response.json();
 
         if (!response.ok) {
           // Handle different types of errors
           if (response.status === 400) {
             const detail = data.detail || "";
 
-            if (typeof detail === "string") {
-              if (detail.includes("User already exists and is verified")) {
-                errorMessage.value =
-                  "An account with this email already exists. Please sign in instead.";
-                errors.email = "Account already exists";
-              } else if (detail.includes("already exists")) {
-                // User exists but not verified - backend will resend verification
-                successMessage.value = "";
-              } else if (detail.includes("Password must include")) {
-                // Password validation error
-                errors.password = detail;
-                errorMessage.value = "Please check your password requirements.";
-              } else if (detail.includes("Name cannot be empty")) {
-                errors.name = "Name is required";
-              } else if (detail.includes("email")) {
-                errors.email = detail;
-              } else {
-                errorMessage.value = detail || "Registration failed";
-              }
+            if (detail.includes("User already exists and is verified")) {
+              errorMessage.value =
+                "An account with this email already exists. Please sign in instead.";
+              errors.email = "Account already exists";
+            } else if (detail.includes("already exists")) {
+              // User exists but not verified - backend will resend verification
+              successMessage.value =
+                "A verification email has been sent to your email address. Please check your inbox.";
+            } else if (detail.includes("Password must include")) {
+              // Password validation error
+              errors.password = detail;
+              errorMessage.value = "Please check your password requirements.";
+            } else if (detail.includes("Name cannot be empty")) {
+              errors.name = "Name is required";
+            } else if (detail.includes("email")) {
+              errors.email = detail;
+            } else {
+              errorMessage.value = detail || "Registration failed";
             }
           } else if (response.status === 422) {
             // Validation errors from FastAPI
@@ -249,19 +239,25 @@ export default defineComponent({
           return;
         }
 
+        // Success - show success message
+        successMessage.value =
+          data.message ||
+          "Account created successfully! Please check your email for verification.";
+
         // Clear form on success
         formData.name = "";
         formData.email = "";
         formData.password = "";
 
-        // Redirect to verify page after a delay
-        const userEmail = (data as { email?: string }).email || formData.email;
+        // Optional: Redirect to a confirmation page after a delay
+        // Note: Using the email from the response, not the cleared form
+        const userEmail = data.email || formData.email;
         setTimeout(() => {
           router.push({
             path: "/verify",
             query: { email: userEmail },
           });
-        }, 3000);
+        }, 2000);
       } catch (error) {
         console.error("Error during sign-up:", error);
         errorMessage.value =
@@ -272,7 +268,6 @@ export default defineComponent({
     };
 
     const handleGoogleLogin = () => {
-      // Use environment variable for Google OAuth endpoint
       window.location.href = `${API_URL}/auth/login`;
     };
 
@@ -280,7 +275,7 @@ export default defineComponent({
       console.log("Guest mode clicked");
       isLoading.value = true;
       try {
-        // Call logout to clear any existing sessions using environment variable
+        // Call logout to clear any existing sessions
         await fetch(`${API_URL}/authorization/logout`, {
           method: "POST",
           credentials: "include",

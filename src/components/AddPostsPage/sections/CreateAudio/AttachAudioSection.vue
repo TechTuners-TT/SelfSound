@@ -1,9 +1,6 @@
-<!-- SIMPLE AUDIO UPLOAD - Just like media posts -->
 <template>
   <div class="m-[20px]">
     <!-- Debug toggle (remove after testing) -->
-
-    <!-- Debug info -->
     <div
       v-if="showDebug"
       class="mb-4 p-3 bg-blue-900/30 rounded text-white text-sm"
@@ -45,62 +42,70 @@
       >
         <!-- Remove button -->
         <button
-          @click="removeFile(idx)"
-          class="absolute top-2 right-2 bg-red-500 hover:bg-red-600 text-white rounded-full w-6 h-6 flex items-center justify-center text-sm z-10"
+          @click.stop="removeFile(idx)"
+          class="absolute cursor-pointer top-[5px] sm:top-[6px] md:top-[7px] lg:top-[8px] xl:top-[9px] 2xl:top-[10px] right-[5px] sm:right-[6px] md:right-[7px] lg:right-[8px] xl:right-[9px] 2xl:right-[10px] text-white rounded-full h-[10px] sm:h-[12px] md:h-[14px] lg:h-[16px] xl:h-[18px] 2xl:h-[20px] w-[10px] sm:w-[12px] md:w-[14px] lg:w-[16px] xl:w-[18px] 2xl:w-[20px] flex items-center justify-center"
         >
-          ×
+          <MediaClose11 />
         </button>
 
-        <div class="p-4">
-          <!-- Audio info and play button -->
+        <div
+          class="p-[10px] sm:p-[15px] md:p-[18px] lg:p-[20px] xl:p-[25.5px] 2xl:p-[28.5px] pt-[15px] sm:pt-[18px] md:pt-[20px] lg:pt-[24px] xl:pt-[27px] 2xl:pt-[30px] pb-[15px] sm:pb-[18px] md:pb-[20px] lg:pb-[24px] xl:pb-[27px] 2xl:pb-[30px]"
+        >
+          <!-- Avatar and song info with title/artist inputs -->
           <div class="flex items-center mb-4">
-            <div
-              class="mr-4 h-16 w-16 rounded-lg bg-gray-600 flex items-center justify-center text-white text-2xl"
-            >
-              🎵
-            </div>
-            <button
-              @click="togglePlay(item)"
-              class="ml-auto cursor-pointer h-10 w-10 rounded-full bg-[#6D01D0] flex items-center justify-center text-white"
-            >
-              {{ item.isPlaying ? "⏸️" : "▶️" }}
-            </button>
-          </div>
-
-          <!-- Title and Artist inputs -->
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-            <div>
-              <label class="block text-sm font-medium mb-1 text-gray-300"
-                >Title</label
+            <!-- Avatar check -->
+            <div class="flex items-center gap-4">
+              <img
+                v-if="item.avatar"
+                :src="item.avatar"
+                alt="Avatar"
+                class="h-[55px] sm:h-[60px] md:h-[65px] lg:h-[70px] xl:h-[75px] 2xl:h-[80px] w-[55px] sm:w-[60px] md:w-[65px] lg:w-[70px] xl:w-[75px] 2xl:w-[80px] mr-[15px] rounded-full object-cover"
+                @error="item.avatar = ''"
+              />
+              <!-- If no avatar, show container with AudioPost icon -->
+              <div
+                v-else
+                class="mr-[15px] h-[55px] sm:h-[60px] md:h-[65px] lg:h-[70px] xl:h-[75px] 2xl:h-[80px] w-[55px] sm:w-[60px] md:w-[65px] lg:w-[70px] xl:w-[75px] 2xl:w-[80px] rounded-lg bg-gray-400 flex items-center justify-center text-white text-2xl"
               >
+                <AudioPost />
+              </div>
+            </div>
+
+            <!-- Title and Artist inputs -->
+            <div class="flex flex-col text-white w-1/2 space-y-2">
               <input
                 v-model="item.title"
                 type="text"
                 placeholder="Song title"
-                class="w-full p-2 bg-[#222] border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:border-[#6D01D0] focus:outline-none"
+                class="bg-transparent border-none outline-none font-bold truncate max-w-xs text-[15px] sm:text-[16px] md:text-[18px] lg:text-[20px] xl:text-[22px] 2xl:text-[24px] placeholder-gray-400"
                 required
               />
-            </div>
-            <div>
-              <label class="block text-sm font-medium mb-1 text-gray-300"
-                >Artist</label
-              >
               <input
                 v-model="item.artist"
                 type="text"
                 placeholder="Artist name"
-                class="w-full p-2 bg-[#222] border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:border-[#6D01D0] focus:outline-none"
+                class="bg-transparent border-none outline-none truncate max-w-xs text-[11px] sm:text-[12px] md:text-[13px] lg:text-[14px] xl:text-[15px] 2xl:text-[16px] placeholder-gray-400"
                 required
               />
             </div>
+
+            <!-- Play/Pause button -->
+            <button
+              @click="togglePlay(item)"
+              class="ml-auto cursor-pointer h-[27px] sm:h-[32px] md:h-[34px] lg:h-[36px] xl:h-[38px] 2xl:h-[40px] w-[27px] sm:w-[32px] md:w-[34px] lg:w-[36px] xl:w-[38px] 2xl:w-[40px] rounded-full bg-[#6D01D0] flex items-center justify-center"
+            >
+              <PlayPauseIcon :isPlaying="item.isPlaying" />
+            </button>
           </div>
 
-          <!-- Audio player -->
-          <div class="flex items-center text-white text-sm gap-2">
+          <!-- Custom audio player -->
+          <div
+            class="mt-[10px] w-full flex items-center text-white text-sm gap-2"
+          >
             <span>{{ formatTime(item.currentTime || 0) }}</span>
             <input
               type="range"
-              class="flex-1 h-1 bg-white rounded appearance-none cursor-pointer range-thumb-purple"
+              class="w-full h-[4px] bg-white rounded appearance-none cursor-pointer range-thumb-purple"
               :max="item.duration || 0"
               :value="item.currentTime || 0"
               @input="(e) => seekAudio(item, e)"
@@ -132,7 +137,9 @@
           : 'bg-[#000C9C]/40 hover:bg-[#6D01D0]',
       ]"
     >
-      +
+      <AddIcon
+        class="2xl:w-[24px] 2xl:h-[24px] xl:w-[20px] xl:h-[20px] lg:w-[18px] lg:h-[18px] w-[16px] h-[16px]"
+      />
     </button>
 
     <!-- Upload Progress -->
@@ -188,6 +195,10 @@
 </template>
 
 <script setup lang="ts">
+import AddIcon from "../../../SVG/AddPosts_Icons/AddIcon.vue";
+import MediaClose11 from "@/components/SVG/AddPosts_Icons/AudioClose11.vue";
+import PlayPauseIcon from "@/components/SVG/AddPosts_Icons/PlayPauseIcon.vue";
+import AudioPost from "@/components/SVG/AddPosts_Icons/AudioCover.vue";
 import { ref, nextTick, onUnmounted } from "vue";
 import { useRouter } from "vue-router";
 
@@ -202,6 +213,7 @@ interface AudioFile {
   type: string;
   title: string;
   artist: string;
+  avatar: string;
   audioRef?: HTMLAudioElement | null;
   isPlaying?: boolean;
   currentTime?: number;
@@ -279,6 +291,7 @@ const handleFileChange = async (event: Event) => {
       type: file.type,
       title: file.name.replace(/\.[^/.]+$/, ""),
       artist: "Unknown Artist",
+      avatar: "",
       audioRef: null,
       isPlaying: false,
       currentTime: 0,

@@ -1,22 +1,6 @@
 <template>
   <div class="m-[20px]">
-    <!-- Debug toggle (remove after testing) -->
-
-    <!-- Debug info -->
-    <div
-      v-if="showDebug"
-      class="mb-4 p-3 bg-orange-900/30 rounded text-white text-sm"
-    >
-      <p><strong>XML DEBUG:</strong></p>
-      <p>Files: {{ files.length }}</p>
-      <p>Submitting: {{ isSubmitting }}</p>
-      <p v-if="submitError" class="text-red-400">Error: {{ submitError }}</p>
-      <p v-if="successMessage" class="text-green-400">
-        Success: {{ successMessage }}
-      </p>
-    </div>
-
-    <!-- Заголовок -->
+    <!-- Title -->
     <div class="flex items-center mb-6">
       <h1
         class="[@media(min-width:1537px)]:text-[24px] xl:text-[20px] lg:text-[18px] text-[16px] font-semibold text-white inter-font"
@@ -25,7 +9,7 @@
       </h1>
     </div>
 
-    <!-- Інпут для файлів -->
+    <!-- Hidden file input -->
     <input
       ref="fileInput"
       type="file"
@@ -35,7 +19,7 @@
       @change="handleFileChange"
     />
 
-    <!-- Прев'ю файлів -->
+    <!-- File preview -->
     <div
       v-if="files.length"
       class="bg-[#000C9C]/40 mb-6 rounded-[5px] pt-[20px] p-[10px] sm:pt-[25px] sm:p-[15px] 2xl:pt-[30px] 2xl:p-[20px]"
@@ -45,19 +29,24 @@
         v-for="(item, idx) in files"
         :key="idx"
       >
-        <!-- Картка файлу -->
+        <!-- File card -->
         <div
           class="p-[10px] sm:p-[12px] lg:p-[13px] xl:p-[14px] 2xl:p-[15px] rounded-[5px] transition"
         >
           <div class="flex items-center">
             <div class="flex items-center gap-4">
-              <!-- XML Icon -->
+              <img
+                v-if="item.avatar"
+                :src="item.avatar"
+                alt="Avatar"
+                class="w-10 h-10 mr-[15px] rounded-[3px] object-cover"
+                @error="item.avatar = ''"
+              />
               <div
+                v-else
                 class="mr-[15px] w-10 h-10 rounded-[3px] bg-[#6D01D0] flex items-center justify-center text-white text-2xl"
-                role="img"
-                aria-label="MusicXML file icon"
               >
-                📄
+                <XMLIcon />
               </div>
             </div>
 
@@ -69,6 +58,7 @@
                 type="text"
                 placeholder="Song/Piece title"
                 class="bg-transparent border-b border-white/30 text-[15px] sm:text-[16px] md:text-[18px] lg:text-[20px] xl:text-[22px] [@media(min-width:1537px)]:text-[24px] font-bold text-white placeholder-gray-400 focus:border-[#6D01D0] focus:outline-none"
+                :disabled="isSubmitting"
                 required
                 :aria-label="`Title for ${item.file.name}`"
               />
@@ -78,6 +68,7 @@
                 type="text"
                 placeholder="Composer name"
                 class="bg-transparent border-b border-white/30 text-[11px] sm:text-[12px] md:text-[13px] lg:text-[14px] xl:text-[15px] [@media(min-width:1537px)]:text-[16px] text-white placeholder-gray-400 focus:border-[#6D01D0] focus:outline-none"
+                :disabled="isSubmitting"
                 required
                 :aria-label="`Composer for ${item.file.name}`"
               />
@@ -89,20 +80,21 @@
               </p>
             </div>
 
-            <!-- Кнопка для видалення файлу -->
+            <!-- Remove file button -->
             <button
               @click.stop="removeFile(idx)"
-              class="absolute top-1/2 right-[12px] sm:right-[15px] md:right-[17px] lg:right-[20px] xl:right-[22px] 2xl:right-[25.85px] transform -translate-y-1/2 bg-red-500 hover:bg-red-600 text-white rounded-full w-6 h-6 flex items-center justify-center text-sm z-10"
+              :disabled="isSubmitting"
+              class="absolute top-1/2 right-[12px] sm:right-[15px] md:right-[17px] lg:right-[20px] xl:right-[22px] 2xl:right-[25.85px] transform -translate-y-1/2 h-[10px] sm:h-[12px] md:h-[14px] lg:h-[16px] xl:h-[18px] 2xl:h-[20px] w-[10px] sm:w-[12px] md:w-[14px] lg:w-[16px] xl:w-[18px] 2xl:w-[20px] rounded-full flex items-center justify-center disabled:opacity-50"
               :aria-label="`Remove ${item.file.name}`"
             >
-              ×
+              <AudioClose11 />
             </button>
           </div>
         </div>
       </div>
     </div>
 
-    <!-- Кнопка додавання -->
+    <!-- Add button -->
     <button
       @click="triggerFileInput"
       :disabled="files.length >= 5 || isSubmitting"
@@ -114,7 +106,9 @@
       ]"
       aria-label="Add MusicXML files"
     >
-      +
+      <AddIcon
+        class="2xl:w-[24px] 2xl:h-[24px] xl:w-[20px] xl:h-[20px] lg:w-[18px] lg:h-[18px] w-[16px] h-[16px]"
+      />
     </button>
 
     <!-- Upload Progress -->
@@ -165,7 +159,7 @@
       </div>
     </div>
 
-    <!-- Кнопка сабміту (відображається тільки якщо є файли) -->
+    <!-- Submit button (only shows when files are selected) -->
     <div v-if="files.length > 0" class="flex justify-end mb-6">
       <button
         @click="submitPost"
@@ -179,6 +173,9 @@
 </template>
 
 <script setup lang="ts">
+import AddIcon from "../../../SVG/AddPosts_Icons/AddIcon.vue";
+import AudioClose11 from "@/components/SVG/AddPosts_Icons/AudioClose11.vue";
+import XMLIcon from "@/components/SVG/AddPosts_Icons/XMLIcon.vue";
 import { ref, onUnmounted } from "vue";
 import { useRouter } from "vue-router";
 
@@ -192,6 +189,7 @@ interface MusicXMLFile {
   file: File;
   title: string;
   composer: string;
+  avatar: string;
 }
 
 // State
@@ -201,9 +199,8 @@ const isSubmitting = ref(false);
 const submitError = ref("");
 const successMessage = ref("");
 const uploadProgress = ref(0);
-const showDebug = ref(false);
 
-// Тригер для відкриття діалогу вибору файлів
+// Trigger file input
 const triggerFileInput = () => {
   console.log("📄 Triggering MusicXML file input...");
   if (files.value.length < 5 && !isSubmitting.value && fileInput.value) {
@@ -211,7 +208,7 @@ const triggerFileInput = () => {
   }
 };
 
-// Обробник вибору файлу
+// Handle file change
 const handleFileChange = (event: Event) => {
   console.log("📄 === MUSICXML FILE CHANGE EVENT ===");
   const target = event.target as HTMLInputElement;
@@ -225,7 +222,7 @@ const handleFileChange = (event: Event) => {
   const newFiles = Array.from(selectedFiles);
   console.log("Selected files:", newFiles.length);
 
-  // Перевірка, скільки файлів уже додано
+  // Check how many files are already added
   const remainingFilesCount = 5 - files.value.length;
   const filesToAdd = newFiles.slice(0, remainingFilesCount);
 
@@ -240,7 +237,7 @@ const handleFileChange = (event: Event) => {
         file.size,
       );
 
-      // Перевірка типу файлів
+      // Check file type
       const isValidXML =
         file.name.endsWith(".musicxml") ||
         file.name.endsWith(".xml") ||
@@ -260,8 +257,9 @@ const handleFileChange = (event: Event) => {
         const newXMLFile: MusicXMLFile = {
           preview,
           file,
-          title: file.name.replace(/\.[^/.]+$/, ""), // Назва без розширення
+          title: file.name.replace(/\.[^/.]+$/, ""), // Name without extension
           composer: "Unknown Composer",
+          avatar: "",
         };
 
         files.value.push(newXMLFile);
@@ -290,16 +288,12 @@ const handleFileChange = (event: Event) => {
   }
 };
 
-// Функція для отримання загальної зайнятої пам'яті (в байтах)
-const getUsedMemoryInBytes = () => {
-  return files.value.reduce((acc, item) => acc + item.file.size, 0);
-};
-
+// Get file size in KB
 const fileSizeInKB = (file: File) => {
-  return (file.size / 1024).toFixed(2); // Переведення в КБ
+  return (file.size / 1024).toFixed(2);
 };
 
-// Видалити файл з масиву
+// Remove file from array
 const removeFile = (idx: number) => {
   console.log("🗑️ Removing XML file at index:", idx);
   const item = files.value[idx];
@@ -462,9 +456,9 @@ const submitPost = async () => {
   }
 };
 
-// Відкриття файлу при натисканні на елемент
+// Open file on click
 const openFile = (preview: string) => {
-  window.open(preview, "_blank"); // Відкриває файл в новій вкладці
+  window.open(preview, "_blank");
 };
 
 // Cleanup
@@ -479,7 +473,6 @@ defineExpose({
   files,
   triggerFileInput,
   handleFileChange,
-  getUsedMemoryInBytes,
   fileSizeInKB,
   removeFile,
   submitPost,

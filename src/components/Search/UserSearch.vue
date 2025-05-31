@@ -82,6 +82,7 @@ interface UserProfile {
   login: string;
   avatar_url?: string;
   active?: boolean;
+  email?: string; // Add email field to interface
 }
 
 const router = useRouter();
@@ -109,6 +110,11 @@ const fetchUsers = async (query = "") => {
       ? await searchRes.json()
       : [];
 
+    // Filter out the hidden user
+    const filteredProfiles = profiles.filter(
+      (user) => user.email !== "selfsoundtechnicalsup@gmail.com",
+    );
+
     // Try fetching listened users (only for signed-in users)
     const listenedRes = await fetch(`${API_URL}/profiles/listened`, {
       method: "GET",
@@ -125,7 +131,7 @@ const fetchUsers = async (query = "") => {
       isGuest.value = true;
     }
 
-    users.value = profiles.map((user) => ({
+    users.value = filteredProfiles.map((user) => ({
       ...user,
       active: listenedIds.has(user.id),
     }));
