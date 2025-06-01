@@ -1,10 +1,9 @@
 <template>
-  =======
-  <main class="flex justify-center items-center w-full h-screen px-4">
-    >>>>>>> 8a65ad71f880d5831656d2a922542b7d61ae3cc9
+  <main class="flex justify-center items-center min-h-screen w-full px-4 py-8">
     <div
-      class="bg-[#02033D] text-white flex flex-col justify-center items-center p-8 rounded-lg aspect-square w-full max-w-[480px]"
+      class="bg-[#02033D] text-white flex flex-col justify-center items-center p-8 rounded-lg w-full max-w-[480px] mx-auto"
     >
+      <!-- Email Icon -->
       <svg
         class="mb-6"
         width="64"
@@ -20,20 +19,27 @@
         />
       </svg>
 
-      <h1 class="text-xl font-bold inter-font mb-6">Check Your Email</h1>
+      <!-- Title -->
+      <h1 class="text-xl font-bold inter-font mb-6 text-center">Check Your Email</h1>
 
-      <p class="text-md inter-font">We've sent a verification link to</p>
-      <p class="text-md inter-font font-semibold">
-        {{ userEmail || "your email address" }}
-      </p>
+      <!-- Email Message -->
+      <div class="text-center mb-6">
+        <p class="text-md inter-font">We've sent a verification link to</p>
+        <p class="text-md inter-font font-semibold">
+          {{ userEmail || "your email address" }}
+        </p>
+      </div>
 
-      <hr class="border-t border-white/20 w-full my-6 inter-font" />
+      <!-- Divider -->
+      <hr class="border-t border-white/20 w-full my-6" />
 
-      <p class="text-md mb-6 inter-font">Didn't receive the email?</p>
+      <!-- Resend Section -->
+      <p class="text-md mb-6 inter-font text-center">Didn't receive the email?</p>
+      
       <button
         @click="resendEmail"
         :disabled="isResending || !canResend"
-        class="relative inter-font mb-6 bg-white hover:bg-[#000C9C]/50 text-[#02033D] hover:text-white font-bold inter-font text-md px-[16px] py-[12px] rounded-lg disabled:opacity-50 disabled:cursor-not-allowed transition duration-300 ease-in-out"
+        class="relative inter-font mb-6 bg-white hover:bg-[#000C9C]/50 text-[#02033D] hover:text-white font-bold text-md px-[16px] py-[12px] rounded-lg disabled:opacity-50 disabled:cursor-not-allowed transition duration-300 ease-in-out"
       >
         {{
           isResending
@@ -44,16 +50,19 @@
         }}
       </button>
 
-      <p v-if="resendMessage" class="text-green-400 text-sm mb-4">
+      <!-- Success/Error Message -->
+      <p v-if="resendMessage" class="text-green-400 text-sm mb-4 text-center">
         {{ resendMessage }}
       </p>
 
-      <p class="text-md text-center inter-font">
+      <!-- Spam Folder Notice -->
+      <p class="text-md text-center inter-font mb-6">
         Make sure to check your spam folder if you don't see the email in your
         inbox
       </p>
 
-      <div class="mt-6">
+      <!-- Back to Sign In Link -->
+      <div class="mt-4">
         <router-link
           to="/sign-in"
           class="text-white/70 hover:text-white underline text-sm inter-font"
@@ -70,7 +79,7 @@ import { ref, onMounted, computed, onUnmounted } from "vue";
 import { useRoute } from "vue-router";
 
 // Get API URL from environment variable
-const API_URL = import.meta.env.VITE_API_URL;
+const API_URL = "https://backend-m5qb.onrender.com";
 
 const route = useRoute();
 const userEmail = ref("");
