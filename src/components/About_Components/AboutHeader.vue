@@ -44,7 +44,7 @@
         >
         <div class="w-px h-6 bg-white" aria-hidden="true"></div>
         <router-link
-          to="/guest"
+          to="/home"
           class="hover:text-purple-700 font-normal nav-link"
           >Guest mode</router-link
         >
@@ -80,7 +80,7 @@
       <router-link to="/support" class="block hover:text-purple-700">
         Support
       </router-link>
-      <router-link to="/guest" class="block hover:text-purple-700">
+      <router-link to="/home" class="block hover:text-purple-700">
         Guest mode
       </router-link>
       <router-link to="/sign-in" class="block hover:text-purple-700">
