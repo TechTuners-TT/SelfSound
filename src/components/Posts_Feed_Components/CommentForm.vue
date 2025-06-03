@@ -106,10 +106,7 @@ onUnmounted(() => {
 
 // Process mentions and make them purple (only for completed mentions)
 const processMentions = (element: HTMLDivElement) => {
-  const html = element.innerHTML;
-
-  // Only style mentions that are followed by a space or are at the end AND are complete usernames (3+ chars)
-  // AND are not currently being typed (not at cursor position)
+  // Get current cursor position
   const selection = window.getSelection();
   let cursorPos = -1;
 
@@ -134,12 +131,8 @@ const processMentions = (element: HTMLDivElement) => {
 
   const textContent = element.textContent || "";
 
-  // Only style mentions that:
-  // 1. Are followed by a space or at end of text
-  // 2. Are at least 3 characters long
-  // 3. Are NOT at the current cursor position (being actively typed)
+  // Find mentions that need styling
   const mentionRegex = /@([a-zA-Z0-9_-]{3,})(?=\s|$)/g;
-
   let match;
   const mentionsToStyle: Array<{
     match: string;
@@ -163,73 +156,155 @@ const processMentions = (element: HTMLDivElement) => {
     }
   }
 
-  // Apply styling to completed mentions only
-  let newHtml = html;
-  for (const mention of mentionsToStyle.reverse()) {
-    // Reverse to maintain positions
-    const regex = new RegExp(`@${mention.username}(?=\\s|$)`, "g");
-    newHtml = newHtml.replace(regex, (match) => {
-      // Check if this mention is already styled
-      if (
-        newHtml.includes(
-          `<span class="mention-input" data-username="${mention.username}"`,
-        )
-      ) {
-        return match; // Already styled, don't replace
-      }
-      return `<span class="mention-input" data-username="${mention.username}" contenteditable="false">@${mention.username}</span>`;
-    });
+  // Check if any mentions need styling
+  let needsUpdate = false;
+  for (const mention of mentionsToStyle) {
+    // Check if this mention is already styled
+    const existingSpan = element.querySelector(`span[data-username="${mention.username}"]`);
+    if (!existingSpan) {
+      needsUpdate = true;
+      break;
+    }
   }
 
-  if (newHtml !== html) {
-    // Save cursor position
-    const selection = window.getSelection();
-    if (!selection || selection.rangeCount === 0) return;
+  if (needsUpdate && mentionsToStyle.length > 0) {
+    // Save cursor position before DOM manipulation
+    let savedCursorPos = cursorPos;
+    
+    // Process mentions using DOM manipulation instead of innerHTML
+    const walker = document.createTreeWalker(
+      element,
+      NodeFilter.SHOW_TEXT,
+      null,
+    );
 
-    const range = selection.getRangeAt(0);
-    const cursorPos = range.startOffset;
+    const textNodes: Text[] = [];
+    let node: Node | null;
+    while ((node = walker.nextNode())) {
+      textNodes.push(node as Text);
+    }
 
-    // Update content
-    element.innerHTML = newHtml;
+    // Process text nodes in reverse order to maintain positions
+    for (let i = textNodes.length - 1; i >= 0; i--) {
+      const textNode = textNodes[i];
+      const text = textNode.textContent || "";
+      
+      // Find mentions in this text node
+      const localMentionRegex = /@([a-zA-Z0-9_-]{3,})(?=\s|$)/g;
+      let localMatch;
+      const fragments: Array<{
+        text: string;
+        isMention: boolean;
+        username?: string;
+      }> = [];
+      
+      let lastIndex = 0;
+      
+      while ((localMatch = localMentionRegex.exec(text)) !== null) {
+        const mentionStart = localMatch.index;
+        const mentionEnd = localMatch.index + localMatch[0].length;
+        
+        // Add text before mention
+        if (mentionStart > lastIndex) {
+          fragments.push({
+            text: text.substring(lastIndex, mentionStart),
+            isMention: false,
+          });
+        }
+        
+        // Add mention
+        fragments.push({
+          text: localMatch[0],
+          isMention: true,
+          username: localMatch[1],
+        });
+        
+        lastIndex = mentionEnd;
+      }
+      
+      // Add remaining text
+      if (lastIndex < text.length) {
+        fragments.push({
+          text: text.substring(lastIndex),
+          isMention: false,
+        });
+      }
+      
+      // If we found mentions, replace the text node
+      if (fragments.some(f => f.isMention)) {
+        const parent = textNode.parentNode;
+        if (parent) {
+          // Create document fragment with new nodes
+          const fragment = document.createDocumentFragment();
+          
+          for (const frag of fragments) {
+            if (frag.isMention && frag.username) {
+              // Check if this mention is already styled elsewhere
+              const existingSpan = element.querySelector(`span[data-username="${frag.username}"]`);
+              if (!existingSpan) {
+                // Create styled span for mention
+                const span = document.createElement('span');
+                span.className = 'mention-input';
+                span.setAttribute('data-username', frag.username);
+                span.setAttribute('contenteditable', 'false');
+                span.textContent = frag.text;
+                fragment.appendChild(span);
+              } else {
+                // Already styled, just add as text
+                fragment.appendChild(document.createTextNode(frag.text));
+              }
+            } else {
+              // Regular text
+              fragment.appendChild(document.createTextNode(frag.text));
+            }
+          }
+          
+          // Replace the text node with the fragment
+          parent.replaceChild(fragment, textNode);
+        }
+      }
+    }
 
     // Restore cursor position
-    try {
-      const newRange = document.createRange();
-      const walker = document.createTreeWalker(
-        element,
-        NodeFilter.SHOW_TEXT,
-        null,
-      );
+    if (savedCursorPos >= 0) {
+      try {
+        const newRange = document.createRange();
+        const newWalker = document.createTreeWalker(
+          element,
+          NodeFilter.SHOW_TEXT,
+          null,
+        );
 
-      let currentPos = 0;
-      let targetNode: Node = element;
-      let targetOffset = 0;
+        let currentPos = 0;
+        let targetNode: Node = element;
+        let targetOffset = 0;
 
-      let node: Node | null;
-      while ((node = walker.nextNode())) {
-        const nodeLength = (node as Text).textContent?.length || 0;
-        if (currentPos + nodeLength >= cursorPos) {
-          targetNode = node as Text;
-          targetOffset = cursorPos - currentPos;
-          break;
+        let newNode: Node | null;
+        while ((newNode = newWalker.nextNode())) {
+          const nodeLength = (newNode as Text).textContent?.length || 0;
+          if (currentPos + nodeLength >= savedCursorPos) {
+            targetNode = newNode as Text;
+            targetOffset = savedCursorPos - currentPos;
+            break;
+          }
+          currentPos += nodeLength;
         }
-        currentPos += nodeLength;
-      }
 
-      newRange.setStart(
-        targetNode,
-        Math.min(targetOffset, (targetNode as Text).textContent?.length || 0),
-      );
-      newRange.collapse(true);
-      selection.removeAllRanges();
-      selection.addRange(newRange);
-    } catch {
-      // Fallback: place cursor at end
-      const newRange = document.createRange();
-      newRange.selectNodeContents(element);
-      newRange.collapse(false);
-      selection.removeAllRanges();
-      selection.addRange(newRange);
+        newRange.setStart(
+          targetNode,
+          Math.min(targetOffset, (targetNode as Text).textContent?.length || 0),
+        );
+        newRange.collapse(true);
+        selection?.removeAllRanges();
+        selection?.addRange(newRange);
+      } catch {
+        // Fallback: place cursor at end
+        const newRange = document.createRange();
+        newRange.selectNodeContents(element);
+        newRange.collapse(false);
+        selection?.removeAllRanges();
+        selection?.addRange(newRange);
+      }
     }
   }
 };
@@ -378,7 +453,7 @@ const selectMention = (user: User) => {
   // Create new content with the mention
   const newText = beforeMention + `@${user.login} ` + afterMention;
 
-  // Update the content
+  // Update the content safely using textContent
   commentInputRef.value.textContent = newText;
 
   // Process mentions to style the new one
@@ -550,8 +625,8 @@ function submitComment() {
 
   emit("submit", content.trim());
 
-  // Clear input after submit
-  commentInputRef.value.innerHTML = "";
+  // Clear input after submit - using textContent instead of innerHTML
+  commentInputRef.value.textContent = "";
   hasContent.value = false;
 }
 
@@ -565,7 +640,7 @@ const handleAvatarError = (event: Event) => {
 defineExpose({
   clearComment: () => {
     if (commentInputRef.value) {
-      commentInputRef.value.innerHTML = "";
+      commentInputRef.value.textContent = "";
       hasContent.value = false;
     }
   },
