@@ -160,7 +160,9 @@ const processMentions = (element: HTMLDivElement) => {
   let needsUpdate = false;
   for (const mention of mentionsToStyle) {
     // Check if this mention is already styled
-    const existingSpan = element.querySelector(`span[data-username="${mention.username}"]`);
+    const existingSpan = element.querySelector(
+      `span[data-username="${mention.username}"]`,
+    );
     if (!existingSpan) {
       needsUpdate = true;
       break;
@@ -170,7 +172,7 @@ const processMentions = (element: HTMLDivElement) => {
   if (needsUpdate && mentionsToStyle.length > 0) {
     // Save cursor position before DOM manipulation
     let savedCursorPos = cursorPos;
-    
+
     // Process mentions using DOM manipulation instead of innerHTML
     const walker = document.createTreeWalker(
       element,
@@ -188,7 +190,7 @@ const processMentions = (element: HTMLDivElement) => {
     for (let i = textNodes.length - 1; i >= 0; i--) {
       const textNode = textNodes[i];
       const text = textNode.textContent || "";
-      
+
       // Find mentions in this text node
       const localMentionRegex = /@([a-zA-Z0-9_-]{3,})(?=\s|$)/g;
       let localMatch;
@@ -197,13 +199,13 @@ const processMentions = (element: HTMLDivElement) => {
         isMention: boolean;
         username?: string;
       }> = [];
-      
+
       let lastIndex = 0;
-      
+
       while ((localMatch = localMentionRegex.exec(text)) !== null) {
         const mentionStart = localMatch.index;
         const mentionEnd = localMatch.index + localMatch[0].length;
-        
+
         // Add text before mention
         if (mentionStart > lastIndex) {
           fragments.push({
@@ -211,17 +213,17 @@ const processMentions = (element: HTMLDivElement) => {
             isMention: false,
           });
         }
-        
+
         // Add mention
         fragments.push({
           text: localMatch[0],
           isMention: true,
           username: localMatch[1],
         });
-        
+
         lastIndex = mentionEnd;
       }
-      
+
       // Add remaining text
       if (lastIndex < text.length) {
         fragments.push({
@@ -229,24 +231,26 @@ const processMentions = (element: HTMLDivElement) => {
           isMention: false,
         });
       }
-      
+
       // If we found mentions, replace the text node
-      if (fragments.some(f => f.isMention)) {
+      if (fragments.some((f) => f.isMention)) {
         const parent = textNode.parentNode;
         if (parent) {
           // Create document fragment with new nodes
           const fragment = document.createDocumentFragment();
-          
+
           for (const frag of fragments) {
             if (frag.isMention && frag.username) {
               // Check if this mention is already styled elsewhere
-              const existingSpan = element.querySelector(`span[data-username="${frag.username}"]`);
+              const existingSpan = element.querySelector(
+                `span[data-username="${frag.username}"]`,
+              );
               if (!existingSpan) {
                 // Create styled span for mention
-                const span = document.createElement('span');
-                span.className = 'mention-input';
-                span.setAttribute('data-username', frag.username);
-                span.setAttribute('contenteditable', 'false');
+                const span = document.createElement("span");
+                span.className = "mention-input";
+                span.setAttribute("data-username", frag.username);
+                span.setAttribute("contenteditable", "false");
                 span.textContent = frag.text;
                 fragment.appendChild(span);
               } else {
@@ -258,7 +262,7 @@ const processMentions = (element: HTMLDivElement) => {
               fragment.appendChild(document.createTextNode(frag.text));
             }
           }
-          
+
           // Replace the text node with the fragment
           parent.replaceChild(fragment, textNode);
         }
