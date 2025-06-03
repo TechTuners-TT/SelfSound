@@ -16,13 +16,14 @@
     <div
       v-if="showMentionDropdown && mentionSuggestions.length > 0"
       ref="dropdownRef"
-      class="absolute z-50 bg-gray-800 border border-gray-600 rounded-lg shadow-lg max-h-48 overflow-y-auto"
+      class="absolute z-50 bg-gray-800 border border-gray-600 rounded-lg shadow-lg max-h-48 overflow-y-auto pointer-events-auto"
       :style="dropdownStyle"
+      @mousedown.prevent
     >
       <div
         v-for="(user, index) in mentionSuggestions"
         :key="user.id"
-        @click="selectMention(user)"
+        @mousedown.prevent="selectMention(user)"
         class="flex items-center gap-2 p-2 hover:bg-gray-700 cursor-pointer transition-colors"
         :class="{ 'bg-gray-700': index === selectedSuggestionIndex }"
       >
@@ -105,69 +106,205 @@ onUnmounted(() => {
 
 // Process mentions and make them purple (only for completed mentions)
 const processMentions = (element: HTMLDivElement) => {
-  const html = element.innerHTML;
+  // Get current cursor position
+  const selection = window.getSelection();
+  let cursorPos = -1;
 
-  // Only style mentions that are followed by a space or are at the end AND are complete usernames
-  const mentionRegex = /@([a-zA-Z0-9_-]{3,})(?=\s|$)(?!<\/span>)/g;
-  const newHtml = html.replace(mentionRegex, (match, username) => {
-    // Check if this mention is already styled
-    if (
-      html.includes(`<span class="mention-input" data-username="${username}"`)
-    ) {
-      return match; // Already styled, don't replace
-    }
-    return `<span class="mention-input" data-username="${username}" contenteditable="false">@${username}</span>`;
-  });
-
-  if (newHtml !== html) {
-    // Save cursor position
-    const selection = window.getSelection();
-    if (!selection || selection.rangeCount === 0) return;
-
+  if (selection && selection.rangeCount > 0) {
     const range = selection.getRangeAt(0);
-    const cursorPos = range.startOffset;
+    const walker = document.createTreeWalker(
+      element,
+      NodeFilter.SHOW_TEXT,
+      null,
+    );
 
-    // Update content
-    element.innerHTML = newHtml;
+    let currentPos = 0;
+    let node: Node | null;
+    while ((node = walker.nextNode())) {
+      if (node === range.startContainer) {
+        cursorPos = currentPos + range.startOffset;
+        break;
+      }
+      currentPos += (node as Text).textContent?.length || 0;
+    }
+  }
+
+  const textContent = element.textContent || "";
+
+  // Find mentions that need styling
+  const mentionRegex = /@([a-zA-Z0-9_-]{3,})(?=\s|$)/g;
+  let match;
+  const mentionsToStyle: Array<{
+    match: string;
+    username: string;
+    start: number;
+    end: number;
+  }> = [];
+
+  while ((match = mentionRegex.exec(textContent)) !== null) {
+    const start = match.index;
+    const end = match.index + match[0].length;
+
+    // Don't style if cursor is within this mention (currently being typed)
+    if (cursorPos < start || cursorPos > end) {
+      mentionsToStyle.push({
+        match: match[0],
+        username: match[1],
+        start,
+        end,
+      });
+    }
+  }
+
+  // Check if any mentions need styling
+  let needsUpdate = false;
+  for (const mention of mentionsToStyle) {
+    // Check if this mention is already styled
+    const existingSpan = element.querySelector(`span[data-username="${mention.username}"]`);
+    if (!existingSpan) {
+      needsUpdate = true;
+      break;
+    }
+  }
+
+  if (needsUpdate && mentionsToStyle.length > 0) {
+    // Save cursor position before DOM manipulation
+    let savedCursorPos = cursorPos;
+    
+    // Process mentions using DOM manipulation instead of innerHTML
+    const walker = document.createTreeWalker(
+      element,
+      NodeFilter.SHOW_TEXT,
+      null,
+    );
+
+    const textNodes: Text[] = [];
+    let node: Node | null;
+    while ((node = walker.nextNode())) {
+      textNodes.push(node as Text);
+    }
+
+    // Process text nodes in reverse order to maintain positions
+    for (let i = textNodes.length - 1; i >= 0; i--) {
+      const textNode = textNodes[i];
+      const text = textNode.textContent || "";
+      
+      // Find mentions in this text node
+      const localMentionRegex = /@([a-zA-Z0-9_-]{3,})(?=\s|$)/g;
+      let localMatch;
+      const fragments: Array<{
+        text: string;
+        isMention: boolean;
+        username?: string;
+      }> = [];
+      
+      let lastIndex = 0;
+      
+      while ((localMatch = localMentionRegex.exec(text)) !== null) {
+        const mentionStart = localMatch.index;
+        const mentionEnd = localMatch.index + localMatch[0].length;
+        
+        // Add text before mention
+        if (mentionStart > lastIndex) {
+          fragments.push({
+            text: text.substring(lastIndex, mentionStart),
+            isMention: false,
+          });
+        }
+        
+        // Add mention
+        fragments.push({
+          text: localMatch[0],
+          isMention: true,
+          username: localMatch[1],
+        });
+        
+        lastIndex = mentionEnd;
+      }
+      
+      // Add remaining text
+      if (lastIndex < text.length) {
+        fragments.push({
+          text: text.substring(lastIndex),
+          isMention: false,
+        });
+      }
+      
+      // If we found mentions, replace the text node
+      if (fragments.some(f => f.isMention)) {
+        const parent = textNode.parentNode;
+        if (parent) {
+          // Create document fragment with new nodes
+          const fragment = document.createDocumentFragment();
+          
+          for (const frag of fragments) {
+            if (frag.isMention && frag.username) {
+              // Check if this mention is already styled elsewhere
+              const existingSpan = element.querySelector(`span[data-username="${frag.username}"]`);
+              if (!existingSpan) {
+                // Create styled span for mention
+                const span = document.createElement('span');
+                span.className = 'mention-input';
+                span.setAttribute('data-username', frag.username);
+                span.setAttribute('contenteditable', 'false');
+                span.textContent = frag.text;
+                fragment.appendChild(span);
+              } else {
+                // Already styled, just add as text
+                fragment.appendChild(document.createTextNode(frag.text));
+              }
+            } else {
+              // Regular text
+              fragment.appendChild(document.createTextNode(frag.text));
+            }
+          }
+          
+          // Replace the text node with the fragment
+          parent.replaceChild(fragment, textNode);
+        }
+      }
+    }
 
     // Restore cursor position
-    try {
-      const newRange = document.createRange();
-      const walker = document.createTreeWalker(
-        element,
-        NodeFilter.SHOW_TEXT,
-        null,
-      );
+    if (savedCursorPos >= 0) {
+      try {
+        const newRange = document.createRange();
+        const newWalker = document.createTreeWalker(
+          element,
+          NodeFilter.SHOW_TEXT,
+          null,
+        );
 
-      let currentPos = 0;
-      let targetNode: Node = element;
-      let targetOffset = 0;
+        let currentPos = 0;
+        let targetNode: Node = element;
+        let targetOffset = 0;
 
-      let node: Node | null;
-      while ((node = walker.nextNode())) {
-        const nodeLength = (node as Text).textContent?.length || 0;
-        if (currentPos + nodeLength >= cursorPos) {
-          targetNode = node as Text;
-          targetOffset = cursorPos - currentPos;
-          break;
+        let newNode: Node | null;
+        while ((newNode = newWalker.nextNode())) {
+          const nodeLength = (newNode as Text).textContent?.length || 0;
+          if (currentPos + nodeLength >= savedCursorPos) {
+            targetNode = newNode as Text;
+            targetOffset = savedCursorPos - currentPos;
+            break;
+          }
+          currentPos += nodeLength;
         }
-        currentPos += nodeLength;
-      }
 
-      newRange.setStart(
-        targetNode,
-        Math.min(targetOffset, (targetNode as Text).textContent?.length || 0),
-      );
-      newRange.collapse(true);
-      selection.removeAllRanges();
-      selection.addRange(newRange);
-    } catch {
-      // Fallback: place cursor at end
-      const newRange = document.createRange();
-      newRange.selectNodeContents(element);
-      newRange.collapse(false);
-      selection.removeAllRanges();
-      selection.addRange(newRange);
+        newRange.setStart(
+          targetNode,
+          Math.min(targetOffset, (targetNode as Text).textContent?.length || 0),
+        );
+        newRange.collapse(true);
+        selection?.removeAllRanges();
+        selection?.addRange(newRange);
+      } catch {
+        // Fallback: place cursor at end
+        const newRange = document.createRange();
+        newRange.selectNodeContents(element);
+        newRange.collapse(false);
+        selection?.removeAllRanges();
+        selection?.addRange(newRange);
+      }
     }
   }
 };
@@ -230,11 +367,13 @@ const checkForMentions = () => {
   mentionEndPos.value = cursorPos;
   currentMentionQuery.value = textAfterAt;
 
-  // Search for users if query is long enough
+  // Search for users if query is long enough (reduced from 1 to allow single character searches)
   if (textAfterAt.length >= 1) {
     searchUsers(textAfterAt);
   } else {
-    hideMentionDropdown();
+    // Don't hide dropdown immediately, just clear suggestions
+    mentionSuggestions.value = [];
+    showMentionDropdown.value = false;
   }
 };
 
@@ -244,6 +383,7 @@ const searchUsers = async (query: string) => {
     clearTimeout(searchTimeout);
   }
 
+  // Shorter debounce for more responsive typing
   searchTimeout = setTimeout(async () => {
     try {
       console.log(`🔎 Searching users for mention: "${query}"`);
@@ -271,13 +411,13 @@ const searchUsers = async (query: string) => {
         await nextTick();
         updateDropdownPosition();
       } else {
-        hideMentionDropdown();
+        showMentionDropdown.value = false;
       }
     } catch (error) {
       console.error("Error searching users:", error);
       hideMentionDropdown();
     }
-  }, 300); // Debounce search
+  }, 200); // Reduced debounce time for more responsive search
 };
 
 // Update dropdown position
@@ -313,7 +453,7 @@ const selectMention = (user: User) => {
   // Create new content with the mention
   const newText = beforeMention + `@${user.login} ` + afterMention;
 
-  // Update the content
+  // Update the content safely using textContent
   commentInputRef.value.textContent = newText;
 
   // Process mentions to style the new one
@@ -374,22 +514,17 @@ const selectMention = (user: User) => {
 // Handle input changes
 const onInput = async (event: Event) => {
   const target = event.target as HTMLDivElement;
-  const content = target.innerHTML;
 
   // Check if there's actual content
   const textContent = target.textContent || target.innerText || "";
   hasContent.value = textContent.trim().length > 0;
 
-  // Process mentions in real-time
-  await nextTick();
-  processMentions(target);
-  checkForMentions();
-};
-
-// Handle cursor position changes
-const _onCursorChange = async () => {
-  await nextTick();
-  checkForMentions();
+  // Process mentions and check for new mentions immediately
+  // but in a non-blocking way
+  setTimeout(() => {
+    processMentions(target);
+    checkForMentions();
+  }, 0); // Use setTimeout with 0 to make it non-blocking
 };
 
 // Handle paste events
@@ -401,6 +536,7 @@ const onPaste = (event: ClipboardEvent) => {
 
 // Handle keyboard navigation in dropdown
 const onKeyDown = (event: KeyboardEvent) => {
+  // Only handle specific navigation keys when dropdown is visible
   if (showMentionDropdown.value && mentionSuggestions.value.length > 0) {
     switch (event.key) {
       case "ArrowDown": {
@@ -409,7 +545,7 @@ const onKeyDown = (event: KeyboardEvent) => {
           selectedSuggestionIndex.value + 1,
           mentionSuggestions.value.length - 1,
         );
-        break;
+        return; // Don't process further
       }
 
       case "ArrowUp": {
@@ -418,24 +554,64 @@ const onKeyDown = (event: KeyboardEvent) => {
           selectedSuggestionIndex.value - 1,
           0,
         );
+        return; // Don't process further
+      }
+
+      case "Tab": {
+        // Only select mention if there's a valid selection
+        if (
+          selectedSuggestionIndex.value >= 0 &&
+          selectedSuggestionIndex.value < mentionSuggestions.value.length
+        ) {
+          event.preventDefault();
+          const selectedUser =
+            mentionSuggestions.value[selectedSuggestionIndex.value];
+          if (selectedUser) {
+            selectMention(selectedUser);
+          }
+          return;
+        }
+        // Otherwise let Tab work normally
         break;
       }
 
       case "Enter": {
-        event.preventDefault();
-        const selectedUser =
-          mentionSuggestions.value[selectedSuggestionIndex.value];
-        if (selectedUser) {
-          selectMention(selectedUser);
+        // Only handle Enter for mention selection, not for submission
+        if (
+          selectedSuggestionIndex.value >= 0 &&
+          selectedSuggestionIndex.value < mentionSuggestions.value.length
+        ) {
+          event.preventDefault();
+          const selectedUser =
+            mentionSuggestions.value[selectedSuggestionIndex.value];
+          if (selectedUser) {
+            selectMention(selectedUser);
+          }
+          return;
         }
-        return;
+        // If no valid selection, let Enter submit the comment
+        break;
       }
 
       case "Escape": {
         event.preventDefault();
         hideMentionDropdown();
-        break;
+        return;
       }
+
+      // For ALL other keys (including letters, numbers, backspace, etc.)
+      // Let them pass through normally - DO NOT PREVENT DEFAULT
+      default:
+        break;
+    }
+  }
+
+  // Handle Enter for submission only when dropdown is not active or no selection
+  if (event.key === "Enter" && !event.shiftKey) {
+    // Only submit if dropdown is not showing or no mention is selected
+    if (!showMentionDropdown.value || selectedSuggestionIndex.value < 0) {
+      event.preventDefault();
+      submitComment();
     }
   }
 };
@@ -449,8 +625,8 @@ function submitComment() {
 
   emit("submit", content.trim());
 
-  // Clear input after submit
-  commentInputRef.value.innerHTML = "";
+  // Clear input after submit - using textContent instead of innerHTML
+  commentInputRef.value.textContent = "";
   hasContent.value = false;
 }
 
@@ -464,7 +640,7 @@ const handleAvatarError = (event: Event) => {
 defineExpose({
   clearComment: () => {
     if (commentInputRef.value) {
-      commentInputRef.value.innerHTML = "";
+      commentInputRef.value.textContent = "";
       hasContent.value = false;
     }
   },

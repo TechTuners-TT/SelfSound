@@ -7,7 +7,7 @@
     >
       <img
         :src="user.avatarUrl"
-        :alt="user.name"
+        :alt="displayName"
         class="rounded-full object-cover w-full h-full"
       />
       <div
@@ -18,8 +18,9 @@
       <p
         class="font-bold text-white h-[24px] sm:h-[30px] text-[21px] sm:text-[22px] xl:text-[24px] [@media(min-width:1537px)]:text-[30px] inter-font"
         style="font-weight: 700"
+        :title="user.name"
       >
-        {{ user.name }}
+        {{ displayName }}
       </p>
       <p
         class="text-base font-medium text-white h-[12px] text-[12px] sm:text-[13px] xl:text-[14px] [@media(min-width:1537px)]:text-[16px] inter-font"
@@ -102,7 +103,9 @@
 </template>
 
 <script setup lang="ts">
-defineProps<{
+import { computed } from "vue";
+
+const props = defineProps<{
   user: {
     name: string;
     login: string;
@@ -116,7 +119,17 @@ defineProps<{
     listenedTo: number;
   };
 }>();
+
+// Helper function to truncate name to 15 characters
+const truncateName = (name: string): string => {
+  if (!name) return "";
+  return name.length > 15 ? name.substring(0, 15) : name;
+};
+
+// Computed property to ensure name is always truncated when displayed
+const displayName = computed(() => truncateName(props.user.name));
 </script>
+
 <style scoped>
 .inter-font {
   font-family: "Inter", sans-serif;

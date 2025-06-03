@@ -195,9 +195,21 @@ const formatTimestamp = (dateString: string): string => {
   return date.toLocaleDateString();
 };
 
-// Transform backend post to your format
+// Transform backend post to your format - FIXED with proper type conversion
 const transformBackendPost = (backendPost: BackendPost): FeedPost | null => {
   try {
+    console.log("🔍 PostFeed - Raw backend post:", backendPost);
+    console.log(
+      "🔍 PostFeed - Raw likes_count:",
+      backendPost.likes_count,
+      typeof backendPost.likes_count,
+    );
+    console.log(
+      "🔍 PostFeed - Raw user_liked:",
+      backendPost.user_liked,
+      typeof backendPost.user_liked,
+    );
+
     const basePost = {
       id: backendPost.id,
       userId: backendPost.user.id,
@@ -206,35 +218,53 @@ const transformBackendPost = (backendPost: BackendPost): FeedPost | null => {
       role: mapUserRole(backendPost.user.tag_id),
       avatarUrl: backendPost.user.avatar_url || "",
       timestamp: formatTimestamp(backendPost.created_at),
-      likes_count: backendPost.likes_count,
-      comments_count: backendPost.comments_count,
-      user_liked: backendPost.user_liked,
+      // FIXED: Ensure proper data types with explicit conversion
+      likes_count: Number(backendPost.likes_count) || 0,
+      comments_count: Number(backendPost.comments_count) || 0,
+      user_liked: Boolean(backendPost.user_liked),
       caption: backendPost.caption,
     };
 
+    console.log(
+      "🔍 PostFeed - Transformed likes_count:",
+      basePost.likes_count,
+      typeof basePost.likes_count,
+    );
+    console.log(
+      "🔍 PostFeed - Transformed user_liked:",
+      basePost.user_liked,
+      typeof basePost.user_liked,
+    );
+
     // Transform media posts
     if (backendPost.type === "media" && backendPost.media) {
-      return {
+      const finalPost = {
         ...basePost,
-        type: "media",
+        type: "media" as const,
         content: {
-          mediaType: "media",
+          mediaType: "media" as const,
           items: backendPost.media.map((item) => ({
             id: item.id,
             src: item.file_url,
-            type: item.file_type === "image" ? "image" : "video",
+            type:
+              item.file_type === "image"
+                ? ("image" as const)
+                : ("video" as const),
           })),
         },
       } as MediaPost;
+
+      console.log("🔍 PostFeed - Final media post:", finalPost);
+      return finalPost;
     }
 
     // Transform audio posts
     if (backendPost.type === "audio" && backendPost.audio) {
       console.log("🎵 Transforming audio post:", backendPost);
 
-      return {
+      const finalPost = {
         ...basePost,
-        type: "audio",
+        type: "audio" as const,
         content: backendPost.audio.map((item) => ({
           title: item.title,
           artist: item.artist,
@@ -243,36 +273,45 @@ const transformBackendPost = (backendPost: BackendPost): FeedPost | null => {
           url: item.file_url, // Audio file URL
         })),
       } as AudioPost;
+
+      console.log("🔍 PostFeed - Final audio post:", finalPost);
+      return finalPost;
     }
 
     // Transform MusicXML posts
     if (backendPost.type === "musicxml" && backendPost.musicxml) {
       console.log("📄 Transforming MusicXML post:", backendPost);
 
-      return {
+      const finalPost = {
         ...basePost,
-        type: "musicxml",
+        type: "musicxml" as const,
         content: backendPost.musicxml.map((item) => ({
           fileName: item.title, // Use title as fileName for display
           composer: item.composer,
           downloadUrl: item.file_url, // Direct download URL
         })),
       } as XmlPost;
+
+      console.log("🔍 PostFeed - Final musicxml post:", finalPost);
+      return finalPost;
     }
 
     // Transform lyrics posts
     if (backendPost.type === "lyrics" && backendPost.lyrics) {
       console.log("📝 Transforming lyrics post:", backendPost);
 
-      return {
+      const finalPost = {
         ...basePost,
-        type: "lyrics",
+        type: "lyrics" as const,
         content: {
           title: backendPost.lyrics.title,
           artist: backendPost.lyrics.artist,
           lyricsText: backendPost.lyrics.lyrics_text,
         },
       } as LyricsPost;
+
+      console.log("🔍 PostFeed - Final lyrics post:", finalPost);
+      return finalPost;
     }
 
     // Unsupported post type

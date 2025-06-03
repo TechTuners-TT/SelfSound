@@ -242,6 +242,12 @@ const reverseTagMap: Record<string, string> = {
   Learner: "5ee121a6-b467-4ead-b3f7-00e1ce6097d5",
 };
 
+// Helper function to truncate name to 15 characters
+const truncateName = (name: string): string => {
+  if (!name) return "";
+  return name.length > 15 ? name.substring(0, 15) : name;
+};
+
 // Reactive user and stats state
 const user = reactive<User>({
   id: undefined,
@@ -496,7 +502,7 @@ const handleRetry = () => {
   fetchPosts();
 };
 
-// Load user profile from backend - ENHANCED
+// Load user profile from backend - ENHANCED WITH NAME TRUNCATION
 const loadUserProfile = async () => {
   isLoading.value = true;
 
@@ -517,10 +523,10 @@ const loadUserProfile = async () => {
     console.log("✅ User profile loaded:", data);
 
     if (data && data.id) {
-      // Update user reactive object
+      // Update user reactive object with name truncation
       Object.assign(user, {
         id: data.id,
-        name: data.name || "",
+        name: truncateName(data.name || ""), // Apply name truncation here
         login: data.login || "",
         biography: data.description || "",
         avatarUrl: data.avatar_url || user.avatarUrl, // Keep default if no avatar
@@ -528,6 +534,31 @@ const loadUserProfile = async () => {
       });
 
       console.log("👤 User object updated:", user);
+
+      // If the name was truncated, automatically update it on the backend
+      if (data.name && data.name.length > 15) {
+        console.log(
+          "🔄 Name was too long, updating backend with truncated name...",
+        );
+        try {
+          await fetch(`${API_URL}/profile/me`, {
+            method: "PATCH",
+            credentials: "include",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              name: user.name, // Send truncated name
+            }),
+          });
+          console.log("✅ Backend updated with truncated name");
+        } catch (error) {
+          console.error(
+            "❌ Failed to update backend with truncated name:",
+            error,
+          );
+        }
+      }
 
       // Load user stats and posts after profile is loaded
       // Make sure to wait for stats before loading posts
@@ -541,12 +572,12 @@ const loadUserProfile = async () => {
   }
 };
 
-// Update user function (called by ProfileContent component) - ENHANCED
+// Update user function (called by ProfileContent component) - ENHANCED WITH NAME TRUNCATION
 const updateUser = async (updatedUser: User) => {
   console.log("🔄 Updating user:", updatedUser);
 
-  // Update the reactive user object
-  user.name = updatedUser.name;
+  // Update the reactive user object with name truncation
+  user.name = truncateName(updatedUser.name);
   user.login = updatedUser.login;
   user.biography = updatedUser.biography;
   user.avatarUrl = updatedUser.avatarUrl;

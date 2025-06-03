@@ -22,11 +22,6 @@
               />
             </section>
 
-            <!-- Listen/Unlisten Button Section -->
-            <section
-              class="px-[10px] sm:px-[40px] md:px-[20px] lg:px-[30px] xl:px-[20px] 2xl:px-[40px]"
-            ></section>
-
             <!-- Profile Content Section -->
             <section v-if="user.id">
               <AnotherProfileContent
