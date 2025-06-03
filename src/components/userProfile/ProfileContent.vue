@@ -66,6 +66,7 @@
             >
               <input
                 v-model="formData.name"
+                @input="onNameInput"
                 maxlength="15"
                 class="w-full text-[10px] sm:text-[11px] md:text-[12px] h-full bg-[#04020B] border-none outline-none text-white px-2 inter-font rounded-md"
                 style="font-weight: 500"
@@ -217,14 +218,31 @@ export default defineComponent({
     const isSubmitting = ref(false);
     const errorMessage = ref("");
 
+    // Helper function to truncate name to 15 characters
+    const truncateName = (name: string): string => {
+      if (!name) return "";
+      return name.length > 15 ? name.substring(0, 15) : name;
+    };
+
     const formData = reactive<FormData>({
-      name: props.user.name,
+      name: truncateName(props.user.name), // Apply truncation when initializing
       login: props.user.login,
       avatarPreview: props.user.avatarUrl,
       biography: props.user.biography,
       selectedTag: props.user.tag || "Add tag",
       avatarFile: null,
     });
+
+    // Name input handler with truncation
+    const onNameInput = (event: Event) => {
+      const input = event.target as HTMLInputElement;
+      const truncatedName = truncateName(input.value);
+      formData.name = truncatedName;
+      // Update the input value to reflect truncation immediately
+      if (input.value !== truncatedName) {
+        input.value = truncatedName;
+      }
+    };
 
     const onLoginInput = (event: Event) => {
       const input = event.target as HTMLInputElement;
@@ -320,7 +338,7 @@ export default defineComponent({
       return json.avatar_url;
     };
 
-    // Save changes function with actual API calls
+    // Save changes function with actual API calls and name truncation
     const saveChanges = async () => {
       if (isSubmitting.value) return;
 
@@ -328,9 +346,12 @@ export default defineComponent({
       errorMessage.value = "";
 
       try {
+        // Ensure name is truncated before sending to backend
+        const truncatedName = truncateName(formData.name);
+
         // 1) Update text fields
         const profilePayload = {
-          name: formData.name,
+          name: truncatedName,
           login: formData.login,
           description: formData.biography,
           tag_id:
@@ -375,10 +396,10 @@ export default defineComponent({
         const updatedProfile = await profileRes.json();
         console.log("Updated profile data:", updatedProfile);
 
-        // 4) Emit the updated user to parent
+        // 4) Emit the updated user to parent with truncated name
         emit("update:user", {
           id: updatedProfile.id,
-          name: updatedProfile.name || "",
+          name: truncateName(updatedProfile.name || ""),
           login: updatedProfile.login || "",
           biography: updatedProfile.description || "",
           avatarUrl: updatedProfile.avatar_url || "",
@@ -402,7 +423,7 @@ export default defineComponent({
     watch(
       () => props.user,
       (newUser) => {
-        formData.name = newUser.name;
+        formData.name = truncateName(newUser.name); // Apply truncation when watching for changes
         formData.login = newUser.login;
         formData.biography = newUser.biography;
         formData.avatarPreview = newUser.avatarUrl;
@@ -416,6 +437,7 @@ export default defineComponent({
       isSubmitting,
       errorMessage,
       formData,
+      onNameInput,
       onLoginInput,
       selectTag,
       fileInput,

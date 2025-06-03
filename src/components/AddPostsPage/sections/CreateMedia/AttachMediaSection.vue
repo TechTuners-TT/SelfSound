@@ -95,10 +95,10 @@
     <!-- Add button -->
     <button
       @click="triggerFileInput"
-      :disabled="files.length >= 10 || isUploading"
+      :disabled="files.length >= MAX_FILES || isUploading"
       :class="[
         'w-full 2xl:h-[50px] h-[40px] 2xl:rounded-[10px] rounded-[5px] transition inter-font text-white font-bold text-xl flex items-center justify-center mb-6',
-        files.length >= 10 || isUploading
+        files.length >= MAX_FILES || isUploading
           ? 'bg-white/5 cursor-not-allowed'
           : 'bg-[#000C9C]/40 hover:bg-[#6D01D0]',
       ]"
@@ -107,6 +107,17 @@
         class="2xl:w-[24px] 2xl:h-[24px] xl:w-[20px] xl:h-[20px] lg:w-[18px] lg:h-[18px] w-[16px] h-[16px]"
       />
     </button>
+
+    <!-- File count indicator -->
+    <div v-if="files.length > 0" class="text-center mb-4">
+      <p class="text-sm text-gray-400">
+        {{ files.length }} of {{ MAX_FILES }} files selected
+        <span v-if="files.length < MAX_FILES" class="text-[#6D01D0]">
+          ({{ MAX_FILES - files.length }} remaining)
+        </span>
+        <span v-else class="text-yellow-400"> (Maximum reached) </span>
+      </p>
+    </div>
 
     <!-- Submit button (only shows when files are selected) -->
     <div v-if="files.length > 0" class="flex justify-end mb-6">
@@ -202,7 +213,7 @@ const ALLOWED_VIDEO_TYPES = new Set([
 const MAX_IMAGE_SIZE = 10 * 1024 * 1024; // 10MB
 const MAX_VIDEO_SIZE = 100 * 1024 * 1024; // 100MB
 const MAX_TOTAL_SIZE = 200 * 1024 * 1024; // 200MB
-const MAX_FILES = 10;
+const MAX_FILES = 5; // CHANGED: Reduced from 10 to 5
 
 // Trigger file selection
 const triggerFileInput = () => {
@@ -424,6 +435,7 @@ defineExpose({
   removeFile,
   submitPost,
   previewFile,
+  MAX_FILES, // Expose MAX_FILES for external access
 });
 </script>
 

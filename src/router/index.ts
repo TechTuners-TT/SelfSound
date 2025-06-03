@@ -54,9 +54,10 @@ const router = createRouter({
       meta: { requiresAuth: false, guestAllowed: true },
     },
     {
-      path: "/post-page",
-      name: "post-page",
+      path: "/post/:postId",
+      name: "PostPage",
       component: PostPage,
+      props: true,
       meta: { requiresAuth: false, guestAllowed: true },
     },
     {

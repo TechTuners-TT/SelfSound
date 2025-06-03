@@ -5,89 +5,147 @@
       {{ caption }}
     </div>
 
-    <!-- Media Grid -->
-    <div
-      :class="[
-        'grid gap-2 rounded-lg overflow-hidden',
-        getGridClass(content.items.length),
-      ]"
-    >
-      <div
-        v-for="(item, index) in content.items"
-        :key="index"
-        class="relative group cursor-pointer"
-        @click="openModal(item)"
-      >
-        <!-- Image -->
-        <img
-          v-if="item.type === 'image'"
-          :src="item.src"
-          :alt="`Media ${index + 1}`"
-          class="w-full h-full object-cover hover:opacity-90 transition-opacity"
-          :class="getItemClass(content.items.length, index)"
-        />
-
-        <!-- Video -->
-        <video
-          v-else
-          :src="item.src"
-          class="w-full h-full object-cover"
-          :class="getItemClass(content.items.length, index)"
-          muted
-          preload="metadata"
-        >
-          <source :src="item.src" type="video/mp4" />
-        </video>
-
-        <!-- Video Play Overlay -->
+    <!-- Media Container -->
+    <div class="relative">
+      <!-- Single item - full width -->
+      <div v-if="props.content.items.length === 1" class="w-full">
         <div
-          v-if="item.type === 'video'"
-          class="absolute inset-0 flex items-center justify-center bg-black bg-opacity-30 group-hover:bg-opacity-20 transition-all"
+          v-for="(item, index) in props.content.items"
+          :key="index"
+          class="w-full"
         >
-          <svg
-            class="w-12 h-12 text-white opacity-80"
-            fill="currentColor"
-            viewBox="0 0 20 20"
-          >
-            <path
-              d="M6.3 2.841A1.5 1.5 0 004 4.11V15.89a1.5 1.5 0 002.3 1.269l9.344-5.89a1.5 1.5 0 000-2.538L6.3 2.84z"
+          <!-- Image -->
+          <template v-if="item.type === 'image'">
+            <img
+              :src="item.src"
+              :alt="`Media ${index + 1}`"
+              class="single-media cursor-pointer hover:opacity-90 transition-opacity"
+              @click="openModal(index)"
             />
-          </svg>
+          </template>
+
+          <!-- Video -->
+          <template v-else>
+            <div class="relative w-full h-[400px] rounded-xl overflow-hidden">
+              <video
+                :src="item.src"
+                class="single-media"
+                muted
+                playsinline
+                preload="metadata"
+              >
+                <source :src="item.src" type="video/mp4" />
+              </video>
+              <div
+                class="absolute inset-0 bg-black/50 flex items-center justify-center z-10"
+              >
+                <button
+                  @click.stop="openModal(index)"
+                  class="w-14 h-14 rounded-full bg-[#6D01D0]/70 hover:bg-[#000C9C]/70 transition-colors flex items-center justify-center cursor-pointer"
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    class="w-6 h-6 text-white"
+                    viewBox="0 0 24 24"
+                    fill="currentColor"
+                  >
+                    <path d="M8 5v14l11-7z" />
+                  </svg>
+                </button>
+              </div>
+            </div>
+          </template>
+        </div>
+      </div>
+
+      <!-- Multiple items - horizontal scroll -->
+      <div v-else class="scroll-wrapper">
+        <div class="scroll-content">
+          <div
+            v-for="(item, index) in props.content.items"
+            :key="index"
+            class="media-item"
+          >
+            <!-- Image -->
+            <template v-if="item.type === 'image'">
+              <img
+                :src="item.src"
+                :alt="`Media ${index + 1}`"
+                class="media cursor-pointer hover:opacity-90 transition-opacity"
+                @click="openModal(index)"
+              />
+            </template>
+
+            <!-- Video -->
+            <template v-else>
+              <div class="relative w-full h-[400px] rounded-xl overflow-hidden">
+                <video
+                  :src="item.src"
+                  class="media"
+                  muted
+                  playsinline
+                  preload="metadata"
+                >
+                  <source :src="item.src" type="video/mp4" />
+                </video>
+                <div
+                  class="absolute inset-0 bg-black/50 flex items-center justify-center z-10"
+                >
+                  <button
+                    @click.stop="openModal(index)"
+                    class="w-14 h-14 rounded-full bg-[#6D01D0]/70 hover:bg-[#000C9C]/70 transition-colors flex items-center justify-center cursor-pointer"
+                  >
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      class="w-6 h-6 text-white"
+                      viewBox="0 0 24 24"
+                      fill="currentColor"
+                    >
+                      <path d="M8 5v14l11-7z" />
+                    </svg>
+                  </button>
+                </div>
+              </div>
+            </template>
+          </div>
         </div>
       </div>
     </div>
 
     <!-- Modal for full-screen view -->
     <div
-      v-if="selectedMedia"
-      class="fixed inset-0 z-50 bg-black bg-opacity-90 flex items-center justify-center p-4"
+      v-if="modalIndex !== null"
+      class="fixed inset-0 bg-black/80 flex items-center justify-center z-50 p-4"
       @click.self="closeModal"
     >
-      <div class="relative max-w-4xl max-h-full">
+      <div class="relative max-w-5xl w-full">
         <button
           @click="closeModal"
-          class="absolute top-4 right-4 z-10 bg-black bg-opacity-50 hover:bg-opacity-70 text-white rounded-full w-10 h-10 flex items-center justify-center"
+          class="absolute top-4 right-4 z-10 bg-black/50 hover:bg-black/70 text-white rounded-full w-10 h-10 flex items-center justify-center"
         >
           ×
         </button>
 
         <!-- Full-screen Image -->
         <img
-          v-if="selectedMedia.type === 'image'"
-          :src="selectedMedia.src"
+          v-if="props.content.items[modalIndex]?.type === 'image'"
+          :src="props.content.items[modalIndex].src"
           :alt="'Full size media'"
-          class="max-w-full max-h-full object-contain rounded-lg"
+          class="w-full max-h-[80vh] object-contain rounded-xl"
         />
 
         <!-- Full-screen Video -->
         <video
           v-else
-          :src="selectedMedia.src"
+          :src="props.content.items[modalIndex]?.src"
+          class="w-full max-h-[80vh] rounded-xl"
           controls
           autoplay
-          class="max-w-full max-h-full object-contain rounded-lg"
         >
-          <source :src="selectedMedia.src" type="video/mp4" />
+          <source
+            :src="props.content.items[modalIndex]?.src"
+            type="video/mp4"
+          />
         </video>
       </div>
     </div>
@@ -108,43 +166,75 @@ interface MediaContent {
   items: MediaItem[];
 }
 
-defineProps<{
+const props = defineProps<{
   content: MediaContent;
   caption?: string;
 }>();
 
-const selectedMedia = ref<MediaItem | null>(null);
+const modalIndex = ref<number | null>(null);
 
-const openModal = (item: MediaItem) => {
-  selectedMedia.value = item;
+const openModal = (index: number) => {
+  modalIndex.value = index;
 };
 
 const closeModal = () => {
-  selectedMedia.value = null;
-};
-
-// Grid layout based on number of items
-const getGridClass = (count: number) => {
-  if (count === 1) return "grid-cols-1";
-  if (count === 2) return "grid-cols-2";
-  if (count === 3) return "grid-cols-2";
-  if (count === 4) return "grid-cols-2";
-  return "grid-cols-3";
-};
-
-// Item styling based on position and count
-const getItemClass = (count: number, index: number) => {
-  const baseClass = "aspect-square";
-
-  if (count === 1) return "aspect-video max-h-96";
-  if (count === 2) return baseClass;
-  if (count === 3) {
-    return index === 0 ? "col-span-2 aspect-video" : baseClass;
-  }
-  if (count === 4) return baseClass;
-
-  // For 5+ items, show first 4 and indicate more
-  if (index < 4) return baseClass;
-  return "hidden";
+  modalIndex.value = null;
 };
 </script>
+
+<style scoped>
+.scroll-wrapper {
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
+  padding-bottom: 12px;
+}
+
+.scroll-content {
+  display: flex;
+  gap: 8px;
+  scroll-snap-type: x mandatory;
+  scrollbar-width: none; /* Firefox */
+}
+
+.scroll-content::-webkit-scrollbar {
+  display: none;
+}
+
+/* Custom scrollbar for the wrapper */
+.scroll-wrapper::-webkit-scrollbar {
+  height: 4px;
+}
+
+.scroll-wrapper::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 4px;
+}
+
+.scroll-wrapper::-webkit-scrollbar-thumb {
+  background-color: #000c9c;
+  border-radius: 4px;
+}
+
+.media-item {
+  flex: 0 0 auto;
+  scroll-snap-align: start;
+  max-width: 300px;
+}
+
+.media {
+  width: 100%;
+  height: 400px;
+  object-fit: cover;
+  border-radius: 12px;
+}
+
+/* Single media item takes full width */
+.single-media {
+  width: 100%;
+  height: 400px;
+  object-fit: cover;
+  border-radius: 12px;
+  max-width: none; /* Override any max-width constraints */
+}
+</style>

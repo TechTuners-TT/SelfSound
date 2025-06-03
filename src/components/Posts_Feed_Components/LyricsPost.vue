@@ -1,33 +1,23 @@
 <template>
   <div class="text-white font-inter">
-    <!-- Назва та автор -->
+    <!-- Title and Artist -->
     <div class="mb-5">
       <h2 class="text-[18px] font-semibold">{{ content.title }}</h2>
       <p class="text-[16px] text-gray-300">{{ content.artist }}</p>
     </div>
 
-    <!-- Formatted Lyrics Text -->
-    <div class="text-[16px] mb-4 leading-relaxed">
-      <!-- Show truncated or full lyrics -->
-      <div class="whitespace-pre-line">
-        {{ isExpanded ? cleanLyrics : truncatedLyrics }}
-      </div>
-    </div>
-
-    <!-- Read more / Show less button (only show if there's more content) -->
+    <!-- "See more" button to navigate to full post -->
     <button
-      v-if="needsReadMore"
-      @click="toggleExpanded"
+      @click="navigateToPost"
       class="inline-flex items-center gap-[5px] px-[13px] py-[8px] bg-[#6D01D0]/20 text-[#6D01D0] hover:bg-[#000C9C]/40 text-[16px] font-medium rounded-[5px] transition"
     >
-      {{ isExpanded ? "Show less" : "Read more" }}
+      See more
       <svg
         width="11"
         height="11"
         viewBox="0 0 11 11"
         fill="none"
         xmlns="http://www.w3.org/2000/svg"
-        :class="{ 'rotate-180': isExpanded }"
         class="transition-transform duration-200"
       >
         <path
@@ -43,7 +33,7 @@
 </template>
 
 <script lang="ts" setup>
-import { computed, ref } from "vue";
+import { useRouter } from "vue-router";
 
 const props = defineProps<{
   content: {
@@ -51,53 +41,19 @@ const props = defineProps<{
     artist: string;
     lyricsText: string;
   };
+  id: string; // Add post ID prop for navigation
 }>();
 
-// State for expand/collapse
-const isExpanded = ref(false);
+const router = useRouter();
 
-// Clean lyrics - remove ALL structure markers and create flowing text
-const cleanLyrics = computed(() => {
-  if (!props.content.lyricsText) return "";
-
-  return (
-    props.content.lyricsText
-      // Remove structure markers like [VERSE], [CHORUS], etc.
-      .replace(/^\[.*\]$/gm, "")
-      // Remove multiple consecutive empty lines
-      .replace(/\n\n+/g, "\n\n")
-      // Remove leading/trailing whitespace
-      .trim()
-  );
-});
-
-// Truncated version - show complete lines only (no cut-off)
-const truncatedLyrics = computed(() => {
-  const fullText = cleanLyrics.value;
-  const lines = fullText.split("\n").filter((line) => line.trim());
-
-  // Show first 4 complete lines (no partial words)
-  const maxLines = 4;
-  const previewLines = lines.slice(0, maxLines);
-
-  return previewLines.join("\n");
-});
-
-// Check if "Read more" button is needed
-const needsReadMore = computed(() => {
-  const fullText = cleanLyrics.value;
-  const truncated = truncatedLyrics.value;
-
-  // Show read more if there's more content beyond the truncated version
-  return fullText.length > truncated.length;
-});
-
-// Toggle expand/collapse
-const toggleExpanded = () => {
-  isExpanded.value = !isExpanded.value;
+// Navigate to the full post page
+const navigateToPost = () => {
+  router.push({ name: "PostPage", params: { postId: props.id } });
 };
 </script>
 
 <style scoped>
-/* Remove any overflow or height restrictions that could cause cut-off */
+.font-inter {
+  font-family: "Inter", sans-serif;
+}
 </style>

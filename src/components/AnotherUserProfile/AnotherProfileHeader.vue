@@ -3,7 +3,7 @@
     class="mb-[10px] flex gap-10 iteam-centere mt-10 sm:gap-15 md:gap-[46px] lg:gap-[76px] xl:gap-[56px] [@media(min-width:1537px)]:gap-[76px] sm:mb-[12px] md:mb-[14px] lg:mb-[16px] xl:mb-[18px] [@media(min-width:1537px)]:mb-[20px]"
   >
     <div
-      class="relative w-[84px] h-[84px] max-sm:w-[60px] max-sm:h-[60px] sm:w-[64px] sm:h-[64px] md:w-[68px] md:h-[68px] lg:w-[72px] lg:h-[72px] xl:w-[84px] xl:h-[84px]"
+      class="relative w-[84px] h-[84px] max-sm:w-[60px] max-sm:h-[60px] sm:w-[64px] sm:h-[64px] md:w-[68px] md:h-[68px] lg:w-[72px] lg:h-[72px] xl:w-[84px] xl:h-[84px] flex-shrink-0"
     >
       <img
         :src="user.avatarUrl || '/default-avatar.png'"
@@ -16,22 +16,29 @@
       ></div>
     </div>
 
-    <div class="flex flex-col gap-1 sm:gap-2.5 text-left">
+    <!-- FIXED: Flexible container for name/username with proper overflow handling -->
+    <div class="flex flex-col gap-1 sm:gap-2.5 text-left min-w-0 flex-1">
+      <!-- FIXED: Name with proper truncation and responsive sizing -->
       <p
-        class="font-bold text-white h-[24px] sm:h-[30px] text-[21px] sm:text-[22px] xl:text-[24px] [@media(min-width:1537px)]:text-[30px] inter-font"
+        class="font-bold text-white text-[18px] sm:text-[20px] md:text-[21px] lg:text-[22px] xl:text-[24px] [@media(min-width:1537px)]:text-[30px] inter-font truncate"
         style="font-weight: 700"
+        :title="user.name || 'Unknown User'"
       >
         {{ user.name || "Unknown User" }}
       </p>
+      <!-- FIXED: Username with better spacing and truncation -->
       <p
-        class="text-base font-medium text-white h-[12px] text-[12px] sm:text-[13px] xl:text-[14px] [@media(min-width:1537px)]:text-[16px] inter-font"
+        class="text-base font-medium text-white text-[12px] sm:text-[13px] xl:text-[14px] [@media(min-width:1537px)]:text-[16px] inter-font truncate"
         style="font-weight: 500"
+        :title="'@' + (user.login || 'unknown')"
       >
         @{{ user.login || "unknown" }}
       </p>
     </div>
+
+    <!-- FIXED: Three dots menu with proper positioning -->
     <div
-      class="ml-auto flex items-center cursor-pointer relative"
+      class="ml-auto flex items-center cursor-pointer relative flex-shrink-0"
       ref="containerRef"
     >
       <div @click="showModal = !showModal">
@@ -70,8 +77,9 @@
     </div>
   </div>
 
+  <!-- FIXED: Biography section with proper text wrapping -->
   <div
-    class="flex items-center gap-10 min-h-[34px] sm:gap-15 md:gap-[46px] lg:gap-[76px] xl:gap-[56px] [@media(min-width:1537px)]:gap-[60px]"
+    class="flex items-start gap-10 min-h-[34px] sm:gap-15 md:gap-[46px] lg:gap-[76px] xl:gap-[56px] [@media(min-width:1537px)]:gap-[60px]"
   >
     <div
       class="flex-shrink-0 min-w-[60px] max-w-[100px] w-[100px] [@media(min-width:1537px)]:w-[100px] xl:w-[84px] lg:w-[72px] md:w-[68px] sm:w-[64px] max-sm:w-[60px]"
@@ -84,14 +92,16 @@
       </div>
     </div>
 
+    <!-- FIXED: Biography with proper text wrapping and overflow handling -->
     <p
-      class="grow m-auto text-white text-[12px] sm:text-[13px] xl:text-[14px] [@media(min-width:1537px)]:text-[16px] inter-font biographyinput"
+      class="flex-1 text-white text-[12px] sm:text-[13px] xl:text-[14px] [@media(min-width:1537px)]:text-[16px] inter-font biographyinput break-words overflow-wrap-anywhere"
       style="font-weight: 400; line-height: 1.125"
     >
       {{ user.biography || "No biography available" }}
     </p>
   </div>
 
+  <!-- Stats section -->
   <div
     class="flex items-center mt-[15px] sm:mt-[20px] md:mt-[25px] lg:mt-[30px] xl:mt-[35px] [@media(min-width:1537px)]:mt-[40px] gap-6.5 sm:gap-12.5 md:gap-[40px] lg:gap-[60px] xl:gap-[50px] [@media(min-width:1537px)]:gap-[60px]"
   >
@@ -104,23 +114,24 @@
       ></div>
     </div>
 
+    <!-- FIXED: Stats section with responsive text sizing -->
     <section
-      class="flex gap-[20px] sm:gap-[40px] md:gap-[30px] lg:gap-[40px] xl:gap-[20px] [@media(min-width:1537px)]:gap-[40px] mb-1.25 inter-font font-medium justify-end"
+      class="flex gap-[15px] sm:gap-[25px] md:gap-[30px] lg:gap-[40px] xl:gap-[20px] [@media(min-width:1537px)]:gap-[40px] mb-1.25 inter-font font-medium justify-end flex-wrap"
     >
       <p
-        class="font-medium text-white inter-font text-[12px] sm:text-[13px] xl:text-[14px] [@media(min-width:1537px)]:text-[16px]"
+        class="font-medium text-white inter-font text-[11px] sm:text-[12px] md:text-[13px] xl:text-[14px] [@media(min-width:1537px)]:text-[16px] whitespace-nowrap"
         style="font-weight: 500"
       >
         {{ stats.posts || 0 }} posts
       </p>
       <p
-        class="font-medium text-white inter-font text-[12px] sm:text-[13px] xl:text-[14px] [@media(min-width:1537px)]:text-[16px]"
+        class="font-medium text-white inter-font text-[11px] sm:text-[12px] md:text-[13px] xl:text-[14px] [@media(min-width:1537px)]:text-[16px] whitespace-nowrap"
         style="font-weight: 500"
       >
         Listeners: {{ stats.listeners || 0 }}
       </p>
       <p
-        class="font-medium text-white inter-font text-[12px] sm:text-[13px] xl:text-[14px] [@media(min-width:1537px)]:text-[16px]"
+        class="font-medium text-white inter-font text-[11px] sm:text-[12px] md:text-[13px] xl:text-[14px] [@media(min-width:1537px)]:text-[16px] whitespace-nowrap"
         style="font-weight: 500"
       >
         Listened to: {{ stats.listenedTo || 0 }}
@@ -432,5 +443,16 @@ function onClickOutside(e: MouseEvent) {
 <style scoped>
 .inter-font {
   font-family: "Inter", sans-serif;
+}
+
+/* Additional CSS for better text handling */
+.break-words {
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  hyphens: auto;
+}
+
+.overflow-wrap-anywhere {
+  overflow-wrap: anywhere;
 }
 </style>

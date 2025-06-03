@@ -20,6 +20,9 @@
         v-model="formData.name"
         :error="errors.name"
         placeholder="Enter name"
+        maxlength="15"
+        @input="onNameInput"
+        @paste="onNamePaste"
       />
 
       <SignUpInput
@@ -125,6 +128,44 @@ export default defineComponent({
     const successMessage = ref("");
     const errorMessage = ref("");
 
+    // Helper function to truncate name to 15 characters
+    const truncateName = (name: string): string => {
+      if (!name) return "";
+      return name.length > 15 ? name.substring(0, 15) : name;
+    };
+
+    // Name input handler with truncation
+    const onNameInput = (event: Event) => {
+      const input = event.target as HTMLInputElement;
+      const truncatedName = truncateName(input.value);
+      formData.name = truncatedName;
+      // Update the input value to reflect truncation immediately
+      if (input.value !== truncatedName) {
+        input.value = truncatedName;
+      }
+      // Clear name error when user starts typing
+      if (errors.name) {
+        errors.name = "";
+      }
+    };
+
+    // Handle paste events to ensure pasted content is also truncated
+    const onNamePaste = (event: ClipboardEvent) => {
+      event.preventDefault();
+      const pastedText = event.clipboardData?.getData("text") || "";
+      const truncatedText = truncateName(pastedText);
+      formData.name = truncatedText;
+
+      // Update the input field directly
+      const input = event.target as HTMLInputElement;
+      input.value = truncatedText;
+
+      // Clear name error when user pastes
+      if (errors.name) {
+        errors.name = "";
+      }
+    };
+
     const resetMessages = () => {
       successMessage.value = "";
       errorMessage.value = "";
@@ -141,6 +182,9 @@ export default defineComponent({
       // Validate name
       if (!formData.name.trim()) {
         errors.name = "Name is required";
+        isValid = false;
+      } else if (formData.name.length > 15) {
+        errors.name = "Name must be 15 characters or less";
         isValid = false;
       }
 
@@ -166,6 +210,9 @@ export default defineComponent({
     };
 
     const handleSubmit = async () => {
+      // Ensure name is truncated before validation
+      formData.name = truncateName(formData.name);
+
       if (!validateForm()) {
         return;
       }
@@ -183,7 +230,7 @@ export default defineComponent({
           body: JSON.stringify({
             email: formData.email,
             password: formData.password,
-            name: formData.name, // Your backend expects 'name', not 'full_name'
+            name: formData.name, // Send truncated name to backend
           }),
         });
 
@@ -299,6 +346,8 @@ export default defineComponent({
       handleSubmit,
       handleGoogleLogin,
       handleGuestMode,
+      onNameInput,
+      onNamePaste,
     };
   },
 });

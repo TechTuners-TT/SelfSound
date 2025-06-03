@@ -20,7 +20,9 @@
       </svg>
 
       <!-- Title -->
-      <h1 class="text-xl font-bold inter-font mb-6 text-center">Check Your Email</h1>
+      <h1 class="text-xl font-bold inter-font mb-6 text-center">
+        Check Your Email
+      </h1>
 
       <!-- Email Message -->
       <div class="text-center mb-6">
@@ -34,8 +36,10 @@
       <hr class="border-t border-white/20 w-full my-6" />
 
       <!-- Resend Section -->
-      <p class="text-md mb-6 inter-font text-center">Didn't receive the email?</p>
-      
+      <p class="text-md mb-6 inter-font text-center">
+        Didn't receive the email?
+      </p>
+
       <button
         @click="resendEmail"
         :disabled="isResending || !canResend"
