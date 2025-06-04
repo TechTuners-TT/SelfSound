@@ -50,6 +50,7 @@
 <script lang="ts" setup>
 import { ref, onMounted } from "vue";
 import PostCard from "@/components/Posts_Feed_Components/PostCard.vue";
+import { api, getAuthToken } from "@/utils/api-helper"; // Import the helper
 
 // Get API URL from environment variable
 const API_URL = import.meta.env.VITE_API_URL;
@@ -165,6 +166,55 @@ const error = ref("");
 const hasMore = ref(true);
 const limit = 10;
 const offset = ref(0);
+
+// FIXED: Helper function to get authentication token
+const getAuthToken = () => {
+  // Check localStorage first
+  let token = localStorage.getItem('access_token') || 
+              localStorage.getItem('authToken') ||
+              sessionStorage.getItem('access_token') ||
+              sessionStorage.getItem('authToken');
+  
+  // If no token in storage, try to read from cookies
+  if (!token) {
+    token = getCookie('access_token');
+  }
+  
+  console.log('🔍 Token search result:', token ? `FOUND: ${token.substring(0, 20)}...` : 'NOT FOUND');
+  return token;
+};
+
+// Helper function to get cookie value - IMPROVED for mobile Safari
+const getCookie = (name: string): string | null => {
+  try {
+    // Method 1: Standard approach
+    const value = `; ${document.cookie}`;
+    const parts = value.split(`; ${name}=`);
+    if (parts.length === 2) {
+      const cookieValue = parts.pop()?.split(';').shift() || null;
+      if (cookieValue) {
+        console.log(`🍪 Found cookie ${name}:`, cookieValue.substring(0, 20) + '...');
+        return cookieValue;
+      }
+    }
+    
+    // Method 2: Direct regex search (better for mobile)
+    const regex = new RegExp(`(^|;)\\s*${name}\\s*=\\s*([^;]+)`);
+    const match = document.cookie.match(regex);
+    if (match) {
+      const cookieValue = match[2];
+      console.log(`🍪 Found cookie via regex ${name}:`, cookieValue.substring(0, 20) + '...');
+      return cookieValue;
+    }
+    
+    console.log(`🍪 Cookie ${name} not found`);
+    console.log(`🍪 Available cookies:`, document.cookie);
+    return null;
+  } catch (error) {
+    console.error('❌ Error reading cookie:', error);
+    return null;
+  }
+};
 
 // Map backend user roles to your role system
 const mapUserRole = (
@@ -335,30 +385,30 @@ const fetchPosts = async (loadMore = false) => {
   error.value = "";
 
   try {
-    // Fetch real posts from backend
-    const endpoint = props.userId
-      ? `${API_URL}/posts/user/${props.userId}?limit=${limit}&offset=${offset.value}`
-      : `${API_URL}/posts/feed?limit=${limit}&offset=${offset.value}`;
-
-    console.log("Fetching posts from:", endpoint);
-
-    const response = await fetch(endpoint, {
-      credentials: "include",
-    });
-
-    if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
+    // FIXED: Use the API helper for authenticated requests
+    const token = getAuthToken();
+    if (!token) {
+      throw new Error('Authentication required. Please sign in.');
     }
 
+    // Fetch real posts from backend using API helper
+    const endpoint = props.userId
+      ? `/posts/user/${props.userId}?limit=${limit}&offset=${offset.value}`
+      : `/posts/feed?limit=${limit}&offset=${offset.value}`;
+
+    console.log("🚀 Fetching posts from:", endpoint);
+    console.log("🔑 Token check:", token ? `${token.substring(0, 20)}...` : 'NOT FOUND');
+
+    const response = await api.get(endpoint);
     const backendPosts: BackendPost[] = await response.json();
-    console.log("Fetched backend posts:", backendPosts);
+    console.log("✅ Fetched backend posts:", backendPosts.length, "posts");
 
     // Transform backend posts (only real data, no mock data)
     const transformedPosts = backendPosts
       .map(transformBackendPost)
       .filter(Boolean) as FeedPost[];
 
-    console.log("Transformed posts:", transformedPosts);
+    console.log("🔄 Transformed posts:", transformedPosts.length, "valid posts");
 
     if (loadMore) {
       posts.value.push(...transformedPosts);
@@ -369,8 +419,14 @@ const fetchPosts = async (loadMore = false) => {
     hasMore.value = backendPosts.length === limit;
     offset.value += backendPosts.length;
   } catch (err) {
-    console.error("Error fetching posts:", err);
+    console.error("❌ Error fetching posts:", err);
     error.value = err instanceof Error ? err.message : "Failed to load posts";
+
+    // If it's an auth error, you might want to redirect to login
+    if (err instanceof Error && err.message.includes('Authentication')) {
+      // Optional: redirect to login
+      // window.location.href = '/signin';
+    }
 
     // Don't fallback to mock data - show error instead
     if (!loadMore) {
