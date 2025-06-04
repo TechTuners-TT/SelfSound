@@ -319,7 +319,7 @@ const fetchListenedToFeed = async (loadMore = false) => {
     }
 
     // Endpoint for posts from users you're listening to
-    const endpoint = `${API_URL}/posts/listened-to?limit=${limit}&offset=${offset.value}`;
+    const endpoint = `${API_URL}/posts/feed/listened-to?limit=${limit}&offset=${offset.value}`;
     console.log("🚀 Fetching listened to feed from:", endpoint);
 
     const response = await fetch(endpoint, {
