@@ -31,6 +31,101 @@ import PostPage from "@/components/Posts_Feed_Components/PostPage.vue";
 // Get API URL from environment variable
 const API_URL = import.meta.env.VITE_API_URL;
 
+// Enhanced mobile detection
+function isMobileDevice(): boolean {
+  const userAgent = navigator.userAgent.toLowerCase();
+  const mobileKeywords = ['mobile', 'android', 'iphone', 'ipad', 'ipod', 'blackberry', 'windows phone'];
+  return mobileKeywords.some(keyword => userAgent.includes(keyword));
+}
+
+function isIOSSafari(): boolean {
+  const userAgent = navigator.userAgent.toLowerCase();
+  return userAgent.includes('safari') && 
+         userAgent.includes('mobile') && 
+         !userAgent.includes('chrome') && 
+         !userAgent.includes('crios');
+}
+
+// Enhanced token storage for mobile compatibility
+class MobileAuthStorage {
+  private static readonly TOKEN_KEY = 'authToken';
+  private static readonly BACKUP_KEY = 'auth_backup';
+  private static readonly SESSION_KEY = 'auth_session';
+  
+  static setToken(token: string): void {
+    try {
+      // Primary storage
+      localStorage.setItem(this.TOKEN_KEY, token);
+      
+      // Backup storage for iOS Safari
+      sessionStorage.setItem(this.SESSION_KEY, token);
+      
+      // Additional backup in a different key
+      localStorage.setItem(this.BACKUP_KEY, token);
+      
+      console.log('📱 Token stored in multiple locations for mobile compatibility');
+    } catch (error) {
+      console.error('❌ Failed to store auth token:', error);
+      // If localStorage fails, try sessionStorage only
+      try {
+        sessionStorage.setItem(this.SESSION_KEY, token);
+        console.log('📱 Fallback: Token stored in sessionStorage only');
+      } catch (sessionError) {
+        console.error('❌ Failed to store token in any storage:', sessionError);
+      }
+    }
+  }
+  
+  static getToken(): string | null {
+    try {
+      // Try primary storage first
+      let token = localStorage.getItem(this.TOKEN_KEY);
+      if (token) {
+        console.log('📱 Token retrieved from primary localStorage');
+        return token;
+      }
+      
+      // Try backup storage
+      token = sessionStorage.getItem(this.SESSION_KEY);
+      if (token) {
+        console.log('📱 Token retrieved from sessionStorage backup');
+        // Restore to primary if found in backup
+        this.setToken(token);
+        return token;
+      }
+      
+      // Try additional backup
+      token = localStorage.getItem(this.BACKUP_KEY);
+      if (token) {
+        console.log('📱 Token retrieved from backup localStorage');
+        this.setToken(token);
+        return token;
+      }
+      
+      console.log('📱 No token found in any storage location');
+      return null;
+    } catch (error) {
+      console.error('❌ Failed to retrieve auth token:', error);
+      return null;
+    }
+  }
+  
+  static clearToken(): void {
+    try {
+      localStorage.removeItem(this.TOKEN_KEY);
+      sessionStorage.removeItem(this.SESSION_KEY);
+      localStorage.removeItem(this.BACKUP_KEY);
+      console.log('🗑️ All auth tokens cleared');
+    } catch (error) {
+      console.error('❌ Failed to clear auth tokens:', error);
+    }
+  }
+  
+  static hasToken(): boolean {
+    return this.getToken() !== null;
+  }
+}
+
 const router = createRouter({
   history: createWebHashHistory(import.meta.env.BASE_URL),
   routes: [
@@ -232,9 +327,16 @@ const router = createRouter({
 
 async function checkAuth(): Promise<boolean> {
   try {
-    // 📱 MOBILE AUTH: Get token from localStorage (FIXED KEY NAME)
-    const authToken = localStorage.getItem('authToken'); // Changed from 'auth_token' to 'authToken'
-    const headers: Record<string, string> = {};
+    const isMobile = isMobileDevice();
+    const isIOS = isIOSSafari();
+    
+    console.log(`📱 Device detection - Mobile: ${isMobile}, iOS Safari: ${isIOS}`);
+    
+    // Get token using enhanced storage
+    const authToken = MobileAuthStorage.getToken();
+    const headers: Record<string, string> = {
+      'Content-Type': 'application/json'
+    };
     
     if (authToken) {
       headers['Authorization'] = `Bearer ${authToken}`;
@@ -243,11 +345,21 @@ async function checkAuth(): Promise<boolean> {
       console.log('🍪 Router: No stored token, relying on cookies for auth check');
     }
 
-    const res = await fetch(`${API_URL}/authorization/me`, {
+    // Enhanced fetch with better mobile compatibility
+    const requestConfig: RequestInit = {
       method: "GET",
+      headers: headers,
       credentials: "include", // Keep for cookie fallback
-      headers: headers, // Add Authorization header for mobile
-    });
+    };
+
+    // For iOS Safari, add additional headers to prevent caching issues
+    if (isIOS) {
+      headers['Cache-Control'] = 'no-cache, no-store, must-revalidate';
+      headers['Pragma'] = 'no-cache';
+      headers['Expires'] = '0';
+    }
+
+    const res = await fetch(`${API_URL}/authorization/me`, requestConfig);
     
     const authMethod = authToken ? 'header' : 'cookie';
     console.log(`🔍 Router: Auth check response status: ${res.status} via ${authMethod}`);
@@ -255,14 +367,14 @@ async function checkAuth(): Promise<boolean> {
     if (!res.ok && authToken) {
       // If header auth failed, clear invalid token
       console.log('🗑️ Router: Clearing invalid auth token');
-      localStorage.removeItem('authToken');
+      MobileAuthStorage.clearToken();
     }
     
     return res.ok;
   } catch (error) {
     console.error('💥 Router: Auth check error:', error);
     // Clear potentially corrupted token on error
-    localStorage.removeItem('authToken');
+    MobileAuthStorage.clearToken();
     return false;
   }
 }
@@ -304,4 +416,6 @@ router.beforeEach(async (to, from, next) => {
   next();
 });
 
+// Export the enhanced storage for use in components
+export { MobileAuthStorage, isMobileDevice, isIOSSafari };
 export default router;
