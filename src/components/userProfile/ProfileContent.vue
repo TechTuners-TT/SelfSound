@@ -201,12 +201,48 @@ interface FormData {
   avatarFile: File | null;
 }
 
-// FIXED: Helper function to get authentication token
+// FIXED: Helper function to get authentication token with enhanced cookie reading
 const getAuthToken = () => {
-  return localStorage.getItem('access_token') || 
-         localStorage.getItem('authToken') ||
-         sessionStorage.getItem('access_token') ||
-         sessionStorage.getItem('authToken');
+  let token = localStorage.getItem('access_token') || 
+              localStorage.getItem('authToken') ||
+              sessionStorage.getItem('access_token') ||
+              sessionStorage.getItem('authToken');
+  
+  if (!token) {
+    token = getCookie('access_token');
+  }
+  
+  console.log('🔍 UserProfileContent token search:', token ? `FOUND: ${token.substring(0, 20)}...` : 'NOT FOUND');
+  return token;
+};
+
+// Enhanced cookie reading function
+const getCookie = (name: string): string | null => {
+  try {
+    const value = `; ${document.cookie}`;
+    const parts = value.split(`; ${name}=`);
+    if (parts.length === 2) {
+      const cookieValue = parts.pop()?.split(';').shift() || null;
+      if (cookieValue) {
+        console.log(`🍪 UserProfileContent found cookie ${name}:`, cookieValue.substring(0, 20) + '...');
+        return cookieValue;
+      }
+    }
+    
+    const regex = new RegExp(`(^|;)\\s*${name}\\s*=\\s*([^;]+)`);
+    const match = document.cookie.match(regex);
+    if (match) {
+      const cookieValue = match[2];
+      console.log(`🍪 UserProfileContent found cookie via regex ${name}:`, cookieValue.substring(0, 20) + '...');
+      return cookieValue;
+    }
+    
+    console.log(`🍪 UserProfileContent cookie ${name} not found`);
+    return null;
+  } catch (error) {
+    console.error('❌ UserProfileContent error reading cookie:', error);
+    return null;
+  }
 };
 
 // FIXED: Helper function to get authenticated headers
@@ -218,9 +254,9 @@ const getAuthHeaders = () => {
   const token = getAuthToken();
   if (token) {
     headers['Authorization'] = `Bearer ${token}`;
-    console.log('🔑 Using Authorization header for API call');
+    console.log('🔑 Using Authorization header for UserProfileContent API call');
   } else {
-    console.warn('⚠️ No token found for authenticated request');
+    console.warn('⚠️ No token found for UserProfileContent authenticated request');
   }
   
   return headers;
@@ -364,6 +400,14 @@ export default defineComponent({
         body: data,
       });
 
+      if (res.status === 401) {
+        localStorage.removeItem('access_token');
+        localStorage.removeItem('authToken');
+        sessionStorage.removeItem('access_token');
+        sessionStorage.removeItem('authToken');
+        throw new Error('Session expired. Please sign in again.');
+      }
+
       if (!res.ok) {
         const err = await res.json();
         throw new Error(err.detail || "Avatar upload failed");
@@ -402,13 +446,18 @@ export default defineComponent({
 
         const resProfile = await fetch(`${API_URL}/profile/me`, {
           method: "PATCH",
-          headers: {
-            "Content-Type": "application/json",
-            'Authorization': `Bearer ${token}`,
-          },
+          headers: getAuthHeaders(),
           credentials: "include",
           body: JSON.stringify(profilePayload),
         });
+
+        if (resProfile.status === 401) {
+          localStorage.removeItem('access_token');
+          localStorage.removeItem('authToken');
+          sessionStorage.removeItem('access_token');
+          sessionStorage.removeItem('authToken');
+          throw new Error('Session expired. Please sign in again.');
+        }
 
         if (!resProfile.ok) {
           const err = await resProfile.json();
@@ -424,8 +473,8 @@ export default defineComponent({
           console.log("Avatar uploaded successfully");
         }
 
-        // 3) Fetch updated profile data
-        const profileRes = await fetch(`${API_URL}/profile/me/profile`, {
+        // 3) Fetch updated profile data using working endpoint
+        const profileRes = await fetch(`${API_URL}/authorization/me`, {
           headers: { 
             "Cache-Control": "no-cache",
             'Authorization': `Bearer ${token}`,
@@ -445,9 +494,9 @@ export default defineComponent({
           id: updatedProfile.id,
           name: truncateName(updatedProfile.name || ""),
           login: updatedProfile.login || "",
-          biography: updatedProfile.description || "",
-          avatarUrl: updatedProfile.avatar_url || "",
-          tag: updatedProfile.tag_id || "Add tag",
+          biography: updatedProfile.description || updatedProfile.biography || "",
+          avatarUrl: updatedProfile.avatar_url || updatedProfile.avatarUrl || "",
+          tag: updatedProfile.tag_id || updatedProfile.tag || "Add tag",
         });
 
         // 5) Close modal
