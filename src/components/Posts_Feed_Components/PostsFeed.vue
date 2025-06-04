@@ -50,7 +50,6 @@
 <script lang="ts" setup>
 import { ref, onMounted } from "vue";
 import PostCard from "@/components/Posts_Feed_Components/PostCard.vue";
-import { api, getAuthToken } from "@/utils/api-helper"; // Import the helper
 
 // Get API URL from environment variable
 const API_URL = import.meta.env.VITE_API_URL;
@@ -167,7 +166,7 @@ const hasMore = ref(true);
 const limit = 10;
 const offset = ref(0);
 
-// FIXED: Helper function to get authentication token
+// Helper function to get authentication token
 const getAuthToken = () => {
   // Check localStorage first
   let token = localStorage.getItem('access_token') || 
@@ -214,6 +213,34 @@ const getCookie = (name: string): string | null => {
     console.error('❌ Error reading cookie:', error);
     return null;
   }
+};
+
+// Helper function to make authenticated API requests
+const makeAuthenticatedRequest = async (endpoint: string, options: RequestInit = {}) => {
+  const token = getAuthToken();
+  if (!token) {
+    throw new Error('Authentication required. Please sign in.');
+  }
+
+  const url = `${API_URL}${endpoint}`;
+  
+  const response = await fetch(url, {
+    ...options,
+    headers: {
+      'Authorization': `Bearer ${token}`,
+      'Content-Type': 'application/json',
+      ...options.headers,
+    },
+  });
+
+  if (!response.ok) {
+    if (response.status === 401) {
+      throw new Error('Authentication expired. Please sign in again.');
+    }
+    throw new Error(`HTTP error! status: ${response.status}`);
+  }
+
+  return response;
 };
 
 // Map backend user roles to your role system
@@ -385,21 +412,14 @@ const fetchPosts = async (loadMore = false) => {
   error.value = "";
 
   try {
-    // FIXED: Use the API helper for authenticated requests
-    const token = getAuthToken();
-    if (!token) {
-      throw new Error('Authentication required. Please sign in.');
-    }
-
-    // Fetch real posts from backend using API helper
+    // Fetch real posts from backend using direct fetch
     const endpoint = props.userId
       ? `/posts/user/${props.userId}?limit=${limit}&offset=${offset.value}`
       : `/posts/feed?limit=${limit}&offset=${offset.value}`;
 
     console.log("🚀 Fetching posts from:", endpoint);
-    console.log("🔑 Token check:", token ? `${token.substring(0, 20)}...` : 'NOT FOUND');
 
-    const response = await api.get(endpoint);
+    const response = await makeAuthenticatedRequest(endpoint);
     const backendPosts: BackendPost[] = await response.json();
     console.log("✅ Fetched backend posts:", backendPosts.length, "posts");
 
