@@ -44,7 +44,7 @@
               >
                 {{ error }}
                 <button
-                  @click="fetchListenedToFeed"
+                  @click="() => fetchListenedToFeed()"
                   class="block mx-auto mt-2 text-[#6D01D0] hover:text-[#8B4CD8]"
                 >
                   Try Again
@@ -75,7 +75,7 @@
                 class="text-center mt-8 pb-8"
               >
                 <button
-                  @click="loadMore"
+                  @click="() => loadMore()"
                   :disabled="isLoadingMore"
                   class="bg-[#6D01D0] hover:bg-[#5a0ba8] disabled:bg-gray-600 text-white px-6 py-2 rounded-lg transition-colors disabled:cursor-not-allowed"
                 >
