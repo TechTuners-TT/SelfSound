@@ -8,7 +8,7 @@
       <div
         class="animate-spin rounded-full h-8 w-8 border-b-2 border-[#6D01D0] mx-auto mb-4"
       ></div>
-      Loading posts from users you're listening to...
+      Loading posts...
     </div>
 
     <!-- Error State -->
@@ -22,38 +22,13 @@
       </button>
     </div>
 
-    <!-- Empty State - Not Following Anyone -->
+    <!-- Empty State -->
     <div
       v-if="!isLoading && !error && posts.length === 0"
-      class="flex flex-col items-center justify-center py-16 px-6"
+      class="text-gray-400 text-center py-8"
     >
-      <div class="text-gray-400 text-center mb-6">
-        <svg
-          class="w-16 h-16 mx-auto mb-4 opacity-50"
-          fill="none"
-          stroke="currentColor"
-          viewBox="0 0 24 24"
-        >
-          <path
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            stroke-width="2"
-            d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"
-          ></path>
-        </svg>
-        <h3 class="text-lg font-semibold mb-2">No posts from followed users</h3>
-        <p class="text-sm max-w-sm mx-auto mb-6">
-          You're not following anyone yet, or the people you follow haven't
-          posted anything. Start following musicians, learners, and listeners to
-          see their posts here!
-        </p>
-      </div>
-      <router-link
-        to="/search"
-        class="bg-[#6D01D0] hover:bg-[#5a0ba8] text-white px-6 py-2 rounded-full font-medium transition-colors"
-      >
-        Discover Users
-      </router-link>
+      <p class="text-lg mb-2">No posts yet</p>
+      <p class="text-sm">Be the first to share something!</p>
     </div>
 
     <!-- Posts -->
@@ -69,20 +44,13 @@
         {{ isLoadingMore ? "Loading..." : "Load More" }}
       </button>
     </div>
-
-    <!-- End of Feed Message -->
-    <div
-      v-if="!hasMore && posts.length > 0"
-      class="text-center py-6 text-gray-400 text-sm"
-    >
-      You've reached the end of your listened to feed
-    </div>
   </div>
 </template>
 
 <script lang="ts" setup>
 import { ref, onMounted } from "vue";
-import PostCard from "./PostCard.vue";
+import PostCard from "@/components/Posts_Feed_Components/PostCard.vue";
+import { api, getAuthToken } from "@/utils/api-helper"; // Import the helper
 
 // Get API URL from environment variable
 const API_URL = import.meta.env.VITE_API_URL;
@@ -127,7 +95,7 @@ interface BackendPost {
   };
 }
 
-// Use the same interfaces as your PostFeed component
+// Keep your existing interfaces - they're perfect!
 interface PostBase {
   id: string;
   userId: string;
@@ -186,6 +154,11 @@ interface LyricsPost extends PostBase {
 
 type FeedPost = AudioPost | XmlPost | MediaPost | LyricsPost;
 
+// Props for filtering posts by user
+const props = defineProps<{
+  userId?: string; // If provided, fetch posts for specific user only
+}>();
+
 const posts = ref<FeedPost[]>([]);
 const isLoading = ref(false);
 const isLoadingMore = ref(false);
@@ -194,7 +167,56 @@ const hasMore = ref(true);
 const limit = 10;
 const offset = ref(0);
 
-// Copy the same utility functions from your PostFeed component
+// FIXED: Helper function to get authentication token
+const getAuthToken = () => {
+  // Check localStorage first
+  let token = localStorage.getItem('access_token') || 
+              localStorage.getItem('authToken') ||
+              sessionStorage.getItem('access_token') ||
+              sessionStorage.getItem('authToken');
+  
+  // If no token in storage, try to read from cookies
+  if (!token) {
+    token = getCookie('access_token');
+  }
+  
+  console.log('🔍 Token search result:', token ? `FOUND: ${token.substring(0, 20)}...` : 'NOT FOUND');
+  return token;
+};
+
+// Helper function to get cookie value - IMPROVED for mobile Safari
+const getCookie = (name: string): string | null => {
+  try {
+    // Method 1: Standard approach
+    const value = `; ${document.cookie}`;
+    const parts = value.split(`; ${name}=`);
+    if (parts.length === 2) {
+      const cookieValue = parts.pop()?.split(';').shift() || null;
+      if (cookieValue) {
+        console.log(`🍪 Found cookie ${name}:`, cookieValue.substring(0, 20) + '...');
+        return cookieValue;
+      }
+    }
+    
+    // Method 2: Direct regex search (better for mobile)
+    const regex = new RegExp(`(^|;)\\s*${name}\\s*=\\s*([^;]+)`);
+    const match = document.cookie.match(regex);
+    if (match) {
+      const cookieValue = match[2];
+      console.log(`🍪 Found cookie via regex ${name}:`, cookieValue.substring(0, 20) + '...');
+      return cookieValue;
+    }
+    
+    console.log(`🍪 Cookie ${name} not found`);
+    console.log(`🍪 Available cookies:`, document.cookie);
+    return null;
+  } catch (error) {
+    console.error('❌ Error reading cookie:', error);
+    return null;
+  }
+};
+
+// Map backend user roles to your role system
 const mapUserRole = (
   tagId: string | null,
 ): "Musician" | "Listener" | "Learner" => {
@@ -206,6 +228,7 @@ const mapUserRole = (
   return roleMap[tagId || ""] || "Listener";
 };
 
+// Format timestamp
 const formatTimestamp = (dateString: string): string => {
   const date = new Date(dateString);
   const now = new Date();
@@ -222,9 +245,21 @@ const formatTimestamp = (dateString: string): string => {
   return date.toLocaleDateString();
 };
 
-// Copy the same transformation logic from your PostFeed
+// Transform backend post to your format - FIXED with proper type conversion
 const transformBackendPost = (backendPost: BackendPost): FeedPost | null => {
   try {
+    console.log("🔍 PostFeed - Raw backend post:", backendPost);
+    console.log(
+      "🔍 PostFeed - Raw likes_count:",
+      backendPost.likes_count,
+      typeof backendPost.likes_count,
+    );
+    console.log(
+      "🔍 PostFeed - Raw user_liked:",
+      backendPost.user_liked,
+      typeof backendPost.user_liked,
+    );
+
     const basePost = {
       id: backendPost.id,
       userId: backendPost.user.id,
@@ -233,75 +268,103 @@ const transformBackendPost = (backendPost: BackendPost): FeedPost | null => {
       role: mapUserRole(backendPost.user.tag_id),
       avatarUrl: backendPost.user.avatar_url || "",
       timestamp: formatTimestamp(backendPost.created_at),
-      likes_count: backendPost.likes_count,
-      comments_count: backendPost.comments_count,
-      user_liked: backendPost.user_liked,
+      // FIXED: Ensure proper data types with explicit conversion
+      likes_count: Number(backendPost.likes_count) || 0,
+      comments_count: Number(backendPost.comments_count) || 0,
+      user_liked: Boolean(backendPost.user_liked),
       caption: backendPost.caption,
     };
 
+    console.log(
+      "🔍 PostFeed - Transformed likes_count:",
+      basePost.likes_count,
+      typeof basePost.likes_count,
+    );
+    console.log(
+      "🔍 PostFeed - Transformed user_liked:",
+      basePost.user_liked,
+      typeof basePost.user_liked,
+    );
+
     // Transform media posts
     if (backendPost.type === "media" && backendPost.media) {
-      return {
+      const finalPost = {
         ...basePost,
-        type: "media",
+        type: "media" as const,
         content: {
-          mediaType: "media",
+          mediaType: "media" as const,
           items: backendPost.media.map((item) => ({
             id: item.id,
             src: item.file_url,
-            type: item.file_type === "image" ? "image" : "video",
+            type:
+              item.file_type === "image"
+                ? ("image" as const)
+                : ("video" as const),
           })),
         },
       } as MediaPost;
+
+      console.log("🔍 PostFeed - Final media post:", finalPost);
+      return finalPost;
     }
 
     // Transform audio posts
     if (backendPost.type === "audio" && backendPost.audio) {
       console.log("🎵 Transforming audio post:", backendPost);
 
-      return {
+      const finalPost = {
         ...basePost,
-        type: "audio",
+        type: "audio" as const,
         content: backendPost.audio.map((item) => ({
           title: item.title,
           artist: item.artist,
-          coverUrl: item.cover_url || "",
-          duration: item.duration || "0:00",
-          url: item.file_url,
+          coverUrl: item.cover_url || "", // Cover image URL from backend
+          duration: item.duration || "0:00", // Duration from backend
+          url: item.file_url, // Audio file URL
         })),
       } as AudioPost;
+
+      console.log("🔍 PostFeed - Final audio post:", finalPost);
+      return finalPost;
     }
 
     // Transform MusicXML posts
     if (backendPost.type === "musicxml" && backendPost.musicxml) {
       console.log("📄 Transforming MusicXML post:", backendPost);
 
-      return {
+      const finalPost = {
         ...basePost,
-        type: "musicxml",
+        type: "musicxml" as const,
         content: backendPost.musicxml.map((item) => ({
-          fileName: item.title,
+          fileName: item.title, // Use title as fileName for display
           composer: item.composer,
-          downloadUrl: item.file_url,
+          downloadUrl: item.file_url, // Direct download URL
         })),
       } as XmlPost;
+
+      console.log("🔍 PostFeed - Final musicxml post:", finalPost);
+      return finalPost;
     }
 
     // Transform lyrics posts
     if (backendPost.type === "lyrics" && backendPost.lyrics) {
       console.log("📝 Transforming lyrics post:", backendPost);
 
-      return {
+      const finalPost = {
         ...basePost,
-        type: "lyrics",
+        type: "lyrics" as const,
         content: {
           title: backendPost.lyrics.title,
           artist: backendPost.lyrics.artist,
           lyricsText: backendPost.lyrics.lyrics_text,
         },
       } as LyricsPost;
+
+      console.log("🔍 PostFeed - Final lyrics post:", finalPost);
+      return finalPost;
     }
 
+    // Unsupported post type
     console.log("⚠️ Unsupported post type:", backendPost.type);
     return null;
   } catch (error) {
@@ -310,7 +373,7 @@ const transformBackendPost = (backendPost: BackendPost): FeedPost | null => {
   }
 };
 
-// Fetch posts from the listened-to endpoint
+// Fetch posts from backend
 const fetchPosts = async (loadMore = false) => {
   if (loadMore) {
     isLoadingMore.value = true;
@@ -322,34 +385,30 @@ const fetchPosts = async (loadMore = false) => {
   error.value = "";
 
   try {
-    // THE KEY DIFFERENCE: Use the listened-to endpoint
-    const endpoint = `${API_URL}/posts/feed/listened-to?limit=${limit}&offset=${offset.value}`;
-
-    console.log("🎯 Fetching listened-to posts from:", endpoint);
-
-    const response = await fetch(endpoint, {
-      credentials: "include",
-    });
-
-    if (response.status === 401) {
-      // User is not authenticated
-      error.value = "Authentication required. Please sign in.";
-      return;
+    // FIXED: Use the API helper for authenticated requests
+    const token = getAuthToken();
+    if (!token) {
+      throw new Error('Authentication required. Please sign in.');
     }
 
-    if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
-    }
+    // Fetch real posts from backend using API helper
+    const endpoint = props.userId
+      ? `/posts/user/${props.userId}?limit=${limit}&offset=${offset.value}`
+      : `/posts/feed?limit=${limit}&offset=${offset.value}`;
 
+    console.log("🚀 Fetching posts from:", endpoint);
+    console.log("🔑 Token check:", token ? `${token.substring(0, 20)}...` : 'NOT FOUND');
+
+    const response = await api.get(endpoint);
     const backendPosts: BackendPost[] = await response.json();
-    console.log("Fetched listened-to posts:", backendPosts);
+    console.log("✅ Fetched backend posts:", backendPosts.length, "posts");
 
-    // Transform backend posts
+    // Transform backend posts (only real data, no mock data)
     const transformedPosts = backendPosts
       .map(transformBackendPost)
       .filter(Boolean) as FeedPost[];
 
-    console.log("Transformed listened-to posts:", transformedPosts);
+    console.log("🔄 Transformed posts:", transformedPosts.length, "valid posts");
 
     if (loadMore) {
       posts.value.push(...transformedPosts);
@@ -360,12 +419,16 @@ const fetchPosts = async (loadMore = false) => {
     hasMore.value = backendPosts.length === limit;
     offset.value += backendPosts.length;
   } catch (err) {
-    console.error("Error fetching listened-to posts:", err);
-    error.value =
-      err instanceof Error
-        ? err.message
-        : "Failed to load posts from followed users";
+    console.error("❌ Error fetching posts:", err);
+    error.value = err instanceof Error ? err.message : "Failed to load posts";
 
+    // If it's an auth error, you might want to redirect to login
+    if (err instanceof Error && err.message.includes('Authentication')) {
+      // Optional: redirect to login
+      // window.location.href = '/signin';
+    }
+
+    // Don't fallback to mock data - show error instead
     if (!loadMore) {
       posts.value = [];
     }
@@ -393,9 +456,6 @@ const handleRetry = () => {
 };
 
 onMounted(() => {
-  // DEBUG: Confirm this component is loading
-  console.log("🚨 ListenedToFeed component mounted!");
-  console.log('🚨 This should show "listened-to" endpoint');
   fetchPosts();
 });
 
