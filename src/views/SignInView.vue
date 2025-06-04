@@ -1,256 +1,277 @@
 <template>
-  <div class="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center px-4 sm:px-6 lg:px-8">
-    <div class="max-w-md w-full space-y-8">
-      <!-- Header -->
-      <div class="text-center">
-        <h2 class="mt-6 text-3xl font-extrabold text-gray-900">
-          Welcome back
-        </h2>
-        <p class="mt-2 text-sm text-gray-600">
-          Sign in to your account
-        </p>
-      </div>
+  <main
+    class="flex flex-col justify-center items-center px-5 w-full min-h-screen overflow-hidden"
+    style="background-color: rgba(6, 3, 16, 1)"
+  >
+    <section class="w-full max-w-sm">
+      <header class="mb-6.5 text-2xl font-bold text-center text-white">
+        <h1>Log in</h1>
+      </header>
 
-      <!-- Loading State -->
-      <div v-if="isLoading" class="text-center py-8">
-        <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-600 mx-auto"></div>
-        <p class="mt-4 text-gray-600">Signing you in...</p>
-      </div>
+      <form @submit.prevent="handleSubmit">
+        <LoginFormInput
+          id="email"
+          label="Email address"
+          type="email"
+          v-model="email"
+          :error="errors.email"
+          placeholder="Enter email"
+        />
 
-      <!-- Success Message -->
-      <div v-if="showSuccess" class="bg-green-50 border border-green-200 rounded-md p-4 mb-6">
-        <div class="flex">
-          <div class="flex-shrink-0">
-            <svg class="h-5 w-5 text-green-400" fill="currentColor" viewBox="0 0 20 20">
-              <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
-            </svg>
-          </div>
-          <div class="ml-3">
-            <p class="text-sm font-medium text-green-800">
-              Successfully signed in! 
-            </p>
-            <p class="text-sm text-green-700 mt-1">
-              You can now continue to the app.
-            </p>
-          </div>
-        </div>
-        <button 
-          @click="continueToApp"
-          class="mt-3 w-full bg-green-600 hover:bg-green-700 text-white font-medium py-2 px-4 rounded-md transition duration-200"
+        <LoginFormInput
+          id="password"
+          label="Password"
+          type="password"
+          v-model="password"
+          :error="errors.password"
+          placeholder="Enter password"
+        />
+
+        <LoginFormButton
+          type="submit"
+          marginClass="mb-4.5 mt-7.5"
+          :disabled="isLoading"
         >
-          Continue to App
-        </button>
-      </div>
+          {{ isLoading ? "Signing In..." : "Sign In" }}
+        </LoginFormButton>
 
-      <!-- Error Message -->
-      <div v-if="errorMessage" class="bg-red-50 border border-red-200 rounded-md p-4 mb-6">
-        <div class="flex">
-          <div class="flex-shrink-0">
-            <svg class="h-5 w-5 text-red-400" fill="currentColor" viewBox="0 0 20 20">
-              <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd" />
-            </svg>
-          </div>
-          <div class="ml-3">
-            <p class="text-sm font-medium text-red-800">
-              Sign in failed
-            </p>
-            <p class="text-sm text-red-700 mt-1">
-              {{ errorMessage }}
-            </p>
-          </div>
-        </div>
-        <button 
-          @click="errorMessage = ''"
-          class="mt-3 text-sm text-red-600 hover:text-red-500 underline"
+        <LoginFormDivider text="or continue with" />
+
+        <LoginFormButton
+          type="button"
+          @click="handleGoogleLogin"
+          marginClass="mb-4.5"
+          :hasIcon="true"
+          :disabled="isLoading"
         >
-          Try again
-        </button>
-      </div>
+          <template #icon>
+            <GoogleIcon />
+          </template>
+          Google
+        </LoginFormButton>
 
-      <!-- Sign In Form -->
-      <div v-if="!isLoading && !showSuccess" class="bg-white py-8 px-6 shadow-lg rounded-lg">
-        <div class="space-y-6">
-          <!-- Google Sign In -->
-          <button
-            @click="signInWithGoogle"
-            :disabled="isLoading"
-            class="w-full flex justify-center items-center px-4 py-3 border border-gray-300 rounded-md shadow-sm bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50 disabled:cursor-not-allowed transition duration-200"
+        <LoginFormButton
+          type="button"
+          @click="handleGuestLogin"
+          marginClass="mb-4.5"
+          :disabled="isLoading"
+        >
+          Guest mode
+        </LoginFormButton>
+
+        <p class="text-base font-semibold text-center text-white">
+          <router-link
+            to="/sign-up"
+            @click.prevent="handleSignUp"
+            class="hover:text-indigo-600"
           >
-            <svg class="w-5 h-5 mr-3" viewBox="0 0 24 24">
-              <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
-              <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
-              <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
-              <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
-            </svg>
-            Continue with Google
-          </button>
-
-          <!-- Divider -->
-          <div class="relative">
-            <div class="absolute inset-0 flex items-center">
-              <div class="w-full border-t border-gray-300" />
-            </div>
-            <div class="relative flex justify-center text-sm">
-              <span class="px-2 bg-white text-gray-500">Or continue with email</span>
-            </div>
-          </div>
-
-          <!-- Email Form -->
-          <form @submit.prevent="signInWithEmail" class="space-y-4">
-            <div>
-              <label for="email" class="block text-sm font-medium text-gray-700">
-                Email address
-              </label>
-              <input
-                id="email"
-                v-model="email"
-                type="email"
-                required
-                class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
-                placeholder="Enter your email"
-              />
-            </div>
-
-            <div>
-              <label for="password" class="block text-sm font-medium text-gray-700">
-                Password
-              </label>
-              <input
-                id="password"
-                v-model="password"
-                type="password"
-                required
-                class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
-                placeholder="Enter your password"
-              />
-            </div>
-
-            <button
-              type="submit"
-              :disabled="isLoading || !email || !password"
-              class="w-full flex justify-center py-3 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50 disabled:cursor-not-allowed transition duration-200"
-            >
-              Sign in with Email
-            </button>
-          </form>
-        </div>
-      </div>
-
-      <!-- Footer -->
-      <div class="text-center text-sm text-gray-600">
-        <p>
-          Don't have an account? 
-          <router-link to="/signup" class="font-medium text-indigo-600 hover:text-indigo-500">
-            Sign up
+            Don't have a profile? Sign up here!
           </router-link>
         </p>
-      </div>
-    </div>
-  </div>
+      </form>
+    </section>
+  </main>
 </template>
 
-<script setup lang="ts">
-import { ref } from 'vue'
-import { useRouter } from 'vue-router'
+<script lang="ts">
+import { defineComponent, ref, reactive, onMounted } from "vue";
+import { useRouter } from "vue-router";
+import LoginFormInput from "@/components/Authentication/LoginFormInput.vue";
+import LoginFormButton from "@/components/Authentication/LoginFormButton.vue";
+import LoginFormDivider from "@/components/Authentication/LoginFormDivider.vue";
+import GoogleIcon from "@/components/SVG/Authentication/Sign_Up_In_If_button_Google.vue";
 
-// Reactive data
-const email = ref('')
-const password = ref('')
-const isLoading = ref(false)
-const errorMessage = ref('')
-const showSuccess = ref(false)
+export default defineComponent({
+  name: "LoginForm",
+  components: {
+    LoginFormInput,
+    LoginFormButton,
+    LoginFormDivider,
+    GoogleIcon,
+  },
+  setup() {
+    const API_URL = import.meta.env.VITE_API_URL;
+    const router = useRouter();
+    const email = ref("");
+    const password = ref("");
+    const isLoading = ref(false);
 
-// Router
-const router = useRouter()
+    const errors = reactive({
+      email: "",
+      password: "",
+    });
 
-// Methods
-const signInWithGoogle = async () => {
-  isLoading.value = true
-  errorMessage.value = ''
-  
-  try {
-    // Replace with your actual Google auth logic
-    const response = await fetch('/api/auth/google', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
+    // Device detection
+    const isIOSSafari = (() => {
+      const userAgent = navigator.userAgent.toLowerCase();
+      return userAgent.includes('safari') && 
+             userAgent.includes('mobile') && 
+             !userAgent.includes('chrome') && 
+             !userAgent.includes('crios');
+    })();
+
+    // Simple token storage
+    const storeToken = (token: string) => {
+      try {
+        localStorage.setItem('authToken', token);
+        sessionStorage.setItem('authToken', token);
+        localStorage.setItem('auth_backup', token);
+        console.log('✅ Token stored successfully');
+      } catch (e) {
+        console.warn("Token storage failed:", e);
+        (window as any).__authToken = token;
       }
-    })
-    
-    if (!response.ok) {
-      throw new Error('Google sign in failed')
-    }
-    
-    const data = await response.json()
-    
-    // Store token (adjust based on your auth implementation)
-    localStorage.setItem('access_token', data.access_token)
-    // or document.cookie = `access_token=${data.access_token}; path=/`
-    
-    showSuccess.value = true
-    
-    // Optional: Auto-redirect after 3 seconds
-    setTimeout(() => {
-      if (showSuccess.value) {
-        continueToApp()
-      }
-    }, 3000)
-    
-  } catch (error: any) {
-    console.error('Google sign in error:', error)
-    errorMessage.value = error.message || 'Google sign in failed. Please try again.'
-  } finally {
-    isLoading.value = false
-  }
-}
+    };
 
-const signInWithEmail = async () => {
-  isLoading.value = true
-  errorMessage.value = ''
-  
-  try {
-    // Replace with your actual email auth logic
-    const response = await fetch('/api/auth/login', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        email: email.value,
-        password: password.value
-      })
-    })
-    
-    if (!response.ok) {
-      throw new Error('Invalid email or password')
-    }
-    
-    const data = await response.json()
-    
-    // Store token (adjust based on your auth implementation)
-    localStorage.setItem('access_token', data.access_token)
-    // or document.cookie = `access_token=${data.access_token}; path=/`
-    
-    showSuccess.value = true
-    
-    // Optional: Auto-redirect after 3 seconds
-    setTimeout(() => {
-      if (showSuccess.value) {
-        continueToApp()
+    const clearTokens = () => {
+      try {
+        localStorage.removeItem('authToken');
+        sessionStorage.removeItem('authToken');
+        localStorage.removeItem('auth_backup');
+        delete (window as any).__authToken;
+        console.log('🗑️ Tokens cleared');
+      } catch (e) {
+        console.warn("Token clearing failed:", e);
       }
-    }, 3000)
-    
-  } catch (error: any) {
-    console.error('Email sign in error:', error)
-    errorMessage.value = error.message || 'Sign in failed. Please check your credentials.'
-  } finally {
-    isLoading.value = false
-  }
-}
+    };
 
-const continueToApp = () => {
-  // Redirect to intended page or dashboard
-  const redirect = router.currentRoute.value.query.redirect as string || '/dashboard'
-  router.push(redirect)
-}
+    onMounted(() => {
+      console.log(`📱 SignIn page loaded - iOS Safari: ${isIOSSafari}`);
+      
+      // Handle email verification
+      const hash = window.location.hash;
+      const query = new URLSearchParams(hash.split("?")[1]);
+      
+      if (query.get("verified") === "true") {
+        alert("✅ Email verified! You can now sign in.");
+        window.location.hash = "#/sign-in";
+        return;
+      }
+    });
+
+    const validateForm = (): boolean => {
+      let isValid = true;
+      errors.email = "";
+      errors.password = "";
+
+      if (!email.value) {
+        errors.email = "Email is required";
+        isValid = false;
+      } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.value)) {
+        errors.email = "Please enter a valid email address";
+        isValid = false;
+      }
+
+      if (!password.value) {
+        errors.password = "Password is required";
+        isValid = false;
+      } else if (password.value.length < 6) {
+        errors.password = "Password must be at least 6 characters";
+        isValid = false;
+      }
+
+      return isValid;
+    };
+
+    const handleSubmit = async () => {
+      if (!validateForm()) return;
+
+      isLoading.value = true;
+
+      try {
+        const headers: Record<string, string> = {
+          "Content-Type": "application/json",
+        };
+
+        if (isIOSSafari) {
+          headers["Cache-Control"] = "no-cache, no-store, must-revalidate";
+          headers["Pragma"] = "no-cache";
+          headers["Expires"] = "0";
+        }
+
+        const response = await fetch(`${API_URL}/authorization/logindefault`, {
+          method: "POST",
+          credentials: "include",
+          headers: headers,
+          body: JSON.stringify({
+            email: email.value,
+            password: password.value,
+          }),
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+          alert(data.detail || data.message || "Login failed");
+          return;
+        }
+
+        if (data.access_token) {
+          storeToken(data.access_token);
+        }
+
+        console.log("✅ Login successful, redirecting to home");
+        router.push("/home");
+        
+      } catch (error) {
+        console.error("💥 Login error:", error);
+        alert("Login error. Please try again.");
+      } finally {
+        isLoading.value = false;
+      }
+    };
+
+    const handleGoogleLogin = () => {
+      const currentUrl = window.location.href;
+      
+      const redirectState = encodeURIComponent(
+        "https://techtuners-tt.github.io/SelfSound/#/sign-in"
+      );
+      
+      const params = new URLSearchParams({
+        state: redirectState,
+        mobile: 'true',
+        ios: isIOSSafari ? 'true' : 'false'
+      });
+      
+      console.log("🔍 Starting Google OAuth login");
+      window.location.href = `${API_URL}/auth/login?${params.toString()}`;
+    };
+
+    const handleGuestLogin = async () => {
+      isLoading.value = true;
+      try {
+        clearTokens();
+        
+        await fetch(`${API_URL}/auth/logout`, {
+          method: "POST",
+          credentials: "include",
+        });
+
+        console.log("👤 Guest mode activated");
+        router.push("/home");
+      } catch (error) {
+        console.error("Guest login error:", error);
+        alert("Guest login error. Please try again.");
+      } finally {
+        isLoading.value = false;
+      }
+    };
+
+    const handleSignUp = () => {
+      router.push("/sign-up");
+    };
+
+    return {
+      email,
+      password,
+      isLoading,
+      errors,
+      handleSubmit,
+      handleGoogleLogin,
+      handleGuestLogin,
+      handleSignUp,
+    };
+  },
+});
 </script>
