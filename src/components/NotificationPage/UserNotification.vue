@@ -25,7 +25,7 @@
   <div v-if="error" class="text-red-400 text-center py-4">
     {{ error }}
     <button
-      @click="fetchNotifications"
+      @click="() => fetchNotifications()"
       class="block mx-auto mt-2 text-[#6D01D0] hover:text-[#8B4CD8]"
     >
       Try Again
