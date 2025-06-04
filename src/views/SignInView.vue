@@ -150,7 +150,6 @@
 </template>
 
 <script>
-import { useAuthStore } from '@/stores/auth'
 import { useRouter } from 'vue-router'
 
 export default {
@@ -165,9 +164,8 @@ export default {
     }
   },
   setup() {
-    const authStore = useAuthStore()
     const router = useRouter()
-    return { authStore, router }
+    return { router }
   },
   methods: {
     async signInWithGoogle() {
@@ -175,7 +173,24 @@ export default {
       this.errorMessage = ''
       
       try {
-        await this.authStore.signInWithGoogle()
+        // Replace with your actual Google auth logic
+        const response = await fetch('/api/auth/google', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          }
+        })
+        
+        if (!response.ok) {
+          throw new Error('Google sign in failed')
+        }
+        
+        const data = await response.json()
+        
+        // Store token (adjust based on your auth implementation)
+        localStorage.setItem('access_token', data.access_token)
+        // or document.cookie = `access_token=${data.access_token}; path=/`
+        
         this.showSuccess = true
         
         // Optional: Auto-redirect after 3 seconds
@@ -198,7 +213,28 @@ export default {
       this.errorMessage = ''
       
       try {
-        await this.authStore.signInWithEmail(this.email, this.password)
+        // Replace with your actual email auth logic
+        const response = await fetch('/api/auth/login', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            email: this.email,
+            password: this.password
+          })
+        })
+        
+        if (!response.ok) {
+          throw new Error('Invalid email or password')
+        }
+        
+        const data = await response.json()
+        
+        // Store token (adjust based on your auth implementation)
+        localStorage.setItem('access_token', data.access_token)
+        // or document.cookie = `access_token=${data.access_token}; path=/`
+        
         this.showSuccess = true
         
         // Optional: Auto-redirect after 3 seconds
