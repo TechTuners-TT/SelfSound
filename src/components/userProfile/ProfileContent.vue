@@ -1,17 +1,4 @@
-// Enhanced fetch functions with mobile authentication support
-const getAuthHeaders = () => {
-  const headers: Record<string, string> = {
-    'Content-Type': 'application/json'
-  };
-  
-  // FIXED: Use consistent token names with LoginForm
-  const token = localStorage.getItem('access_token') || 
-               localStorage.getItem('authToken') ||
-               sessionStorage.getItem('access_token') ||
-               sessionStorage.getItem('authToken');
-  
-  if (token) {
-    headers['Authorization'] = `Bearer ${token}`<template>
+<template>
   <section class="flex flex-col gap-15 mx-auto section_1">
     <div
       class="px-[10px] sm:px-[40px] md:px-[20px] lg:px-[30px] xl:px-[20px] 2xl:px-[40px]"
@@ -111,6 +98,7 @@ const getAuthHeaders = () => {
               />
             </div>
           </div>
+
           <!-- Biography -->
           <div
             class="flex items-center gap-[13px] sm:gap-[23px] md:gap-[19px] lg:gap-[39px] xl:gap-[49px] 2xl:gap-[59px] font-medium"
