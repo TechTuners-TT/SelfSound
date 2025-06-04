@@ -126,6 +126,40 @@ class MobileAuthStorage {
   }
 }
 
+// 🔥 CRITICAL: OAuth token capture function
+function captureTokenFromUrl(): string | null {
+  const url = window.location.href;
+  console.log("🔍 OAuth: Checking URL for token:", url);
+  
+  // Extract token from URL using multiple patterns
+  const tokenPatterns = [
+    /[?&]token=([^&\s#]+)/,  // ?token=xxx or &token=xxx
+    /#.*[?&]token=([^&\s#]+)/, // #/path?token=xxx
+    /token=([^&\s#]+)/ // fallback: any token=xxx
+  ];
+  
+  for (const pattern of tokenPatterns) {
+    const tokenMatch = url.match(pattern);
+    if (tokenMatch) {
+      const token = decodeURIComponent(tokenMatch[1]);
+      console.log("✅ OAuth: Found token in URL:", token.substring(0, 50) + "...");
+      
+      // Store token using enhanced storage
+      MobileAuthStorage.setToken(token);
+      
+      // Clean URL to remove token
+      const cleanUrl = url.replace(/[?&]token=[^&\s#]+/, '');
+      window.history.replaceState({}, '', cleanUrl);
+      console.log("✅ OAuth: URL cleaned:", cleanUrl);
+      
+      return token;
+    }
+  }
+  
+  console.log("📝 OAuth: No token found in URL");
+  return null;
+}
+
 const router = createRouter({
   history: createWebHashHistory(import.meta.env.BASE_URL),
   routes: [
@@ -382,6 +416,12 @@ async function checkAuth(): Promise<boolean> {
 router.beforeEach(async (to, from, next) => {
   console.log(`🔍 Router: Navigating from ${from.path} to ${to.path}`);
   console.log(`🔍 Route meta:`, to.meta);
+
+  // 🔥 CRITICAL: Check for OAuth token in URL FIRST (before any auth checks)
+  const urlToken = captureTokenFromUrl();
+  if (urlToken) {
+    console.log("🎯 OAuth: Token captured from URL and stored");
+  }
 
   const requiresAuth = to.meta.requiresAuth;
   const requiresAdmin = to.meta.requiresAdmin;
