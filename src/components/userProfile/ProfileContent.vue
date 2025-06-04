@@ -1,4 +1,17 @@
-<template>
+// Enhanced fetch functions with mobile authentication support
+const getAuthHeaders = () => {
+  const headers: Record<string, string> = {
+    'Content-Type': 'application/json'
+  };
+  
+  // FIXED: Use consistent token names with LoginForm
+  const token = localStorage.getItem('access_token') || 
+               localStorage.getItem('authToken') ||
+               sessionStorage.getItem('access_token') ||
+               sessionStorage.getItem('authToken');
+  
+  if (token) {
+    headers['Authorization'] = `Bearer ${token}`<template>
   <section class="flex flex-col gap-15 mx-auto section_1">
     <div
       class="px-[10px] sm:px-[40px] md:px-[20px] lg:px-[30px] xl:px-[20px] 2xl:px-[40px]"
@@ -200,6 +213,31 @@ interface FormData {
   avatarFile: File | null;
 }
 
+// FIXED: Helper function to get authentication token
+const getAuthToken = () => {
+  return localStorage.getItem('access_token') || 
+         localStorage.getItem('authToken') ||
+         sessionStorage.getItem('access_token') ||
+         sessionStorage.getItem('authToken');
+};
+
+// FIXED: Helper function to get authenticated headers
+const getAuthHeaders = () => {
+  const headers: Record<string, string> = {
+    'Content-Type': 'application/json'
+  };
+  
+  const token = getAuthToken();
+  if (token) {
+    headers['Authorization'] = `Bearer ${token}`;
+    console.log('🔑 Using Authorization header for API call');
+  } else {
+    console.warn('⚠️ No token found for authenticated request');
+  }
+  
+  return headers;
+};
+
 export default defineComponent({
   props: {
     user: {
@@ -316,15 +354,24 @@ export default defineComponent({
       }
     };
 
-    // Upload avatar function
+    // FIXED: Upload avatar function with authentication
     const uploadAvatar = async (): Promise<string | null> => {
       if (!formData.avatarFile) return null;
+
+      const token = getAuthToken();
+      if (!token) {
+        throw new Error('Authentication required. Please sign in.');
+      }
 
       const data = new FormData();
       data.append("avatar", formData.avatarFile);
 
       const res = await fetch(`${API_URL}/profile/me/avatar`, {
         method: "PATCH",
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          // Note: Don't set Content-Type for FormData, browser will set it correctly
+        },
         credentials: "include",
         body: data,
       });
@@ -338,7 +385,7 @@ export default defineComponent({
       return json.avatar_url;
     };
 
-    // Save changes function with actual API calls and name truncation
+    // FIXED: Save changes function with authentication
     const saveChanges = async () => {
       if (isSubmitting.value) return;
 
@@ -346,6 +393,11 @@ export default defineComponent({
       errorMessage.value = "";
 
       try {
+        const token = getAuthToken();
+        if (!token) {
+          throw new Error('Authentication required. Please sign in.');
+        }
+
         // Ensure name is truncated before sending to backend
         const truncatedName = truncateName(formData.name);
 
@@ -362,10 +414,11 @@ export default defineComponent({
 
         const resProfile = await fetch(`${API_URL}/profile/me`, {
           method: "PATCH",
-          credentials: "include",
           headers: {
             "Content-Type": "application/json",
+            'Authorization': `Bearer ${token}`,
           },
+          credentials: "include",
           body: JSON.stringify(profilePayload),
         });
 
@@ -385,8 +438,11 @@ export default defineComponent({
 
         // 3) Fetch updated profile data
         const profileRes = await fetch(`${API_URL}/profile/me/profile`, {
+          headers: { 
+            "Cache-Control": "no-cache",
+            'Authorization': `Bearer ${token}`,
+          },
           credentials: "include",
-          headers: { "Cache-Control": "no-cache" },
         });
 
         if (!profileRes.ok) {
