@@ -232,12 +232,25 @@ const router = createRouter({
 
 async function checkAuth(): Promise<boolean> {
   try {
+    // MOBILE AUTH: Get token from localStorage for mobile fallback
+    const authToken = localStorage.getItem('auth_token');
+    const headers: Record<string, string> = {};
+    
+    if (authToken) {
+      headers['Authorization'] = `Bearer ${authToken}`;
+      console.log('🔍 Router: Using stored auth token for check');
+    }
+
     const res = await fetch(`${API_URL}/authorization/me`, {
       method: "GET",
-      credentials: "include",
+      credentials: "include", // Keep for cookie fallback
+      headers: headers, // Add Authorization header for mobile
     });
+    
+    console.log(`🔍 Router: Auth check response status: ${res.status}`);
     return res.ok;
-  } catch {
+  } catch (error) {
+    console.error('🔍 Router: Auth check error:', error);
     return false;
   }
 }
