@@ -101,14 +101,27 @@ export default defineComponent({
       password: "",
     });
 
-    // ✅ Show success message if user comes from verification link
+    // ✅ Handle verification success and Google OAuth mobile callback
     onMounted(() => {
       const hash = window.location.hash;
       const query = new URLSearchParams(hash.split("?")[1]);
+      
+      // Handle email verification success
       if (query.get("verified") === "true") {
         alert("✅ Email verified! You can now sign in.");
-        // Optionally clean up the hash
         window.location.hash = "#/sign-in";
+        return;
+      }
+
+      // 📱 Handle Google OAuth mobile callback with token
+      const token = query.get("token");
+      if (token) {
+        console.log("📱 Google OAuth mobile callback: storing token");
+        localStorage.setItem('authToken', token);
+        
+        // Clean up URL and redirect to home
+        window.location.hash = "#/home";
+        router.push("/home");
       }
     });
 
@@ -144,7 +157,7 @@ export default defineComponent({
       try {
         const response = await fetch(`${API_URL}/authorization/logindefault`, {
           method: "POST",
-          credentials: "include",
+          credentials: "include", // This handles cookies for web
           headers: {
             "Content-Type": "application/json",
           },
@@ -161,9 +174,21 @@ export default defineComponent({
           return;
         }
 
+        // 📱 MOBILE AUTH: Store token for mobile use
+        if (data.access_token) {
+          localStorage.setItem('authToken', data.access_token);
+          console.log("📱 Storing auth token for mobile use");
+        } else {
+          console.log("🍪 Using cookie-based auth (web)");
+        }
+
+        // ✅ Login successful
+        console.log("✅ Login successful, redirecting to home");
+        
         setTimeout(() => {
           router.push("/home");
         }, 100);
+        
       } catch (error) {
         console.error("Login error:", error);
         alert("Login error. Please try again.");
@@ -173,17 +198,26 @@ export default defineComponent({
     };
 
     const handleGoogleLogin = () => {
-      window.location.href = `${API_URL}/auth/login`;
+      // For mobile callbacks, we need to handle the redirect with token
+      const currentUrl = window.location.href;
+      const redirectState = encodeURIComponent(currentUrl.replace('#/sign-in', '#/sign-in'));
+      
+      console.log("🔍 Initiating Google OAuth login");
+      window.location.href = `${API_URL}/auth/login?state=${redirectState}`;
     };
 
     const handleGuestLogin = async () => {
       isLoading.value = true;
       try {
+        // Clear any existing auth data
+        localStorage.removeItem('authToken');
+        
         await fetch(`${API_URL}/auth/logout`, {
           method: "POST",
           credentials: "include",
         });
 
+        console.log("👤 Guest mode activated");
         await router.push("/home");
       } catch (error) {
         console.error("Guest login error:", error);
