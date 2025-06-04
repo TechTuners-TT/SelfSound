@@ -232,13 +232,15 @@ const router = createRouter({
 
 async function checkAuth(): Promise<boolean> {
   try {
-    // MOBILE AUTH: Get token from localStorage for mobile fallback
-    const authToken = localStorage.getItem('auth_token');
+    // 📱 MOBILE AUTH: Get token from localStorage (FIXED KEY NAME)
+    const authToken = localStorage.getItem('authToken'); // Changed from 'auth_token' to 'authToken'
     const headers: Record<string, string> = {};
     
     if (authToken) {
       headers['Authorization'] = `Bearer ${authToken}`;
-      console.log('🔍 Router: Using stored auth token for check');
+      console.log('📱 Router: Using stored auth token for check');
+    } else {
+      console.log('🍪 Router: No stored token, relying on cookies for auth check');
     }
 
     const res = await fetch(`${API_URL}/authorization/me`, {
@@ -247,10 +249,20 @@ async function checkAuth(): Promise<boolean> {
       headers: headers, // Add Authorization header for mobile
     });
     
-    console.log(`🔍 Router: Auth check response status: ${res.status}`);
+    const authMethod = authToken ? 'header' : 'cookie';
+    console.log(`🔍 Router: Auth check response status: ${res.status} via ${authMethod}`);
+    
+    if (!res.ok && authToken) {
+      // If header auth failed, clear invalid token
+      console.log('🗑️ Router: Clearing invalid auth token');
+      localStorage.removeItem('authToken');
+    }
+    
     return res.ok;
   } catch (error) {
-    console.error('🔍 Router: Auth check error:', error);
+    console.error('💥 Router: Auth check error:', error);
+    // Clear potentially corrupted token on error
+    localStorage.removeItem('authToken');
     return false;
   }
 }
@@ -269,6 +281,7 @@ router.beforeEach(async (to, from, next) => {
     return;
   }
 
+  console.log(`🔐 Router: Protected route ${to.path} requires authentication`);
   const isAuthenticated = await checkAuth();
   console.log(`🔍 Router: Is authenticated? ${isAuthenticated}`);
 
