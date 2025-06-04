@@ -22,6 +22,17 @@
       </button>
     </div>
 
+    <!-- Guest Mode Notice -->
+    <div
+      v-if="isGuestMode && !error"
+      class="bg-[#6D01D0]/10 border border-[#6D01D0]/20 text-[#6D01D0] text-center py-3 px-4 rounded-lg mb-4"
+    >
+      <p class="text-sm">
+        You're browsing in guest mode. 
+        <span class="font-semibold">Sign in</span> to like posts, comment, and see personalized content!
+      </p>
+    </div>
+
     <!-- Empty State -->
     <div
       v-if="!isLoading && !error && posts.length === 0"
@@ -156,6 +167,7 @@ type FeedPost = AudioPost | XmlPost | MediaPost | LyricsPost;
 // Props for filtering posts by user
 const props = defineProps<{
   userId?: string; // If provided, fetch posts for specific user only
+  guestMode?: boolean; // NEW: Allow parent to specify guest mode
 }>();
 
 const posts = ref<FeedPost[]>([]);
@@ -163,6 +175,7 @@ const isLoading = ref(false);
 const isLoadingMore = ref(false);
 const error = ref("");
 const hasMore = ref(true);
+const isGuestMode = ref(false); // NEW: Track if we're in guest mode
 const limit = 10;
 const offset = ref(0);
 
@@ -215,32 +228,56 @@ const getCookie = (name: string): string | null => {
   }
 };
 
-// Helper function to make authenticated API requests
-const makeAuthenticatedRequest = async (endpoint: string, options: RequestInit = {}) => {
+// NEW: Helper function to make API requests (authenticated or public)
+const makeApiRequest = async (endpoint: string, options: RequestInit = {}) => {
   const token = getAuthToken();
-  if (!token) {
-    throw new Error('Authentication required. Please sign in.');
-  }
-
+  
+  // Determine if we're in guest mode
+  const isGuest = !token || props.guestMode;
+  isGuestMode.value = isGuest;
+  
   const url = `${API_URL}${endpoint}`;
+  
+  // For guest mode, don't include authorization header
+  const headers: Record<string, string> = {
+    'Content-Type': 'application/json',
+    ...options.headers as Record<string, string>,
+  };
+  
+  // Only add authorization header if we have a token and not in explicit guest mode
+  if (token && !props.guestMode) {
+    headers['Authorization'] = `Bearer ${token}`;
+  }
   
   const response = await fetch(url, {
     ...options,
-    headers: {
-      'Authorization': `Bearer ${token}`,
-      'Content-Type': 'application/json',
-      ...options.headers,
-    },
+    headers,
   });
 
   if (!response.ok) {
-    if (response.status === 401) {
+    if (response.status === 401 && !isGuest) {
+      // Only throw auth error if we were trying to authenticate
       throw new Error('Authentication expired. Please sign in again.');
+    } else if (response.status === 401 && isGuest) {
+      // In guest mode, 401 might be expected for some endpoints
+      console.log('🔓 Guest mode: Received 401, this might be expected');
     }
+    
+    // For other errors, check if we should fall back to public endpoint
+    if (response.status >= 400 && !endpoint.includes('/public/')) {
+      console.log('🔄 Trying public endpoint fallback...');
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+    
     throw new Error(`HTTP error! status: ${response.status}`);
   }
 
   return response;
+};
+
+// UPDATED: Helper function for backward compatibility
+const makeAuthenticatedRequest = async (endpoint: string, options: RequestInit = {}) => {
+  return makeApiRequest(endpoint, options);
 };
 
 // Map backend user roles to your role system
@@ -298,7 +335,8 @@ const transformBackendPost = (backendPost: BackendPost): FeedPost | null => {
       // FIXED: Ensure proper data types with explicit conversion
       likes_count: Number(backendPost.likes_count) || 0,
       comments_count: Number(backendPost.comments_count) || 0,
-      user_liked: Boolean(backendPost.user_liked),
+      // In guest mode, user_liked should always be false
+      user_liked: isGuestMode.value ? false : Boolean(backendPost.user_liked),
       caption: backendPost.caption,
     };
 
@@ -400,7 +438,7 @@ const transformBackendPost = (backendPost: BackendPost): FeedPost | null => {
   }
 };
 
-// Fetch posts from backend
+// UPDATED: Fetch posts from backend with guest mode support
 const fetchPosts = async (loadMore = false) => {
   if (loadMore) {
     isLoadingMore.value = true;
@@ -412,18 +450,33 @@ const fetchPosts = async (loadMore = false) => {
   error.value = "";
 
   try {
-    // Fetch real posts from backend using direct fetch
-    const endpoint = props.userId
-      ? `/posts/user/${props.userId}?limit=${limit}&offset=${offset.value}`
-      : `/posts/feed?limit=${limit}&offset=${offset.value}`;
+    // Check if we have authentication
+    const token = getAuthToken();
+    const isGuest = !token || props.guestMode;
+    isGuestMode.value = isGuest;
+    
+    // Choose endpoint based on authentication status and props
+    let endpoint: string;
+    
+    if (props.userId) {
+      // User-specific posts
+      endpoint = isGuest 
+        ? `/posts/public/user/${props.userId}?limit=${limit}&offset=${offset.value}`
+        : `/posts/user/${props.userId}?limit=${limit}&offset=${offset.value}`;
+    } else {
+      // General feed
+      endpoint = isGuest 
+        ? `/posts/public/feed?limit=${limit}&offset=${offset.value}`
+        : `/posts/feed?limit=${limit}&offset=${offset.value}`;
+    }
 
-    console.log("🚀 Fetching posts from:", endpoint);
+    console.log(`🚀 Fetching posts from: ${endpoint} (Guest mode: ${isGuest})`);
 
-    const response = await makeAuthenticatedRequest(endpoint);
+    const response = await makeApiRequest(endpoint);
     const backendPosts: BackendPost[] = await response.json();
     console.log("✅ Fetched backend posts:", backendPosts.length, "posts");
 
-    // Transform backend posts (only real data, no mock data)
+    // Transform backend posts
     const transformedPosts = backendPosts
       .map(transformBackendPost)
       .filter(Boolean) as FeedPost[];
@@ -438,17 +491,58 @@ const fetchPosts = async (loadMore = false) => {
 
     hasMore.value = backendPosts.length === limit;
     offset.value += backendPosts.length;
+    
   } catch (err) {
     console.error("❌ Error fetching posts:", err);
+    
+    // Try fallback to public endpoint if authenticated endpoint fails
+    if (!isGuestMode.value && err instanceof Error && !err.message.includes('public')) {
+      console.log("🔄 Trying public endpoint as fallback...");
+      try {
+        const publicEndpoint = props.userId
+          ? `/posts/public/user/${props.userId}?limit=${limit}&offset=${offset.value}`
+          : `/posts/public/feed?limit=${limit}&offset=${offset.value}`;
+          
+        console.log("🚀 Fallback to public endpoint:", publicEndpoint);
+        
+        const response = await fetch(`${API_URL}${publicEndpoint}`, {
+          headers: { 'Content-Type': 'application/json' }
+        });
+        
+        if (response.ok) {
+          const backendPosts: BackendPost[] = await response.json();
+          const transformedPosts = backendPosts
+            .map(transformBackendPost)
+            .filter(Boolean) as FeedPost[];
+          
+          if (loadMore) {
+            posts.value.push(...transformedPosts);
+          } else {
+            posts.value = transformedPosts;
+          }
+          
+          hasMore.value = backendPosts.length === limit;
+          offset.value += backendPosts.length;
+          isGuestMode.value = true; // Mark as guest mode since we used public endpoint
+          
+          console.log("✅ Fallback successful, loaded", transformedPosts.length, "posts");
+          return; // Success with fallback
+        }
+      } catch (fallbackErr) {
+        console.error("❌ Fallback also failed:", fallbackErr);
+      }
+    }
+    
+    // If we get here, both primary and fallback failed
     error.value = err instanceof Error ? err.message : "Failed to load posts";
 
-    // If it's an auth error, you might want to redirect to login
-    if (err instanceof Error && err.message.includes('Authentication')) {
+    // Only redirect for auth errors in non-guest mode
+    if (err instanceof Error && err.message.includes('Authentication') && !isGuestMode.value) {
+      console.log("🔒 Authentication error in authenticated mode");
       // Optional: redirect to login
       // window.location.href = '/signin';
     }
 
-    // Don't fallback to mock data - show error instead
     if (!loadMore) {
       posts.value = [];
     }
@@ -482,5 +576,6 @@ onMounted(() => {
 // Expose refresh function for parent components
 defineExpose({
   refresh: () => fetchPosts(),
+  isGuestMode: () => isGuestMode.value, // NEW: Expose guest mode status
 });
 </script>
