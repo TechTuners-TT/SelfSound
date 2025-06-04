@@ -24,6 +24,12 @@
   <!-- Error State -->
   <div v-if="error" class="text-red-400 text-center py-4">
     {{ error }}
+    <button
+      @click="fetchNotifications"
+      class="block mx-auto mt-2 text-[#6D01D0] hover:text-[#8B4CD8]"
+    >
+      Try Again
+    </button>
   </div>
 
   <!-- Empty State -->
@@ -148,6 +154,31 @@ const offset = ref(0);
 
 let timeInterval: ReturnType<typeof setTimeout> | null = null;
 
+// FIXED: Helper function to get authentication token
+const getAuthToken = () => {
+  return localStorage.getItem('access_token') || 
+         localStorage.getItem('authToken') ||
+         sessionStorage.getItem('access_token') ||
+         sessionStorage.getItem('authToken');
+};
+
+// FIXED: Helper function to get authenticated headers
+const getAuthHeaders = () => {
+  const headers: Record<string, string> = {
+    'Content-Type': 'application/json'
+  };
+  
+  const token = getAuthToken();
+  if (token) {
+    headers['Authorization'] = `Bearer ${token}`;
+    console.log('🔑 Using Authorization header for notifications API');
+  } else {
+    console.warn('⚠️ No token found for notifications request');
+  }
+  
+  return headers;
+};
+
 // Get notification color based on type
 const getNotificationColor = (type: string): string => {
   switch (type) {
@@ -224,7 +255,7 @@ const handleNotificationAction = (notification: Notification) => {
   }
 };
 
-// Fetch notifications from backend
+// FIXED: Fetch notifications from backend with authentication
 async function fetchNotifications(loadMore: boolean = false) {
   if (loadMore) {
     isLoadingMore.value = true;
@@ -236,23 +267,35 @@ async function fetchNotifications(loadMore: boolean = false) {
   error.value = "";
 
   try {
+    const token = getAuthToken();
+    if (!token) {
+      throw new Error('Authentication required. Please sign in to view notifications.');
+    }
+
     console.log("🔔 Fetching notifications...");
     const res = await fetch(
       `${API_URL}/notifications?limit=${limit}&offset=${offset.value}`,
       {
-        credentials: "include",
+        method: 'GET',
+        headers: getAuthHeaders(),
+        credentials: "include", // Keep for cookie fallback
       },
     );
 
     if (!res.ok) {
       if (res.status === 401) {
-        throw new Error("Please sign in to view notifications");
+        // Clear invalid token
+        localStorage.removeItem('access_token');
+        localStorage.removeItem('authToken');
+        sessionStorage.removeItem('access_token');
+        sessionStorage.removeItem('authToken');
+        throw new Error("Session expired. Please sign in again.");
       }
       throw new Error(`Failed to fetch notifications: ${res.statusText}`);
     }
 
     const data = await res.json();
-    console.log("🔔 Notifications data:", data);
+    console.log("✅ Notifications loaded:", data.length, "items");
 
     if (loadMore) {
       notifications.value.push(...data);
@@ -271,11 +314,18 @@ async function fetchNotifications(loadMore: boolean = false) {
   }
 }
 
-// Mark notification as read
+// FIXED: Mark notification as read with authentication
 async function markAsRead(notificationId: string) {
   try {
+    const token = getAuthToken();
+    if (!token) {
+      console.warn('⚠️ No token available to mark notification as read');
+      return;
+    }
+
     const res = await fetch(`${API_URL}/notifications/${notificationId}/read`, {
       method: "PATCH",
+      headers: getAuthHeaders(),
       credentials: "include",
     });
 
@@ -286,7 +336,10 @@ async function markAsRead(notificationId: string) {
       );
       if (notification) {
         notification.read = true;
+        console.log('✅ Notification marked as read:', notificationId);
       }
+    } else {
+      console.error('❌ Failed to mark notification as read:', res.status);
     }
   } catch (err) {
     console.error("❌ Error marking notification as read:", err);
