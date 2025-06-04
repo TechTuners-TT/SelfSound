@@ -1,3 +1,4 @@
+<!-- 🔥 FIXED PostCard.vue with Enhanced Mobile Auth -->
 <template>
   <div class="relative" :style="{ marginLeft: side, marginRight: side }">
     <div
@@ -264,6 +265,72 @@ import { useRouter } from "vue-router";
 // Get API URL from environment variable
 const API_URL = import.meta.env.VITE_API_URL;
 
+// 🔥 FIXED: Auth functions (EXACT copies from UserProfile.vue)
+const getAuthToken = () => {
+  // Check localStorage first
+  let token = localStorage.getItem('access_token') || 
+              localStorage.getItem('authToken') ||
+              sessionStorage.getItem('access_token') ||
+              sessionStorage.getItem('authToken');
+  
+  // If no token in storage, try to read from cookies with enhanced method
+  if (!token) {
+    token = getCookie('access_token');
+  }
+  
+  console.log('🔍 PostCard token search:', token ? `FOUND: ${token.substring(0, 20)}...` : 'NOT FOUND');
+  return token;
+};
+
+// Enhanced cookie reading function (EXACT COPY from UserProfile)
+const getCookie = (name: string): string | null => {
+  try {
+    // Method 1: Standard approach
+    const value = `; ${document.cookie}`;
+    const parts = value.split(`; ${name}=`);
+    if (parts.length === 2) {
+      const cookieValue = parts.pop()?.split(';').shift() || null;
+      if (cookieValue) {
+        console.log(`🍪 PostCard found cookie ${name}:`, cookieValue.substring(0, 20) + '...');
+        return cookieValue;
+      }
+    }
+    
+    // Method 2: Direct regex search (better for mobile)
+    const regex = new RegExp(`(^|;)\\s*${name}\\s*=\\s*([^;]+)`);
+    const match = document.cookie.match(regex);
+    if (match) {
+      const cookieValue = match[2];
+      console.log(`🍪 PostCard found cookie via regex ${name}:`, cookieValue.substring(0, 20) + '...');
+      return cookieValue;
+    }
+    
+    console.log(`🍪 PostCard cookie ${name} not found`);
+    return null;
+  } catch (error) {
+    console.error('❌ PostCard error reading cookie:', error);
+    return null;
+  }
+};
+
+// Enhanced auth headers function
+const getAuthHeaders = () => {
+  const headers: Record<string, string> = {
+    'Content-Type': 'application/json'
+  };
+  
+  const token = getAuthToken();
+  
+  if (token) {
+    headers['Authorization'] = `Bearer ${token}`;
+    console.log('🔑 PostCard using Authorization header:', token.substring(0, 20) + '...');
+  } else {
+    console.warn('⚠️ PostCard no token found for authenticated request');
+  }
+  
+  return headers;
+};
+
 // Post components
 import AudioContent from "@/components/Posts_Feed_Components/AudioPost.vue";
 import MusicXmlContent from "@/components/Posts_Feed_Components/MusicXmlPost.vue";
@@ -394,7 +461,7 @@ watch(
 // Router for navigation
 const router = useRouter();
 
-// Like toggle function with backend integration - FRONTEND-ONLY FIX
+// 🔥 FIXED: Like toggle function with proper auth
 async function toggleLike() {
   if (isLiking.value) return;
 
@@ -421,18 +488,29 @@ async function toggleLike() {
   });
 
   try {
+    const token = getAuthToken();
+    if (!token) {
+      throw new Error('Authentication required. Please sign in.');
+    }
+
     console.log("🔍 LIKE DEBUG - Making API call...");
 
     const response = await fetch(`${API_URL}/posts/${props.post.id}/like`, {
       method: "POST",
-      credentials: "include",
-      headers: {
-        "Content-Type": "application/json",
-      },
+      headers: getAuthHeaders(),
+      credentials: "include", // CRITICAL for mobile
     });
 
     console.log("🔍 LIKE DEBUG - Response status:", response.status);
-    console.log("🔍 LIKE DEBUG - Response ok:", response.ok);
+
+    // 🔥 CRITICAL: Handle 401 responses with token cleanup
+    if (response.status === 401) {
+      localStorage.removeItem('access_token');
+      localStorage.removeItem('authToken');
+      sessionStorage.removeItem('access_token');
+      sessionStorage.removeItem('authToken');
+      throw new Error('Session expired. Please sign in again.');
+    }
 
     if (!response.ok) {
       const errorText = await response.text();
@@ -443,29 +521,16 @@ async function toggleLike() {
     const result = await response.json();
     console.log("✅ LIKE DEBUG - API Success Response:", result);
 
-    // FRONTEND-ONLY FIX: Handle your backend's actual response format
-    // Your backend returns: {"message": "Post liked", "liked": true}
+    // Handle your backend's actual response format
     if (result.liked !== undefined) {
       console.log("🔍 LIKE DEBUG - Using backend 'liked' field:", result.liked);
       liked.value = result.liked;
-
-      // Keep our optimistic count update since backend doesn't return count
-      console.log("🔍 LIKE DEBUG - Keeping optimistic count:", likeCount.value);
     } else if (result.user_liked !== undefined) {
-      // Fallback: if backend format changes
-      console.log(
-        "🔍 LIKE DEBUG - Using backend 'user_liked' field:",
-        result.user_liked,
-      );
+      console.log("🔍 LIKE DEBUG - Using backend 'user_liked' field:", result.user_liked);
       liked.value = result.user_liked;
       if (result.likes_count !== undefined) {
         likeCount.value = Math.max(0, result.likes_count);
       }
-    } else {
-      // Keep optimistic update if no recognizable fields
-      console.log(
-        "🔍 LIKE DEBUG - No recognized fields, keeping optimistic update",
-      );
     }
 
     console.log("🔍 LIKE DEBUG - Final state after server response:", {
@@ -529,7 +594,7 @@ function closeReportModal() {
   showReportModal.value = false;
 }
 
-// Submit report with full backend integration and debug logging
+// 🔥 FIXED: Submit report with proper auth
 async function submitReport() {
   console.log("🔍 submitReport called");
   console.log("🔍 reportReason:", reportReason.value);
@@ -559,13 +624,16 @@ async function submitReport() {
   console.log(`🔍 Making request to: ${API_URL}/reports/post`);
 
   try {
+    const token = getAuthToken();
+    if (!token) {
+      throw new Error('Authentication required. Please sign in.');
+    }
+
     console.log("🔍 Starting fetch request...");
     const response = await fetch(`${API_URL}/reports/post`, {
       method: "POST",
-      credentials: "include",
-      headers: {
-        "Content-Type": "application/json",
-      },
+      headers: getAuthHeaders(),
+      credentials: "include", // CRITICAL for mobile
       body: JSON.stringify(payload),
     });
 
@@ -573,6 +641,15 @@ async function submitReport() {
     console.log("  - Status:", response.status);
     console.log("  - StatusText:", response.statusText);
     console.log("  - OK:", response.ok);
+
+    // 🔥 CRITICAL: Handle 401 responses with token cleanup
+    if (response.status === 401) {
+      localStorage.removeItem('access_token');
+      localStorage.removeItem('authToken');
+      sessionStorage.removeItem('access_token');
+      sessionStorage.removeItem('authToken');
+      throw new Error('Session expired. Please sign in again.');
+    }
 
     if (!response.ok) {
       const errorData = await response.json();
