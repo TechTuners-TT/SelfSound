@@ -149,114 +149,108 @@
   </div>
 </template>
 
-<script>
+<script setup lang="ts">
+import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 
-export default {
-  name: 'SignInView',
-  data() {
-    return {
-      email: '',
-      password: '',
-      isLoading: false,
-      errorMessage: '',
-      showSuccess: false
-    }
-  },
-  setup() {
-    const router = useRouter()
-    return { router }
-  },
-  methods: {
-    async signInWithGoogle() {
-      this.isLoading = true
-      this.errorMessage = ''
-      
-      try {
-        // Replace with your actual Google auth logic
-        const response = await fetch('/api/auth/google', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json'
-          }
-        })
-        
-        if (!response.ok) {
-          throw new Error('Google sign in failed')
-        }
-        
-        const data = await response.json()
-        
-        // Store token (adjust based on your auth implementation)
-        localStorage.setItem('access_token', data.access_token)
-        // or document.cookie = `access_token=${data.access_token}; path=/`
-        
-        this.showSuccess = true
-        
-        // Optional: Auto-redirect after 3 seconds
-        setTimeout(() => {
-          if (this.showSuccess) {
-            this.continueToApp()
-          }
-        }, 3000)
-        
-      } catch (error) {
-        console.error('Google sign in error:', error)
-        this.errorMessage = error.message || 'Google sign in failed. Please try again.'
-      } finally {
-        this.isLoading = false
-      }
-    },
+// Reactive data
+const email = ref('')
+const password = ref('')
+const isLoading = ref(false)
+const errorMessage = ref('')
+const showSuccess = ref(false)
 
-    async signInWithEmail() {
-      this.isLoading = true
-      this.errorMessage = ''
-      
-      try {
-        // Replace with your actual email auth logic
-        const response = await fetch('/api/auth/login', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify({
-            email: this.email,
-            password: this.password
-          })
-        })
-        
-        if (!response.ok) {
-          throw new Error('Invalid email or password')
-        }
-        
-        const data = await response.json()
-        
-        // Store token (adjust based on your auth implementation)
-        localStorage.setItem('access_token', data.access_token)
-        // or document.cookie = `access_token=${data.access_token}; path=/`
-        
-        this.showSuccess = true
-        
-        // Optional: Auto-redirect after 3 seconds
-        setTimeout(() => {
-          if (this.showSuccess) {
-            this.continueToApp()
-          }
-        }, 3000)
-        
-      } catch (error) {
-        console.error('Email sign in error:', error)
-        this.errorMessage = error.message || 'Sign in failed. Please check your credentials.'
-      } finally {
-        this.isLoading = false
-      }
-    },
+// Router
+const router = useRouter()
 
-    continueToApp() {
-      // Redirect to intended page or dashboard
-      const redirect = this.$route.query.redirect || '/dashboard'
-      this.$router.push(redirect)
+// Methods
+const signInWithGoogle = async () => {
+  isLoading.value = true
+  errorMessage.value = ''
+  
+  try {
+    // Replace with your actual Google auth logic
+    const response = await fetch('/api/auth/google', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    })
+    
+    if (!response.ok) {
+      throw new Error('Google sign in failed')
     }
+    
+    const data = await response.json()
+    
+    // Store token (adjust based on your auth implementation)
+    localStorage.setItem('access_token', data.access_token)
+    // or document.cookie = `access_token=${data.access_token}; path=/`
+    
+    showSuccess.value = true
+    
+    // Optional: Auto-redirect after 3 seconds
+    setTimeout(() => {
+      if (showSuccess.value) {
+        continueToApp()
+      }
+    }, 3000)
+    
+  } catch (error: any) {
+    console.error('Google sign in error:', error)
+    errorMessage.value = error.message || 'Google sign in failed. Please try again.'
+  } finally {
+    isLoading.value = false
   }
+}
+
+const signInWithEmail = async () => {
+  isLoading.value = true
+  errorMessage.value = ''
+  
+  try {
+    // Replace with your actual email auth logic
+    const response = await fetch('/api/auth/login', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        email: email.value,
+        password: password.value
+      })
+    })
+    
+    if (!response.ok) {
+      throw new Error('Invalid email or password')
+    }
+    
+    const data = await response.json()
+    
+    // Store token (adjust based on your auth implementation)
+    localStorage.setItem('access_token', data.access_token)
+    // or document.cookie = `access_token=${data.access_token}; path=/`
+    
+    showSuccess.value = true
+    
+    // Optional: Auto-redirect after 3 seconds
+    setTimeout(() => {
+      if (showSuccess.value) {
+        continueToApp()
+      }
+    }, 3000)
+    
+  } catch (error: any) {
+    console.error('Email sign in error:', error)
+    errorMessage.value = error.message || 'Sign in failed. Please check your credentials.'
+  } finally {
+    isLoading.value = false
+  }
+}
+
+const continueToApp = () => {
+  // Redirect to intended page or dashboard
+  const redirect = router.currentRoute.value.query.redirect as string || '/dashboard'
+  router.push(redirect)
 }
 </script>
