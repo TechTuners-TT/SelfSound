@@ -1,102 +1,171 @@
 <template>
-  <div>
-    <!-- Loading State -->
-    <div
-      v-if="isLoading && posts.length === 0"
-      class="text-white text-center py-8"
-    >
-      <div
-        class="animate-spin rounded-full h-8 w-8 border-b-2 border-[#6D01D0] mx-auto mb-4"
-      ></div>
-      Loading posts...
-    </div>
+  <div class="relative w-full min-h-screen flex flex-col bg-[#060310]">
+    <!-- Main content -->
+    <main class="flex flex-col flex-grow overflow-auto">
+      <!-- Nav Bar -->
+      <NavBar />
 
-    <!-- Error State -->
-    <div v-if="error" class="text-red-400 text-center py-4 mb-4">
-      {{ error }}
-      <button
-        @click="handleRetry"
-        class="block mx-auto mt-2 text-[#6D01D0] hover:text-[#8B4CD8]"
-      >
-        Try Again
-      </button>
-    </div>
+      <!-- Content -->
+      <div class="flex-grow max-h-full">
+        <div class="relative flex items-start justify-center w-full h-full">
+          <div
+            class="gap-[20px] sm:gap-[20px] md:gap-[25px] lg:gap-[30px] xl:gap-[35px] 2xl:gap-10 relative w-full md:w-3/5 xl:w-1/3 bg-black/30 flex flex-col min-h-screen overflow-y-auto"
+          >
+            <!-- Page Header -->
+            <section class="px-[10px] sm:px-[40px] md:px-[20px] lg:px-[30px] xl:px-[20px] 2xl:px-[40px] pt-8">
+              <h1 class="text-white text-2xl font-bold inter-font mb-4">
+                Listened To Feed
+              </h1>
+              <p class="text-gray-300 text-sm inter-font">
+                Posts from users you're listening to
+              </p>
+            </section>
 
-    <!-- Empty State -->
-    <div
-      v-if="!isLoading && !error && posts.length === 0"
-      class="text-gray-400 text-center py-8"
-    >
-      <p class="text-lg mb-2">No posts yet</p>
-      <p class="text-sm">Be the first to share something!</p>
-    </div>
+            <!-- Divider -->
+            <div class="w-full h-px border border-[rgba(255,255,255,0.5)]"></div>
 
-    <!-- Posts -->
-    <PostCard v-for="post in posts" :key="post.id" :post="post" />
+            <!-- Feed Content -->
+            <section class="px-[10px] sm:px-[40px] md:px-[20px] lg:px-[30px] xl:px-[20px] 2xl:px-[40px]">
+              <!-- Loading State -->
+              <div
+                v-if="isLoading && posts.length === 0"
+                class="text-white text-center py-8"
+              >
+                <div
+                  class="animate-spin rounded-full h-8 w-8 border-b-2 border-[#6D01D0] mx-auto mb-4"
+                ></div>
+                Loading listened to feed...
+              </div>
 
-    <!-- Load More Button -->
-    <div v-if="hasMore && posts.length > 0" class="text-center mt-8">
-      <button
-        @click="handleLoadMore"
-        :disabled="isLoadingMore"
-        class="bg-[#6D01D0] hover:bg-[#5a0ba8] disabled:bg-gray-600 text-white px-6 py-2 rounded-lg transition-colors disabled:cursor-not-allowed"
-      >
-        {{ isLoadingMore ? "Loading..." : "Load More" }}
-      </button>
-    </div>
+              <!-- Error State -->
+              <div
+                v-if="error"
+                class="text-red-400 text-center py-4 mb-4"
+              >
+                {{ error }}
+                <button
+                  @click="fetchListenedToFeed"
+                  class="block mx-auto mt-2 text-[#6D01D0] hover:text-[#8B4CD8]"
+                >
+                  Try Again
+                </button>
+              </div>
+
+              <!-- Empty State -->
+              <div
+                v-if="!isLoading && !error && posts.length === 0"
+                class="text-gray-400 text-center py-8"
+              >
+                <p class="text-lg mb-2">No posts yet</p>
+                <p class="text-sm">Follow some users to see their posts here!</p>
+              </div>
+
+              <!-- Posts -->
+              <div v-if="posts.length > 0" class="space-y-4">
+                <PostCard 
+                  v-for="post in posts" 
+                  :key="post.id" 
+                  :post="post" 
+                />
+              </div>
+
+              <!-- Load More Button -->
+              <div
+                v-if="hasMore && posts.length > 0"
+                class="text-center mt-8 pb-8"
+              >
+                <button
+                  @click="loadMore"
+                  :disabled="isLoadingMore"
+                  class="bg-[#6D01D0] hover:bg-[#5a0ba8] disabled:bg-gray-600 text-white px-6 py-2 rounded-lg transition-colors disabled:cursor-not-allowed"
+                >
+                  {{ isLoadingMore ? "Loading..." : "Load More" }}
+                </button>
+              </div>
+            </section>
+          </div>
+        </div>
+      </div>
+    </main>
   </div>
 </template>
 
-<script lang="ts" setup>
-import { ref, onMounted } from "vue";
-import PostCard from "@/components/Posts_Feed_Components/PostCard.vue";
-import { api, getAuthToken } from "@/utils/api-helper"; // Import the helper
+<script setup lang="ts">
+import { ref, onMounted } from 'vue';
+import NavBar from '@/components/Navigation/NavBar.vue';
+import PostCard from '@/components/Posts_Feed_Components/PostCard.vue';
 
 // Get API URL from environment variable
 const API_URL = import.meta.env.VITE_API_URL;
 
-// Backend post interface for API responses
-interface BackendPost {
-  id: string;
-  type: string;
-  caption?: string;
-  created_at: string;
-  likes_count: number;
-  comments_count: number;
-  user_liked: boolean;
-  user: {
-    id: string;
-    login: string;
-    name: string;
-    tag_id: string | null;
-    avatar_url?: string;
-  };
-  media?: Array<{
-    id: string;
-    file_url: string;
-    file_type: string;
-  }>;
-  audio?: Array<{
-    title: string;
-    artist: string;
-    cover_url?: string;
-    duration?: string;
-    file_url: string;
-  }>;
-  musicxml?: Array<{
-    title: string;
-    composer: string;
-    file_url: string;
-  }>;
-  lyrics?: {
-    title: string;
-    artist: string;
-    lyrics_text: string;
-  };
-}
+// 🔥 FIXED: Auth functions (exact copies from UserProfile.vue)
+const getAuthToken = () => {
+  // Check localStorage first
+  let token = localStorage.getItem('access_token') || 
+              localStorage.getItem('authToken') ||
+              sessionStorage.getItem('access_token') ||
+              sessionStorage.getItem('authToken');
+  
+  // If no token in storage, try to read from cookies with enhanced method
+  if (!token) {
+    token = getCookie('access_token');
+  }
+  
+  console.log('🔍 ListenedToFeed token search:', token ? `FOUND: ${token.substring(0, 20)}...` : 'NOT FOUND');
+  return token;
+};
 
-// Keep your existing interfaces - they're perfect!
-interface PostBase {
+// Enhanced cookie reading function
+const getCookie = (name: string): string | null => {
+  try {
+    // Method 1: Standard approach
+    const value = `; ${document.cookie}`;
+    const parts = value.split(`; ${name}=`);
+    if (parts.length === 2) {
+      const cookieValue = parts.pop()?.split(';').shift() || null;
+      if (cookieValue) {
+        console.log(`🍪 ListenedToFeed found cookie ${name}:`, cookieValue.substring(0, 20) + '...');
+        return cookieValue;
+      }
+    }
+    
+    // Method 2: Direct regex search (better for mobile)
+    const regex = new RegExp(`(^|;)\\s*${name}\\s*=\\s*([^;]+)`);
+    const match = document.cookie.match(regex);
+    if (match) {
+      const cookieValue = match[2];
+      console.log(`🍪 ListenedToFeed found cookie via regex ${name}:`, cookieValue.substring(0, 20) + '...');
+      return cookieValue;
+    }
+    
+    console.log(`🍪 ListenedToFeed cookie ${name} not found`);
+    return null;
+  } catch (error) {
+    console.error('❌ ListenedToFeed error reading cookie:', error);
+    return null;
+  }
+};
+
+// Enhanced auth headers function
+const getAuthHeaders = () => {
+  const headers: Record<string, string> = {
+    'Content-Type': 'application/json'
+  };
+  
+  const token = getAuthToken();
+  
+  if (token) {
+    headers['Authorization'] = `Bearer ${token}`;
+    console.log('🔑 ListenedToFeed using Authorization header:', token.substring(0, 20) + '...');
+  } else {
+    console.warn('⚠️ ListenedToFeed no token found for authenticated request');
+  }
+  
+  return headers;
+};
+
+// Post interface (using same structure as other components)
+interface Post {
   id: string;
   userId: string;
   username: string;
@@ -109,117 +178,27 @@ interface PostBase {
   comments_count?: number;
   user_liked?: boolean;
   caption?: string;
+  content: any;
 }
 
-interface AudioPost extends PostBase {
-  type: "audio";
-  content: {
-    title: string;
-    artist: string;
-    coverUrl: string;
-    duration: string;
-    url: string;
-  }[];
-}
-
-interface XmlPost extends PostBase {
-  type: "musicxml";
-  content: {
-    fileName: string;
-    composer: string;
-    downloadUrl: string;
-  }[];
-}
-
-interface MediaPost extends PostBase {
-  type: "media";
-  content: {
-    mediaType: "media";
-    items: {
-      src: string;
-      type: "image" | "video";
-      id?: string;
-    }[];
-  };
-}
-
-interface LyricsPost extends PostBase {
-  type: "lyrics";
-  content: {
-    title: string;
-    artist: string;
-    lyricsText: string;
-  };
-}
-
-type FeedPost = AudioPost | XmlPost | MediaPost | LyricsPost;
-
-// Props for filtering posts by user
-const props = defineProps<{
-  userId?: string; // If provided, fetch posts for specific user only
-}>();
-
-const posts = ref<FeedPost[]>([]);
+// Reactive state
+const posts = ref<Post[]>([]);
 const isLoading = ref(false);
 const isLoadingMore = ref(false);
-const error = ref("");
+const error = ref('');
 const hasMore = ref(true);
 const limit = 10;
 const offset = ref(0);
 
-// FIXED: Helper function to get authentication token
-const getAuthToken = () => {
-  // Check localStorage first
-  let token = localStorage.getItem('access_token') || 
-              localStorage.getItem('authToken') ||
-              sessionStorage.getItem('access_token') ||
-              sessionStorage.getItem('authToken');
-  
-  // If no token in storage, try to read from cookies
-  if (!token) {
-    token = getCookie('access_token');
-  }
-  
-  console.log('🔍 Token search result:', token ? `FOUND: ${token.substring(0, 20)}...` : 'NOT FOUND');
-  return token;
+// Map UUIDs to tag names
+const tagMap: Record<string, string> = {
+  "146fb41a-2f3e-48c7-bef9-01de0279dfd7": "Listener",
+  "b361c6f9-9425-4548-8c07-cb408140c304": "Musician", 
+  "5ee121a6-b467-4ead-b3f7-00e1ce6097d5": "Learner",
 };
 
-// Helper function to get cookie value - IMPROVED for mobile Safari
-const getCookie = (name: string): string | null => {
-  try {
-    // Method 1: Standard approach
-    const value = `; ${document.cookie}`;
-    const parts = value.split(`; ${name}=`);
-    if (parts.length === 2) {
-      const cookieValue = parts.pop()?.split(';').shift() || null;
-      if (cookieValue) {
-        console.log(`🍪 Found cookie ${name}:`, cookieValue.substring(0, 20) + '...');
-        return cookieValue;
-      }
-    }
-    
-    // Method 2: Direct regex search (better for mobile)
-    const regex = new RegExp(`(^|;)\\s*${name}\\s*=\\s*([^;]+)`);
-    const match = document.cookie.match(regex);
-    if (match) {
-      const cookieValue = match[2];
-      console.log(`🍪 Found cookie via regex ${name}:`, cookieValue.substring(0, 20) + '...');
-      return cookieValue;
-    }
-    
-    console.log(`🍪 Cookie ${name} not found`);
-    console.log(`🍪 Available cookies:`, document.cookie);
-    return null;
-  } catch (error) {
-    console.error('❌ Error reading cookie:', error);
-    return null;
-  }
-};
-
-// Map backend user roles to your role system
-const mapUserRole = (
-  tagId: string | null,
-): "Musician" | "Listener" | "Learner" => {
+// Helper functions
+const mapUserRole = (tagId: string | null): "Musician" | "Listener" | "Learner" => {
   const roleMap: Record<string, "Musician" | "Listener" | "Learner"> = {
     "146fb41a-2f3e-48c7-bef9-01de0279dfd7": "Listener",
     "b361c6f9-9425-4548-8c07-cb408140c304": "Musician",
@@ -228,7 +207,6 @@ const mapUserRole = (
   return roleMap[tagId || ""] || "Listener";
 };
 
-// Format timestamp
 const formatTimestamp = (dateString: string): string => {
   const date = new Date(dateString);
   const now = new Date();
@@ -245,21 +223,9 @@ const formatTimestamp = (dateString: string): string => {
   return date.toLocaleDateString();
 };
 
-// Transform backend post to your format - FIXED with proper type conversion
-const transformBackendPost = (backendPost: BackendPost): FeedPost | null => {
+// Transform backend post to frontend format
+const transformBackendPost = (backendPost: any): Post | null => {
   try {
-    console.log("🔍 PostFeed - Raw backend post:", backendPost);
-    console.log(
-      "🔍 PostFeed - Raw likes_count:",
-      backendPost.likes_count,
-      typeof backendPost.likes_count,
-    );
-    console.log(
-      "🔍 PostFeed - Raw user_liked:",
-      backendPost.user_liked,
-      typeof backendPost.user_liked,
-    );
-
     const basePost = {
       id: backendPost.id,
       userId: backendPost.user.id,
@@ -268,104 +234,66 @@ const transformBackendPost = (backendPost: BackendPost): FeedPost | null => {
       role: mapUserRole(backendPost.user.tag_id),
       avatarUrl: backendPost.user.avatar_url || "",
       timestamp: formatTimestamp(backendPost.created_at),
-      // FIXED: Ensure proper data types with explicit conversion
-      likes_count: Number(backendPost.likes_count) || 0,
-      comments_count: Number(backendPost.comments_count) || 0,
-      user_liked: Boolean(backendPost.user_liked),
+      likes_count: backendPost.likes_count,
+      comments_count: backendPost.comments_count,
+      user_liked: backendPost.user_liked,
       caption: backendPost.caption,
     };
 
-    console.log(
-      "🔍 PostFeed - Transformed likes_count:",
-      basePost.likes_count,
-      typeof basePost.likes_count,
-    );
-    console.log(
-      "🔍 PostFeed - Transformed user_liked:",
-      basePost.user_liked,
-      typeof basePost.user_liked,
-    );
-
-    // Transform media posts
+    // Transform different post types
     if (backendPost.type === "media" && backendPost.media) {
-      const finalPost = {
+      return {
         ...basePost,
-        type: "media" as const,
+        type: "media",
         content: {
-          mediaType: "media" as const,
-          items: backendPost.media.map((item) => ({
+          mediaType: "media",
+          items: backendPost.media.map((item: any) => ({
             id: item.id,
             src: item.file_url,
-            type:
-              item.file_type === "image"
-                ? ("image" as const)
-                : ("video" as const),
+            type: item.file_type === "image" ? "image" : "video",
           })),
         },
-      } as MediaPost;
-
-      console.log("🔍 PostFeed - Final media post:", finalPost);
-      return finalPost;
+      };
     }
 
-    // Transform audio posts
     if (backendPost.type === "audio" && backendPost.audio) {
-      console.log("🎵 Transforming audio post:", backendPost);
-
-      const finalPost = {
+      return {
         ...basePost,
-        type: "audio" as const,
-        content: backendPost.audio.map((item) => ({
+        type: "audio",
+        content: backendPost.audio.map((item: any) => ({
           title: item.title,
           artist: item.artist,
-          coverUrl: item.cover_url || "", // Cover image URL from backend
-          duration: item.duration || "0:00", // Duration from backend
-          url: item.file_url, // Audio file URL
+          coverUrl: item.cover_url || "",
+          duration: item.duration || "0:00",
+          url: item.file_url,
         })),
-      } as AudioPost;
-
-      console.log("🔍 PostFeed - Final audio post:", finalPost);
-      return finalPost;
+      };
     }
 
-    // Transform MusicXML posts
     if (backendPost.type === "musicxml" && backendPost.musicxml) {
-      console.log("📄 Transforming MusicXML post:", backendPost);
-
-      const finalPost = {
+      return {
         ...basePost,
-        type: "musicxml" as const,
-        content: backendPost.musicxml.map((item) => ({
-          fileName: item.title, // Use title as fileName for display
+        type: "musicxml",
+        content: backendPost.musicxml.map((item: any) => ({
+          fileName: item.title,
           composer: item.composer,
-          downloadUrl: item.file_url, // Direct download URL
+          downloadUrl: item.file_url,
         })),
-      } as XmlPost;
-
-      console.log("🔍 PostFeed - Final musicxml post:", finalPost);
-      return finalPost;
+      };
     }
 
-    // Transform lyrics posts
     if (backendPost.type === "lyrics" && backendPost.lyrics) {
-      console.log("📝 Transforming lyrics post:", backendPost);
-
-      const finalPost = {
+      return {
         ...basePost,
-        type: "lyrics" as const,
+        type: "lyrics",
         content: {
           title: backendPost.lyrics.title,
           artist: backendPost.lyrics.artist,
           lyricsText: backendPost.lyrics.lyrics_text,
         },
-      } as LyricsPost;
-
-      console.log("🔍 PostFeed - Final lyrics post:", finalPost);
-      return finalPost;
+      };
     }
 
-    // Unsupported post type
-    console.log("⚠️ Unsupported post type:", backendPost.type);
     return null;
   } catch (error) {
     console.error("❌ Error transforming post:", error);
@@ -373,8 +301,8 @@ const transformBackendPost = (backendPost: BackendPost): FeedPost | null => {
   }
 };
 
-// Fetch posts from backend
-const fetchPosts = async (loadMore = false) => {
+// 🔥 FIXED: Fetch listened to feed with proper authentication
+const fetchListenedToFeed = async (loadMore = false) => {
   if (loadMore) {
     isLoadingMore.value = true;
   } else {
@@ -382,33 +310,43 @@ const fetchPosts = async (loadMore = false) => {
     offset.value = 0;
   }
 
-  error.value = "";
+  error.value = '';
 
   try {
-    // FIXED: Use the API helper for authenticated requests
     const token = getAuthToken();
     if (!token) {
       throw new Error('Authentication required. Please sign in.');
     }
 
-    // Fetch real posts from backend using API helper
-    const endpoint = props.userId
-      ? `/posts/user/${props.userId}?limit=${limit}&offset=${offset.value}`
-      : `/posts/feed?limit=${limit}&offset=${offset.value}`;
+    // Endpoint for posts from users you're listening to
+    const endpoint = `${API_URL}/posts/listened-to?limit=${limit}&offset=${offset.value}`;
+    console.log("🚀 Fetching listened to feed from:", endpoint);
 
-    console.log("🚀 Fetching posts from:", endpoint);
-    console.log("🔑 Token check:", token ? `${token.substring(0, 20)}...` : 'NOT FOUND');
+    const response = await fetch(endpoint, {
+      method: 'GET',
+      headers: getAuthHeaders(),
+      credentials: "include",
+    });
 
-    const response = await api.get(endpoint);
-    const backendPosts: BackendPost[] = await response.json();
-    console.log("✅ Fetched backend posts:", backendPosts.length, "posts");
+    // Handle 401 responses with token cleanup
+    if (response.status === 401) {
+      localStorage.removeItem('access_token');
+      localStorage.removeItem('authToken');
+      sessionStorage.removeItem('access_token');
+      sessionStorage.removeItem('authToken');
+      throw new Error('Session expired. Please sign in again.');
+    }
 
-    // Transform backend posts (only real data, no mock data)
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+
+    const backendPosts = await response.json();
+    console.log("✅ Fetched listened to posts:", backendPosts.length, "posts");
+
     const transformedPosts = backendPosts
       .map(transformBackendPost)
-      .filter(Boolean) as FeedPost[];
-
-    console.log("🔄 Transformed posts:", transformedPosts.length, "valid posts");
+      .filter(Boolean) as Post[];
 
     if (loadMore) {
       posts.value.push(...transformedPosts);
@@ -418,17 +356,11 @@ const fetchPosts = async (loadMore = false) => {
 
     hasMore.value = backendPosts.length === limit;
     offset.value += backendPosts.length;
+
   } catch (err) {
-    console.error("❌ Error fetching posts:", err);
-    error.value = err instanceof Error ? err.message : "Failed to load posts";
+    console.error("❌ Error fetching listened to feed:", err);
+    error.value = err instanceof Error ? err.message : "Failed to load feed";
 
-    // If it's an auth error, you might want to redirect to login
-    if (err instanceof Error && err.message.includes('Authentication')) {
-      // Optional: redirect to login
-      // window.location.href = '/signin';
-    }
-
-    // Don't fallback to mock data - show error instead
     if (!loadMore) {
       posts.value = [];
     }
@@ -440,27 +372,25 @@ const fetchPosts = async (loadMore = false) => {
 
 // Load more posts
 const loadMore = () => {
-  fetchPosts(true);
-};
-
-// Handle load more button click
-const handleLoadMore = () => {
   if (!isLoadingMore.value && hasMore.value) {
-    loadMore();
+    fetchListenedToFeed(true);
   }
 };
 
-// Handle retry button click
-const handleRetry = () => {
-  fetchPosts();
-};
-
+// Load feed on component mount
 onMounted(() => {
-  fetchPosts();
-});
-
-// Expose refresh function for parent components
-defineExpose({
-  refresh: () => fetchPosts(),
+  fetchListenedToFeed();
 });
 </script>
+
+<style scoped>
+.inter-font {
+  font-family: "Inter", sans-serif;
+}
+
+/* Center the content container */
+main {
+  display: flex;
+  justify-content: center;
+}
+</style>
