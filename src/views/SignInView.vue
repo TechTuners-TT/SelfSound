@@ -8,6 +8,15 @@
         <h1>Log in</h1>
       </header>
 
+      <!-- iOS Safari Debug Info (remove in production) -->
+      <div v-if="showDebugInfo" class="mb-4 p-3 bg-gray-800 rounded text-white text-xs">
+        <p>Device: {{ deviceInfo.userAgent }}</p>
+        <p>Mobile: {{ deviceInfo.isMobile }}</p>
+        <p>iOS Safari: {{ deviceInfo.isIOSSafari }}</p>
+        <p>Token Found: {{ !!currentToken }}</p>
+        <p>Token Source: {{ tokenSource }}</p>
+      </div>
+
       <form @submit.prevent="handleSubmit">
         <LoginFormInput
           id="email"
@@ -74,7 +83,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, reactive, onMounted } from "vue";
+import { defineComponent, ref, reactive, onMounted, computed } from "vue";
 import { useRouter } from "vue-router";
 import LoginFormInput from "@/components/Authentication/LoginFormInput.vue";
 import LoginFormButton from "@/components/Authentication/LoginFormButton.vue";
@@ -96,29 +105,186 @@ export default defineComponent({
     const email = ref("");
     const password = ref("");
     const isLoading = ref(false);
+    const currentToken = ref<string | null>(null);
+    const tokenSource = ref<string>("");
+    const showDebugInfo = ref(false); // Set to true for debugging
 
     const errors = reactive({
       email: "",
       password: "",
     });
 
-    // Enhanced mobile detection
-    const isMobileDevice = (): boolean => {
+    // Enhanced device detection
+    const deviceInfo = reactive({
+      userAgent: navigator.userAgent,
+      isMobile: false,
+      isIOSSafari: false,
+    });
+
+    const detectDevice = () => {
       const userAgent = navigator.userAgent.toLowerCase();
       const mobileKeywords = ['mobile', 'android', 'iphone', 'ipad', 'ipod', 'blackberry', 'windows phone'];
-      return mobileKeywords.some(keyword => userAgent.includes(keyword));
+      deviceInfo.isMobile = mobileKeywords.some(keyword => userAgent.includes(keyword));
+      deviceInfo.isIOSSafari = userAgent.includes('safari') && 
+                               userAgent.includes('mobile') && 
+                               !userAgent.includes('chrome') && 
+                               !userAgent.includes('crios');
     };
 
-    const isIOSSafari = (): boolean => {
-      const userAgent = navigator.userAgent.toLowerCase();
-      return userAgent.includes('safari') && 
-             userAgent.includes('mobile') && 
-             !userAgent.includes('chrome') && 
-             !userAgent.includes('crios');
+    // iOS Safari specific token handling
+    const IOSSafariTokenManager = {
+      // Store token with multiple strategies for iOS Safari
+      storeToken(token: string): void {
+        console.log("🔐 iOS Safari: Storing token with multiple strategies");
+        
+        try {
+          // Strategy 1: Standard localStorage
+          localStorage.setItem('authToken', token);
+          console.log("✅ Stored in localStorage");
+        } catch (e) {
+          console.warn("❌ localStorage failed:", e);
+        }
+
+        try {
+          // Strategy 2: sessionStorage (more reliable on iOS Safari)
+          sessionStorage.setItem('authToken', token);
+          sessionStorage.setItem('auth_session', token);
+          console.log("✅ Stored in sessionStorage");
+        } catch (e) {
+          console.warn("❌ sessionStorage failed:", e);
+        }
+
+        try {
+          // Strategy 3: Multiple backup keys
+          localStorage.setItem('auth_backup', token);
+          localStorage.setItem('user_token', token);
+          console.log("✅ Stored backup tokens");
+        } catch (e) {
+          console.warn("❌ Backup storage failed:", e);
+        }
+
+        // Strategy 4: Store in memory as last resort
+        (window as any).__authToken = token;
+        console.log("✅ Stored in window memory");
+
+        // Strategy 5: Try to store in document.cookie as fallback
+        try {
+          document.cookie = `authToken=${token}; path=/; max-age=86400; secure; samesite=lax`;
+          console.log("✅ Stored in document.cookie");
+        } catch (e) {
+          console.warn("❌ Cookie storage failed:", e);
+        }
+      },
+
+      // Retrieve token with multiple strategies
+      getToken(): string | null {
+        console.log("🔍 iOS Safari: Retrieving token with multiple strategies");
+        
+        // Strategy 1: Check URL parameters first (OAuth callback)
+        const urlParams = new URLSearchParams(window.location.hash.split('?')[1] || '');
+        const urlToken = urlParams.get('token');
+        if (urlToken) {
+          console.log("✅ Found token in URL parameters");
+          this.storeToken(urlToken); // Store it for future use
+          // Clean URL
+          window.location.hash = window.location.hash.split('?')[0];
+          tokenSource.value = "url_params";
+          return urlToken;
+        }
+
+        // Strategy 2: Standard localStorage
+        try {
+          const token = localStorage.getItem('authToken');
+          if (token) {
+            console.log("✅ Found token in localStorage");
+            tokenSource.value = "localStorage";
+            return token;
+          }
+        } catch (e) {
+          console.warn("❌ localStorage read failed:", e);
+        }
+
+        // Strategy 3: sessionStorage
+        try {
+          let token = sessionStorage.getItem('authToken');
+          if (!token) token = sessionStorage.getItem('auth_session');
+          if (token) {
+            console.log("✅ Found token in sessionStorage");
+            tokenSource.value = "sessionStorage";
+            return token;
+          }
+        } catch (e) {
+          console.warn("❌ sessionStorage read failed:", e);
+        }
+
+        // Strategy 4: Backup keys
+        try {
+          let token = localStorage.getItem('auth_backup');
+          if (!token) token = localStorage.getItem('user_token');
+          if (token) {
+            console.log("✅ Found token in backup storage");
+            tokenSource.value = "backup";
+            return token;
+          }
+        } catch (e) {
+          console.warn("❌ Backup storage read failed:", e);
+        }
+
+        // Strategy 5: Memory fallback
+        const memoryToken = (window as any).__authToken;
+        if (memoryToken) {
+          console.log("✅ Found token in memory");
+          tokenSource.value = "memory";
+          return memoryToken;
+        }
+
+        // Strategy 6: Check document.cookie
+        try {
+          const cookies = document.cookie.split(';');
+          for (let cookie of cookies) {
+            const [name, value] = cookie.trim().split('=');
+            if (name === 'authToken' && value) {
+              console.log("✅ Found token in document.cookie");
+              tokenSource.value = "cookie";
+              return value;
+            }
+          }
+        } catch (e) {
+          console.warn("❌ Cookie read failed:", e);
+        }
+
+        console.log("❌ No token found in any location");
+        tokenSource.value = "none";
+        return null;
+      },
+
+      // Clear all token storage
+      clearToken(): void {
+        console.log("🗑️ iOS Safari: Clearing all token storage");
+        
+        try {
+          localStorage.removeItem('authToken');
+          localStorage.removeItem('auth_backup');
+          localStorage.removeItem('user_token');
+          sessionStorage.removeItem('authToken');
+          sessionStorage.removeItem('auth_session');
+          delete (window as any).__authToken;
+          document.cookie = 'authToken=; path=/; expires=Thu, 01 Jan 1970 00:00:01 GMT;';
+          console.log("✅ All token storage cleared");
+        } catch (e) {
+          console.warn("❌ Token clearing failed:", e);
+        }
+      }
     };
 
-    // Enhanced verification and OAuth handling
+    // Enhanced OAuth and verification handling
     onMounted(() => {
+      detectDevice();
+      console.log(`📱 Device detected - Mobile: ${deviceInfo.isMobile}, iOS Safari: ${deviceInfo.isIOSSafari}`);
+      
+      // Check for existing token
+      currentToken.value = IOSSafariTokenManager.getToken();
+      
       const hash = window.location.hash;
       const query = new URLSearchParams(hash.split("?")[1]);
       
@@ -129,28 +295,43 @@ export default defineComponent({
         return;
       }
 
-      // Enhanced mobile OAuth callback handling
+      // Enhanced iOS Safari OAuth callback handling
       const token = query.get("token");
       if (token) {
-        console.log("📱 Google OAuth mobile callback: storing token with enhanced method");
+        console.log("📱 iOS Safari OAuth callback: processing token");
+        IOSSafariTokenManager.storeToken(token);
+        currentToken.value = token;
         
-        // Use enhanced storage method
-        MobileAuthStorage.setToken(token);
-        
-        // Additional mobile-specific token validation
+        // Immediate validation and redirect
         validateAndRedirect(token);
+      }
+
+      // If we have a token, try to validate it
+      if (currentToken.value) {
+        console.log("🔍 Found existing token, validating...");
+        validateAndRedirect(currentToken.value);
       }
     });
 
     const validateAndRedirect = async (token: string) => {
       try {
-        // Validate the token immediately
+        console.log("🔍 Validating token...");
+        
+        const headers: Record<string, string> = {
+          "Authorization": `Bearer ${token}`,
+          "Content-Type": "application/json"
+        };
+
+        // iOS Safari specific headers
+        if (deviceInfo.isIOSSafari) {
+          headers["Cache-Control"] = "no-cache, no-store, must-revalidate";
+          headers["Pragma"] = "no-cache";
+          headers["Expires"] = "0";
+        }
+
         const response = await fetch(`${API_URL}/authorization/me`, {
           method: "GET",
-          headers: {
-            "Authorization": `Bearer ${token}`,
-            "Content-Type": "application/json"
-          },
+          headers: headers,
           credentials: "include"
         });
 
@@ -158,16 +339,22 @@ export default defineComponent({
           console.log("✅ Token validated successfully, redirecting to home");
           // Clean up URL and redirect to home
           window.location.hash = "#/home";
-          router.push("/home");
+          setTimeout(() => {
+            router.push("/home");
+          }, 100);
         } else {
           console.log("❌ Token validation failed, clearing and staying on sign-in");
-          MobileAuthStorage.clearToken();
-          alert("Authentication failed. Please try logging in again.");
+          IOSSafariTokenManager.clearToken();
+          currentToken.value = null;
+          
+          if (response.status === 401) {
+            console.log("Token expired or invalid");
+          }
         }
       } catch (error) {
-        console.error("Token validation error:", error);
-        MobileAuthStorage.clearToken();
-        alert("Authentication error. Please try logging in again.");
+        console.error("💥 Token validation error:", error);
+        IOSSafariTokenManager.clearToken();
+        currentToken.value = null;
       }
     };
 
@@ -201,25 +388,23 @@ export default defineComponent({
       isLoading.value = true;
 
       try {
-        const isMobile = isMobileDevice();
-        const isIOS = isIOSSafari();
-        
-        console.log(`📱 Login attempt - Mobile: ${isMobile}, iOS: ${isIOS}`);
+        console.log(`📱 Login attempt - Mobile: ${deviceInfo.isMobile}, iOS Safari: ${deviceInfo.isIOSSafari}`);
 
-        // Enhanced request headers for mobile
+        // Enhanced request headers
         const headers: Record<string, string> = {
           "Content-Type": "application/json",
         };
 
         // iOS Safari specific headers
-        if (isIOS) {
+        if (deviceInfo.isIOSSafari) {
           headers["Cache-Control"] = "no-cache, no-store, must-revalidate";
           headers["Pragma"] = "no-cache";
+          headers["Expires"] = "0";
         }
 
         const requestConfig: RequestInit = {
           method: "POST",
-          credentials: "include", // This handles cookies for web
+          credentials: "include",
           headers: headers,
           body: JSON.stringify({
             email: email.value,
@@ -236,31 +421,29 @@ export default defineComponent({
           return;
         }
 
-        // Enhanced mobile auth token handling
+        // Enhanced iOS Safari token handling
         if (data.access_token) {
-          console.log("📱 Storing auth token for mobile use with enhanced method");
-          MobileAuthStorage.setToken(data.access_token);
+          console.log("📱 iOS Safari: Storing auth token");
+          IOSSafariTokenManager.storeToken(data.access_token);
+          currentToken.value = data.access_token;
           
-          // Immediate token validation for mobile
-          if (isMobile) {
+          // Immediate validation for iOS Safari
+          if (deviceInfo.isIOSSafari) {
             await validateAndRedirect(data.access_token);
             return;
           }
-        } else {
-          console.log("🍪 Using cookie-based auth (web)");
         }
 
         // ✅ Login successful
         console.log("✅ Login successful, redirecting to home");
         
-        // Enhanced redirect with delay for mobile compatibility
-        const redirectDelay = isMobile ? 300 : 100;
+        const redirectDelay = deviceInfo.isMobile ? 300 : 100;
         setTimeout(() => {
           router.push("/home");
         }, redirectDelay);
         
       } catch (error) {
-        console.error("Login error:", error);
+        console.error("💥 Login error:", error);
         alert("Login error. Please try again.");
       } finally {
         isLoading.value = false;
@@ -268,24 +451,22 @@ export default defineComponent({
     };
 
     const handleGoogleLogin = () => {
-      // Enhanced Google OAuth for mobile
-      const isMobile = isMobileDevice();
+      // Enhanced Google OAuth for iOS Safari
       const currentUrl = window.location.href;
       
-      // For mobile, use a more explicit redirect state
       let redirectState;
-      if (isMobile) {
+      if (deviceInfo.isMobile) {
         redirectState = encodeURIComponent(currentUrl.replace('#/sign-in', '#/sign-in?mobile=true'));
       } else {
         redirectState = encodeURIComponent(currentUrl.replace('#/sign-in', '#/sign-in'));
       }
       
-      console.log(`🔍 Initiating Google OAuth login (Mobile: ${isMobile})`);
+      console.log(`🔍 Initiating Google OAuth login (iOS Safari: ${deviceInfo.isIOSSafari})`);
       
-      // Add mobile parameter to help backend identify mobile requests
       const params = new URLSearchParams({
         state: redirectState,
-        mobile: isMobile ? 'true' : 'false'
+        mobile: deviceInfo.isMobile ? 'true' : 'false',
+        ios: deviceInfo.isIOSSafari ? 'true' : 'false'
       });
       
       window.location.href = `${API_URL}/auth/login?${params.toString()}`;
@@ -294,8 +475,9 @@ export default defineComponent({
     const handleGuestLogin = async () => {
       isLoading.value = true;
       try {
-        // Clear any existing auth data with enhanced method
-        MobileAuthStorage.clearToken();
+        // Clear any existing auth data
+        IOSSafariTokenManager.clearToken();
+        currentToken.value = null;
         
         await fetch(`${API_URL}/auth/logout`, {
           method: "POST",
@@ -321,6 +503,10 @@ export default defineComponent({
       password,
       isLoading,
       errors,
+      deviceInfo,
+      currentToken,
+      tokenSource,
+      showDebugInfo,
       handleSubmit,
       handleGoogleLogin,
       handleGuestLogin,
