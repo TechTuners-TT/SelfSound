@@ -80,6 +80,7 @@ import LoginFormInput from "@/components/Authentication/LoginFormInput.vue";
 import LoginFormButton from "@/components/Authentication/LoginFormButton.vue";
 import LoginFormDivider from "@/components/Authentication/LoginFormDivider.vue";
 import GoogleIcon from "@/components/SVG/Authentication/Sign_Up_In_If_button_Google.vue";
+import { MobileAuthStorage } from "@/router";
 
 export default defineComponent({
   name: "LoginForm",
@@ -101,7 +102,22 @@ export default defineComponent({
       password: "",
     });
 
-    // ✅ Handle verification success and Google OAuth mobile callback
+    // Enhanced mobile detection
+    const isMobileDevice = (): boolean => {
+      const userAgent = navigator.userAgent.toLowerCase();
+      const mobileKeywords = ['mobile', 'android', 'iphone', 'ipad', 'ipod', 'blackberry', 'windows phone'];
+      return mobileKeywords.some(keyword => userAgent.includes(keyword));
+    };
+
+    const isIOSSafari = (): boolean => {
+      const userAgent = navigator.userAgent.toLowerCase();
+      return userAgent.includes('safari') && 
+             userAgent.includes('mobile') && 
+             !userAgent.includes('chrome') && 
+             !userAgent.includes('crios');
+    };
+
+    // Enhanced verification and OAuth handling
     onMounted(() => {
       const hash = window.location.hash;
       const query = new URLSearchParams(hash.split("?")[1]);
@@ -113,17 +129,47 @@ export default defineComponent({
         return;
       }
 
-      // 📱 Handle Google OAuth mobile callback with token
+      // Enhanced mobile OAuth callback handling
       const token = query.get("token");
       if (token) {
-        console.log("📱 Google OAuth mobile callback: storing token");
-        localStorage.setItem('authToken', token);
+        console.log("📱 Google OAuth mobile callback: storing token with enhanced method");
         
-        // Clean up URL and redirect to home
-        window.location.hash = "#/home";
-        router.push("/home");
+        // Use enhanced storage method
+        MobileAuthStorage.setToken(token);
+        
+        // Additional mobile-specific token validation
+        validateAndRedirect(token);
       }
     });
+
+    const validateAndRedirect = async (token: string) => {
+      try {
+        // Validate the token immediately
+        const response = await fetch(`${API_URL}/authorization/me`, {
+          method: "GET",
+          headers: {
+            "Authorization": `Bearer ${token}`,
+            "Content-Type": "application/json"
+          },
+          credentials: "include"
+        });
+
+        if (response.ok) {
+          console.log("✅ Token validated successfully, redirecting to home");
+          // Clean up URL and redirect to home
+          window.location.hash = "#/home";
+          router.push("/home");
+        } else {
+          console.log("❌ Token validation failed, clearing and staying on sign-in");
+          MobileAuthStorage.clearToken();
+          alert("Authentication failed. Please try logging in again.");
+        }
+      } catch (error) {
+        console.error("Token validation error:", error);
+        MobileAuthStorage.clearToken();
+        alert("Authentication error. Please try logging in again.");
+      }
+    };
 
     const validateForm = (): boolean => {
       let isValid = true;
@@ -155,17 +201,33 @@ export default defineComponent({
       isLoading.value = true;
 
       try {
-        const response = await fetch(`${API_URL}/authorization/logindefault`, {
+        const isMobile = isMobileDevice();
+        const isIOS = isIOSSafari();
+        
+        console.log(`📱 Login attempt - Mobile: ${isMobile}, iOS: ${isIOS}`);
+
+        // Enhanced request headers for mobile
+        const headers: Record<string, string> = {
+          "Content-Type": "application/json",
+        };
+
+        // iOS Safari specific headers
+        if (isIOS) {
+          headers["Cache-Control"] = "no-cache, no-store, must-revalidate";
+          headers["Pragma"] = "no-cache";
+        }
+
+        const requestConfig: RequestInit = {
           method: "POST",
           credentials: "include", // This handles cookies for web
-          headers: {
-            "Content-Type": "application/json",
-          },
+          headers: headers,
           body: JSON.stringify({
             email: email.value,
             password: password.value,
           }),
-        });
+        };
+
+        const response = await fetch(`${API_URL}/authorization/logindefault`, requestConfig);
 
         const data = await response.json();
 
@@ -174,10 +236,16 @@ export default defineComponent({
           return;
         }
 
-        // 📱 MOBILE AUTH: Store token for mobile use
+        // Enhanced mobile auth token handling
         if (data.access_token) {
-          localStorage.setItem('authToken', data.access_token);
-          console.log("📱 Storing auth token for mobile use");
+          console.log("📱 Storing auth token for mobile use with enhanced method");
+          MobileAuthStorage.setToken(data.access_token);
+          
+          // Immediate token validation for mobile
+          if (isMobile) {
+            await validateAndRedirect(data.access_token);
+            return;
+          }
         } else {
           console.log("🍪 Using cookie-based auth (web)");
         }
@@ -185,9 +253,11 @@ export default defineComponent({
         // ✅ Login successful
         console.log("✅ Login successful, redirecting to home");
         
+        // Enhanced redirect with delay for mobile compatibility
+        const redirectDelay = isMobile ? 300 : 100;
         setTimeout(() => {
           router.push("/home");
-        }, 100);
+        }, redirectDelay);
         
       } catch (error) {
         console.error("Login error:", error);
@@ -198,19 +268,34 @@ export default defineComponent({
     };
 
     const handleGoogleLogin = () => {
-      // For mobile callbacks, we need to handle the redirect with token
+      // Enhanced Google OAuth for mobile
+      const isMobile = isMobileDevice();
       const currentUrl = window.location.href;
-      const redirectState = encodeURIComponent(currentUrl.replace('#/sign-in', '#/sign-in'));
       
-      console.log("🔍 Initiating Google OAuth login");
-      window.location.href = `${API_URL}/auth/login?state=${redirectState}`;
+      // For mobile, use a more explicit redirect state
+      let redirectState;
+      if (isMobile) {
+        redirectState = encodeURIComponent(currentUrl.replace('#/sign-in', '#/sign-in?mobile=true'));
+      } else {
+        redirectState = encodeURIComponent(currentUrl.replace('#/sign-in', '#/sign-in'));
+      }
+      
+      console.log(`🔍 Initiating Google OAuth login (Mobile: ${isMobile})`);
+      
+      // Add mobile parameter to help backend identify mobile requests
+      const params = new URLSearchParams({
+        state: redirectState,
+        mobile: isMobile ? 'true' : 'false'
+      });
+      
+      window.location.href = `${API_URL}/auth/login?${params.toString()}`;
     };
 
     const handleGuestLogin = async () => {
       isLoading.value = true;
       try {
-        // Clear any existing auth data
-        localStorage.removeItem('authToken');
+        // Clear any existing auth data with enhanced method
+        MobileAuthStorage.clearToken();
         
         await fetch(`${API_URL}/auth/logout`, {
           method: "POST",
