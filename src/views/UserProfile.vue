@@ -281,12 +281,53 @@ const hasMore = ref(true);
 const limit = 10;
 const offset = ref(0);
 
-// FIXED: Helper function to get authentication token
+// FIXED: Helper function to get authentication token with enhanced cookie reading
 const getAuthToken = () => {
-  return localStorage.getItem('access_token') || 
-         localStorage.getItem('authToken') ||
-         sessionStorage.getItem('access_token') ||
-         sessionStorage.getItem('authToken');
+  // Check localStorage first
+  let token = localStorage.getItem('access_token') || 
+              localStorage.getItem('authToken') ||
+              sessionStorage.getItem('access_token') ||
+              sessionStorage.getItem('authToken');
+  
+  // If no token in storage, try to read from cookies with enhanced method
+  if (!token) {
+    token = getCookie('access_token');
+  }
+  
+  console.log('🔍 UserProfile token search:', token ? `FOUND: ${token.substring(0, 20)}...` : 'NOT FOUND');
+  return token;
+};
+
+// Enhanced cookie reading function (same as PostFeed)
+const getCookie = (name: string): string | null => {
+  try {
+    // Method 1: Standard approach
+    const value = `; ${document.cookie}`;
+    const parts = value.split(`; ${name}=`);
+    if (parts.length === 2) {
+      const cookieValue = parts.pop()?.split(';').shift() || null;
+      if (cookieValue) {
+        console.log(`🍪 UserProfile found cookie ${name}:`, cookieValue.substring(0, 20) + '...');
+        return cookieValue;
+      }
+    }
+    
+    // Method 2: Direct regex search (better for mobile)
+    const regex = new RegExp(`(^|;)\\s*${name}\\s*=\\s*([^;]+)`);
+    const match = document.cookie.match(regex);
+    if (match) {
+      const cookieValue = match[2];
+      console.log(`🍪 UserProfile found cookie via regex ${name}:`, cookieValue.substring(0, 20) + '...');
+      return cookieValue;
+    }
+    
+    console.log(`🍪 UserProfile cookie ${name} not found`);
+    console.log(`🍪 UserProfile available cookies:`, document.cookie);
+    return null;
+  } catch (error) {
+    console.error('❌ UserProfile error reading cookie:', error);
+    return null;
+  }
 };
 
 // FIXED: Enhanced fetch functions with consistent mobile authentication support
@@ -553,7 +594,7 @@ const fetchPosts = async (loadMore = false) => {
   }
 };
 
-// FIXED: Load user profile with proper authentication
+// FIXED: Load user profile using the working endpoint
 const loadUserProfile = async () => {
   isLoading.value = true;
 
@@ -565,7 +606,8 @@ const loadUserProfile = async () => {
 
     console.log("🔍 Loading user profile...");
     
-    const response = await fetch(`${API_URL}/profile/me/profile`, {
+    // FIXED: Use the working /authorization/me endpoint instead
+    const response = await fetch(`${API_URL}/authorization/me`, {
       method: 'GET',
       headers: {
         ...getAuthHeaders(),
@@ -589,46 +631,45 @@ const loadUserProfile = async () => {
     }
 
     const data = await response.json();
-    console.log("✅ User profile loaded:", data);
+    console.log("✅ User profile loaded via /authorization/me:", data);
 
     if (data && data.id) {
+      // FIXED: Try to get additional profile data from the working endpoint
+      let profileData = data;
+      
+      // Try to get extended profile data, but don't fail if it doesn't work
+      try {
+        const profileResponse = await fetch(`${API_URL}/profile/me/profile`, {
+          method: 'GET',
+          headers: getAuthHeaders(),
+          credentials: "include",
+        });
+        
+        if (profileResponse.ok) {
+          const extendedData = await profileResponse.json();
+          console.log("✅ Extended profile data:", extendedData);
+          // Merge the data, preferring extended data where available
+          profileData = { ...data, ...extendedData };
+        } else {
+          console.log("⚠️ Extended profile data not available, using basic data");
+        }
+      } catch (extendedError) {
+        console.log("⚠️ Could not fetch extended profile, using basic data:", extendedError);
+      }
+
       // Update user reactive object with name truncation
       Object.assign(user, {
-        id: data.id,
-        name: truncateName(data.name || ""), // Apply name truncation here
-        login: data.login || "",
-        biography: data.description || "",
-        avatarUrl: data.avatar_url || user.avatarUrl, // Keep default if no avatar
-        tag: data.tag_id || null,
+        id: profileData.id,
+        name: truncateName(profileData.name || ""), // Apply name truncation here
+        login: profileData.login || "",
+        biography: profileData.description || profileData.biography || "",
+        avatarUrl: profileData.avatar_url || profileData.avatarUrl || user.avatarUrl,
+        tag: profileData.tag_id || profileData.tag || null,
       });
 
       console.log("👤 User object updated:", user);
 
-      // If the name was truncated, automatically update it on the backend
-      if (data.name && data.name.length > 15) {
-        console.log(
-          "🔄 Name was too long, updating backend with truncated name...",
-        );
-        try {
-          await fetch(`${API_URL}/profile/me`, {
-            method: "PATCH",
-            headers: getAuthHeaders(),
-            credentials: "include",
-            body: JSON.stringify({
-              name: user.name, // Send truncated name
-            }),
-          });
-          console.log("✅ Backend updated with truncated name");
-        } catch (error) {
-          console.error(
-            "❌ Failed to update backend with truncated name:",
-            error,
-          );
-        }
-      }
-
       // Load user stats and posts after profile is loaded
-      // Make sure to wait for stats before loading posts
       await fetchUserStats();
       await fetchPosts();
     }
