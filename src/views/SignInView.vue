@@ -110,26 +110,45 @@ export default defineComponent({
              !userAgent.includes('crios');
     })();
 
-    // Simple token storage
+    // FIXED: Store token with correct key names that PostFeed expects
     const storeToken = (token: string) => {
       try {
+        // PRIMARY: Use the same key as PostFeed expects
+        localStorage.setItem('access_token', token);
+        sessionStorage.setItem('access_token', token);
+        
+        // BACKUP: Keep old keys for compatibility
         localStorage.setItem('authToken', token);
         sessionStorage.setItem('authToken', token);
         localStorage.setItem('auth_backup', token);
-        console.log('✅ Token stored successfully');
+        
+        // MOBILE FALLBACK: Set cookie for mobile compatibility
+        document.cookie = `access_token=${token}; path=/; secure; samesite=lax; max-age=86400`;
+        
+        console.log('✅ Token stored successfully:', token.substring(0, 20) + '...');
+        console.log('📱 iOS Safari detected:', isIOSSafari);
       } catch (e) {
         console.warn("Token storage failed:", e);
         (window as any).__authToken = token;
+        (window as any).__access_token = token;
       }
     };
 
     const clearTokens = () => {
       try {
+        // Clear all possible token storage locations
+        localStorage.removeItem('access_token');
         localStorage.removeItem('authToken');
-        sessionStorage.removeItem('authToken');
         localStorage.removeItem('auth_backup');
+        sessionStorage.removeItem('access_token');
+        sessionStorage.removeItem('authToken');
+        
+        // Clear cookies
+        document.cookie = 'access_token=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT';
+        
         delete (window as any).__authToken;
-        console.log('🗑️ Tokens cleared');
+        delete (window as any).__access_token;
+        console.log('🗑️ All tokens cleared');
       } catch (e) {
         console.warn("Token clearing failed:", e);
       }
@@ -137,6 +156,7 @@ export default defineComponent({
 
     onMounted(() => {
       console.log(`📱 SignIn page loaded - iOS Safari: ${isIOSSafari}`);
+      console.log(`🌐 API URL: ${API_URL}`);
       
       // Handle email verification
       const hash = window.location.hash;
@@ -183,11 +203,15 @@ export default defineComponent({
           "Content-Type": "application/json",
         };
 
+        // ENHANCED: Better mobile headers
         if (isIOSSafari) {
           headers["Cache-Control"] = "no-cache, no-store, must-revalidate";
           headers["Pragma"] = "no-cache";
           headers["Expires"] = "0";
+          headers["X-Requested-With"] = "XMLHttpRequest";
         }
+
+        console.log(`🚀 Attempting login to: ${API_URL}/authorization/logindefault`);
 
         const response = await fetch(`${API_URL}/authorization/logindefault`, {
           method: "POST",
@@ -199,31 +223,52 @@ export default defineComponent({
           }),
         });
 
+        console.log(`📡 Response status: ${response.status}`);
+
         const data = await response.json();
+        console.log(`📊 Response data:`, data);
 
         if (!response.ok) {
+          console.error(`❌ Login failed:`, data);
           alert(data.detail || data.message || "Login failed");
           return;
         }
 
+        // ENHANCED: Better token handling
         if (data.access_token) {
           storeToken(data.access_token);
+          
+          // DEBUGGING: Verify token storage
+          const storedToken = localStorage.getItem('access_token');
+          console.log(`🔍 Token verification - Stored: ${storedToken ? storedToken.substring(0, 20) + '...' : 'NONE'}`);
+          
+          if (!storedToken) {
+            console.error('❌ Token storage failed!');
+            alert('Login successful but token storage failed. Please try again.');
+            return;
+          }
+        } else {
+          console.error('❌ No access token in response');
+          alert('Login failed: No access token received');
+          return;
         }
 
         console.log("✅ Login successful, redirecting to home");
-        router.push("/home");
+        
+        // WAIT a moment to ensure token is stored before navigation
+        setTimeout(() => {
+          router.push("/home");
+        }, 100);
         
       } catch (error) {
         console.error("💥 Login error:", error);
-        alert("Login error. Please try again.");
+        alert("Network error. Please check your connection and try again.");
       } finally {
         isLoading.value = false;
       }
     };
 
     const handleGoogleLogin = () => {
-      const currentUrl = window.location.href;
-      
       const redirectState = encodeURIComponent(
         "https://techtuners-tt.github.io/SelfSound/#/sign-in"
       );
@@ -235,6 +280,7 @@ export default defineComponent({
       });
       
       console.log("🔍 Starting Google OAuth login");
+      console.log(`🔗 Redirect URL: ${API_URL}/auth/login?${params.toString()}`);
       window.location.href = `${API_URL}/auth/login?${params.toString()}`;
     };
 
@@ -243,10 +289,15 @@ export default defineComponent({
       try {
         clearTokens();
         
-        await fetch(`${API_URL}/auth/logout`, {
-          method: "POST",
-          credentials: "include",
-        });
+        // ENHANCED: Better guest mode handling
+        try {
+          await fetch(`${API_URL}/auth/logout`, {
+            method: "POST",
+            credentials: "include",
+          });
+        } catch (logoutError) {
+          console.warn("Logout error (ignored for guest mode):", logoutError);
+        }
 
         console.log("👤 Guest mode activated");
         router.push("/home");
