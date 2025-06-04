@@ -281,22 +281,32 @@ const hasMore = ref(true);
 const limit = 10;
 const offset = ref(0);
 
-// Enhanced fetch functions with mobile authentication support
+// FIXED: Helper function to get authentication token
+const getAuthToken = () => {
+  return localStorage.getItem('access_token') || 
+         localStorage.getItem('authToken') ||
+         sessionStorage.getItem('access_token') ||
+         sessionStorage.getItem('authToken');
+};
+
+// FIXED: Enhanced fetch functions with consistent mobile authentication support
 const getAuthHeaders = () => {
   const headers: Record<string, string> = {
     'Content-Type': 'application/json'
   };
   
-  // Get token from storage (mobile-first approach)
-  const token = localStorage.getItem('authToken') || 
-               sessionStorage.getItem('authToken') || 
-               localStorage.getItem('auth_backup');
+  // FIXED: Use consistent token names with LoginForm and other components
+  const token = getAuthToken();
   
   if (token) {
     headers['Authorization'] = `Bearer ${token}`;
-    console.log('📱 Using Authorization header for API call');
+    console.log('🔑 Using Authorization header for UserProfile API call:', token.substring(0, 20) + '...');
   } else {
-    console.log('🍪 No token found, relying on cookies');
+    console.warn('⚠️ No token found for UserProfile authenticated request');
+    console.log('🔍 Available storage:');
+    console.log('  - localStorage.access_token:', localStorage.getItem('access_token') ? 'EXISTS' : 'MISSING');
+    console.log('  - localStorage.authToken:', localStorage.getItem('authToken') ? 'EXISTS' : 'MISSING');
+    console.log('  - sessionStorage.access_token:', sessionStorage.getItem('access_token') ? 'EXISTS' : 'MISSING');
   }
   
   return headers;
@@ -418,9 +428,14 @@ const fetchUserStats = async () => {
       return;
     }
 
+    const token = getAuthToken();
+    if (!token) {
+      console.warn('⚠️ No token available for stats request');
+      return;
+    }
+
     console.log("🔍 Fetching user stats for user:", user.id);
     
-    // FIXED: Use the correct endpoint that matches your backend
     const response = await fetch(`${API_URL}/profile/${user.id}/stats`, {
       method: 'GET',
       headers: getAuthHeaders(),
@@ -428,6 +443,14 @@ const fetchUserStats = async () => {
     });
 
     if (!response.ok) {
+      if (response.status === 401) {
+        console.error('❌ Unauthorized stats request - clearing tokens');
+        localStorage.removeItem('access_token');
+        localStorage.removeItem('authToken');
+        sessionStorage.removeItem('access_token');
+        sessionStorage.removeItem('authToken');
+        throw new Error('Session expired. Please sign in again.');
+      }
       console.error(`Stats API error: ${response.status} ${response.statusText}`);
       throw new Error(`Failed to fetch user stats: ${response.statusText}`);
     }
@@ -470,8 +493,13 @@ const fetchPosts = async (loadMore = false) => {
   postsError.value = "";
 
   try {
+    const token = getAuthToken();
+    if (!token) {
+      throw new Error('Authentication required. Please sign in.');
+    }
+
     const endpoint = `${API_URL}/posts/user/${user.id}?limit=${limit}&offset=${offset.value}`;
-    console.log("Fetching posts from:", endpoint);
+    console.log("🚀 Fetching posts from:", endpoint);
 
     const response = await fetch(endpoint, {
       method: 'GET',
@@ -479,12 +507,20 @@ const fetchPosts = async (loadMore = false) => {
       credentials: "include", // Keep for cookie fallback
     });
 
+    if (response.status === 401) {
+      localStorage.removeItem('access_token');
+      localStorage.removeItem('authToken');
+      sessionStorage.removeItem('access_token');
+      sessionStorage.removeItem('authToken');
+      throw new Error('Session expired. Please sign in again.');
+    }
+
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`);
     }
 
     const backendPosts: BackendPost[] = await response.json();
-    console.log("Fetched backend posts:", backendPosts);
+    console.log("✅ Fetched backend posts:", backendPosts.length, "posts");
 
     const transformedPosts = backendPosts
       .map(transformBackendPost)
@@ -504,7 +540,7 @@ const fetchPosts = async (loadMore = false) => {
       stats.posts = backendPosts.length;
     }
   } catch (err) {
-    console.error("Error fetching posts:", err);
+    console.error("❌ Error fetching posts:", err);
     postsError.value =
       err instanceof Error ? err.message : "Failed to load posts";
 
@@ -522,6 +558,11 @@ const loadUserProfile = async () => {
   isLoading.value = true;
 
   try {
+    const token = getAuthToken();
+    if (!token) {
+      throw new Error('Authentication required. Please sign in.');
+    }
+
     console.log("🔍 Loading user profile...");
     
     const response = await fetch(`${API_URL}/profile/me/profile`, {
@@ -532,6 +573,14 @@ const loadUserProfile = async () => {
       },
       credentials: "include", // Keep for cookie fallback
     });
+
+    if (response.status === 401) {
+      localStorage.removeItem('access_token');
+      localStorage.removeItem('authToken');
+      sessionStorage.removeItem('access_token');
+      sessionStorage.removeItem('authToken');
+      throw new Error('Session expired. Please sign in again.');
+    }
 
     if (!response.ok) {
       throw new Error(
@@ -585,6 +634,8 @@ const loadUserProfile = async () => {
     }
   } catch (err) {
     console.error("❌ Error loading user profile:", err);
+    // Optionally redirect to login if authentication fails
+    // router.push('/sign-in');
   } finally {
     isLoading.value = false;
   }
