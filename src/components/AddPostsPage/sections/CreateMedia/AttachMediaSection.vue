@@ -179,6 +179,56 @@ const API_URL = import.meta.env.VITE_API_URL;
 
 const router = useRouter();
 
+// FIXED: Helper function to get authentication token
+const getAuthToken = () => {
+  let token = localStorage.getItem('access_token') || 
+              localStorage.getItem('authToken') ||
+              sessionStorage.getItem('access_token') ||
+              sessionStorage.getItem('authToken');
+  
+  if (!token) {
+    token = getCookie('access_token');
+  }
+  
+  return token;
+};
+
+// Enhanced cookie reading function
+const getCookie = (name: string): string | null => {
+  try {
+    const value = `; ${document.cookie}`;
+    const parts = value.split(`; ${name}=`);
+    if (parts.length === 2) {
+      const cookieValue = parts.pop()?.split(';').shift() || null;
+      if (cookieValue) return cookieValue;
+    }
+    
+    const regex = new RegExp(`(^|;)\\s*${name}\\s*=\\s*([^;]+)`);
+    const match = document.cookie.match(regex);
+    if (match) return match[2];
+    
+    return null;
+  } catch (error) {
+    console.error('❌ AttachMedia error reading cookie:', error);
+    return null;
+  }
+};
+
+// FIXED: Helper function to get authenticated headers
+const getAuthHeaders = () => {
+  const headers: Record<string, string> = {};
+  
+  const token = getAuthToken();
+  if (token) {
+    headers['Authorization'] = `Bearer ${token}`;
+    console.log('🔑 Using Authorization header for AttachMedia API call');
+  } else {
+    console.warn('⚠️ No token found for AttachMedia request');
+  }
+  
+  return headers;
+};
+
 const fileInput = ref<HTMLInputElement | null>(null);
 const files = ref<{ preview: string; file: File; type: string }[]>([]);
 const modalPreview = ref<{ preview: string; file: File; type: string } | null>(
@@ -318,7 +368,7 @@ const cleanupPreviewUrls = () => {
   previewUrls.clear();
 };
 
-// Submit files to backend
+// FIXED: Submit files to backend with authentication
 const submitPost = async () => {
   if (files.value.length === 0 || isUploading.value) return;
 
@@ -328,6 +378,11 @@ const submitPost = async () => {
   uploadProgress.value = 0;
 
   try {
+    const token = getAuthToken();
+    if (!token) {
+      throw new Error('Authentication required. Please sign in.');
+    }
+
     const formData = new FormData();
 
     // Add files
@@ -344,11 +399,20 @@ const submitPost = async () => {
 
     const response = await fetch(`${API_URL}/posts/media`, {
       method: "POST",
+      headers: getAuthHeaders(),
       credentials: "include",
       body: formData,
     });
 
     clearInterval(progressInterval);
+
+    if (response.status === 401) {
+      localStorage.removeItem('access_token');
+      localStorage.removeItem('authToken');
+      sessionStorage.removeItem('access_token');
+      sessionStorage.removeItem('authToken');
+      throw new Error('Session expired. Please sign in again.');
+    }
 
     if (!response.ok) {
       let errorMsg = "Failed to create post";
