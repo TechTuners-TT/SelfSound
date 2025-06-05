@@ -203,16 +203,20 @@ interface FormData {
 
 // FIXED: Helper function to get authentication token with enhanced cookie reading
 const getAuthToken = () => {
-  let token = localStorage.getItem('access_token') || 
-              localStorage.getItem('authToken') ||
-              sessionStorage.getItem('access_token') ||
-              sessionStorage.getItem('authToken');
-  
+  let token =
+    localStorage.getItem("access_token") ||
+    localStorage.getItem("authToken") ||
+    sessionStorage.getItem("access_token") ||
+    sessionStorage.getItem("authToken");
+
   if (!token) {
-    token = getCookie('access_token');
+    token = getCookie("access_token");
   }
-  
-  console.log('🔍 UserProfileContent token search:', token ? `FOUND: ${token.substring(0, 20)}...` : 'NOT FOUND');
+
+  console.log(
+    "🔍 UserProfileContent token search:",
+    token ? `FOUND: ${token.substring(0, 20)}...` : "NOT FOUND",
+  );
   return token;
 };
 
@@ -222,25 +226,31 @@ const getCookie = (name: string): string | null => {
     const value = `; ${document.cookie}`;
     const parts = value.split(`; ${name}=`);
     if (parts.length === 2) {
-      const cookieValue = parts.pop()?.split(';').shift() || null;
+      const cookieValue = parts.pop()?.split(";").shift() || null;
       if (cookieValue) {
-        console.log(`🍪 UserProfileContent found cookie ${name}:`, cookieValue.substring(0, 20) + '...');
+        console.log(
+          `🍪 UserProfileContent found cookie ${name}:`,
+          cookieValue.substring(0, 20) + "...",
+        );
         return cookieValue;
       }
     }
-    
+
     const regex = new RegExp(`(^|;)\\s*${name}\\s*=\\s*([^;]+)`);
     const match = document.cookie.match(regex);
     if (match) {
       const cookieValue = match[2];
-      console.log(`🍪 UserProfileContent found cookie via regex ${name}:`, cookieValue.substring(0, 20) + '...');
+      console.log(
+        `🍪 UserProfileContent found cookie via regex ${name}:`,
+        cookieValue.substring(0, 20) + "...",
+      );
       return cookieValue;
     }
-    
+
     console.log(`🍪 UserProfileContent cookie ${name} not found`);
     return null;
   } catch (error) {
-    console.error('❌ UserProfileContent error reading cookie:', error);
+    console.error("❌ UserProfileContent error reading cookie:", error);
     return null;
   }
 };
@@ -248,17 +258,21 @@ const getCookie = (name: string): string | null => {
 // FIXED: Helper function to get authenticated headers
 const getAuthHeaders = () => {
   const headers: Record<string, string> = {
-    'Content-Type': 'application/json'
+    "Content-Type": "application/json",
   };
-  
+
   const token = getAuthToken();
   if (token) {
-    headers['Authorization'] = `Bearer ${token}`;
-    console.log('🔑 Using Authorization header for UserProfileContent API call');
+    headers["Authorization"] = `Bearer ${token}`;
+    console.log(
+      "🔑 Using Authorization header for UserProfileContent API call",
+    );
   } else {
-    console.warn('⚠️ No token found for UserProfileContent authenticated request');
+    console.warn(
+      "⚠️ No token found for UserProfileContent authenticated request",
+    );
   }
-  
+
   return headers;
 };
 
@@ -384,7 +398,7 @@ export default defineComponent({
 
       const token = getAuthToken();
       if (!token) {
-        throw new Error('Authentication required. Please sign in.');
+        throw new Error("Authentication required. Please sign in.");
       }
 
       const data = new FormData();
@@ -393,7 +407,7 @@ export default defineComponent({
       const res = await fetch(`${API_URL}/profile/me/avatar`, {
         method: "PATCH",
         headers: {
-          'Authorization': `Bearer ${token}`,
+          Authorization: `Bearer ${token}`,
           // Note: Don't set Content-Type for FormData, browser will set it correctly
         },
         credentials: "include",
@@ -401,11 +415,11 @@ export default defineComponent({
       });
 
       if (res.status === 401) {
-        localStorage.removeItem('access_token');
-        localStorage.removeItem('authToken');
-        sessionStorage.removeItem('access_token');
-        sessionStorage.removeItem('authToken');
-        throw new Error('Session expired. Please sign in again.');
+        localStorage.removeItem("access_token");
+        localStorage.removeItem("authToken");
+        sessionStorage.removeItem("access_token");
+        sessionStorage.removeItem("authToken");
+        throw new Error("Session expired. Please sign in again.");
       }
 
       if (!res.ok) {
@@ -427,7 +441,7 @@ export default defineComponent({
       try {
         const token = getAuthToken();
         if (!token) {
-          throw new Error('Authentication required. Please sign in.');
+          throw new Error("Authentication required. Please sign in.");
         }
 
         // Ensure name is truncated before sending to backend
@@ -452,11 +466,11 @@ export default defineComponent({
         });
 
         if (resProfile.status === 401) {
-          localStorage.removeItem('access_token');
-          localStorage.removeItem('authToken');
-          sessionStorage.removeItem('access_token');
-          sessionStorage.removeItem('authToken');
-          throw new Error('Session expired. Please sign in again.');
+          localStorage.removeItem("access_token");
+          localStorage.removeItem("authToken");
+          sessionStorage.removeItem("access_token");
+          sessionStorage.removeItem("authToken");
+          throw new Error("Session expired. Please sign in again.");
         }
 
         if (!resProfile.ok) {
@@ -475,9 +489,9 @@ export default defineComponent({
 
         // 3) Fetch updated profile data using working endpoint
         const profileRes = await fetch(`${API_URL}/authorization/me`, {
-          headers: { 
+          headers: {
             "Cache-Control": "no-cache",
-            'Authorization': `Bearer ${token}`,
+            Authorization: `Bearer ${token}`,
           },
           credentials: "include",
         });
@@ -494,8 +508,10 @@ export default defineComponent({
           id: updatedProfile.id,
           name: truncateName(updatedProfile.name || ""),
           login: updatedProfile.login || "",
-          biography: updatedProfile.description || updatedProfile.biography || "",
-          avatarUrl: updatedProfile.avatar_url || updatedProfile.avatarUrl || "",
+          biography:
+            updatedProfile.description || updatedProfile.biography || "",
+          avatarUrl:
+            updatedProfile.avatar_url || updatedProfile.avatarUrl || "",
           tag: updatedProfile.tag_id || updatedProfile.tag || "Add tag",
         });
 

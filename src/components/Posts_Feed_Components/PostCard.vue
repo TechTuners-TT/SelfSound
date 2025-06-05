@@ -268,17 +268,21 @@ const API_URL = import.meta.env.VITE_API_URL;
 // 🔥 FIXED: Auth functions (EXACT copies from UserProfile.vue)
 const getAuthToken = () => {
   // Check localStorage first
-  let token = localStorage.getItem('access_token') || 
-              localStorage.getItem('authToken') ||
-              sessionStorage.getItem('access_token') ||
-              sessionStorage.getItem('authToken');
-  
+  let token =
+    localStorage.getItem("access_token") ||
+    localStorage.getItem("authToken") ||
+    sessionStorage.getItem("access_token") ||
+    sessionStorage.getItem("authToken");
+
   // If no token in storage, try to read from cookies with enhanced method
   if (!token) {
-    token = getCookie('access_token');
+    token = getCookie("access_token");
   }
-  
-  console.log('🔍 PostCard token search:', token ? `FOUND: ${token.substring(0, 20)}...` : 'NOT FOUND');
+
+  console.log(
+    "🔍 PostCard token search:",
+    token ? `FOUND: ${token.substring(0, 20)}...` : "NOT FOUND",
+  );
   return token;
 };
 
@@ -289,26 +293,32 @@ const getCookie = (name: string): string | null => {
     const value = `; ${document.cookie}`;
     const parts = value.split(`; ${name}=`);
     if (parts.length === 2) {
-      const cookieValue = parts.pop()?.split(';').shift() || null;
+      const cookieValue = parts.pop()?.split(";").shift() || null;
       if (cookieValue) {
-        console.log(`🍪 PostCard found cookie ${name}:`, cookieValue.substring(0, 20) + '...');
+        console.log(
+          `🍪 PostCard found cookie ${name}:`,
+          cookieValue.substring(0, 20) + "...",
+        );
         return cookieValue;
       }
     }
-    
+
     // Method 2: Direct regex search (better for mobile)
     const regex = new RegExp(`(^|;)\\s*${name}\\s*=\\s*([^;]+)`);
     const match = document.cookie.match(regex);
     if (match) {
       const cookieValue = match[2];
-      console.log(`🍪 PostCard found cookie via regex ${name}:`, cookieValue.substring(0, 20) + '...');
+      console.log(
+        `🍪 PostCard found cookie via regex ${name}:`,
+        cookieValue.substring(0, 20) + "...",
+      );
       return cookieValue;
     }
-    
+
     console.log(`🍪 PostCard cookie ${name} not found`);
     return null;
   } catch (error) {
-    console.error('❌ PostCard error reading cookie:', error);
+    console.error("❌ PostCard error reading cookie:", error);
     return null;
   }
 };
@@ -316,18 +326,21 @@ const getCookie = (name: string): string | null => {
 // Enhanced auth headers function
 const getAuthHeaders = () => {
   const headers: Record<string, string> = {
-    'Content-Type': 'application/json'
+    "Content-Type": "application/json",
   };
-  
+
   const token = getAuthToken();
-  
+
   if (token) {
-    headers['Authorization'] = `Bearer ${token}`;
-    console.log('🔑 PostCard using Authorization header:', token.substring(0, 20) + '...');
+    headers["Authorization"] = `Bearer ${token}`;
+    console.log(
+      "🔑 PostCard using Authorization header:",
+      token.substring(0, 20) + "...",
+    );
   } else {
-    console.warn('⚠️ PostCard no token found for authenticated request');
+    console.warn("⚠️ PostCard no token found for authenticated request");
   }
-  
+
   return headers;
 };
 
@@ -490,7 +503,7 @@ async function toggleLike() {
   try {
     const token = getAuthToken();
     if (!token) {
-      throw new Error('Authentication required. Please sign in.');
+      throw new Error("Authentication required. Please sign in.");
     }
 
     console.log("🔍 LIKE DEBUG - Making API call...");
@@ -505,11 +518,11 @@ async function toggleLike() {
 
     // 🔥 CRITICAL: Handle 401 responses with token cleanup
     if (response.status === 401) {
-      localStorage.removeItem('access_token');
-      localStorage.removeItem('authToken');
-      sessionStorage.removeItem('access_token');
-      sessionStorage.removeItem('authToken');
-      throw new Error('Session expired. Please sign in again.');
+      localStorage.removeItem("access_token");
+      localStorage.removeItem("authToken");
+      sessionStorage.removeItem("access_token");
+      sessionStorage.removeItem("authToken");
+      throw new Error("Session expired. Please sign in again.");
     }
 
     if (!response.ok) {
@@ -526,7 +539,10 @@ async function toggleLike() {
       console.log("🔍 LIKE DEBUG - Using backend 'liked' field:", result.liked);
       liked.value = result.liked;
     } else if (result.user_liked !== undefined) {
-      console.log("🔍 LIKE DEBUG - Using backend 'user_liked' field:", result.user_liked);
+      console.log(
+        "🔍 LIKE DEBUG - Using backend 'user_liked' field:",
+        result.user_liked,
+      );
       liked.value = result.user_liked;
       if (result.likes_count !== undefined) {
         likeCount.value = Math.max(0, result.likes_count);
@@ -626,7 +642,7 @@ async function submitReport() {
   try {
     const token = getAuthToken();
     if (!token) {
-      throw new Error('Authentication required. Please sign in.');
+      throw new Error("Authentication required. Please sign in.");
     }
 
     console.log("🔍 Starting fetch request...");
@@ -644,11 +660,11 @@ async function submitReport() {
 
     // 🔥 CRITICAL: Handle 401 responses with token cleanup
     if (response.status === 401) {
-      localStorage.removeItem('access_token');
-      localStorage.removeItem('authToken');
-      sessionStorage.removeItem('access_token');
-      sessionStorage.removeItem('authToken');
-      throw new Error('Session expired. Please sign in again.');
+      localStorage.removeItem("access_token");
+      localStorage.removeItem("authToken");
+      sessionStorage.removeItem("access_token");
+      sessionStorage.removeItem("authToken");
+      throw new Error("Session expired. Please sign in again.");
     }
 
     if (!response.ok) {
