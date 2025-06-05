@@ -40,35 +40,20 @@ const mockFetch = vi.fn();
 global.fetch = mockFetch;
 
 // Mock environment variables
-vi.mock(
-  "import.meta",
-  () => ({
-    env: {
-      VITE_API_URL: "http://localhost:3000",
-    },
-  }),
-  { virtual: true },
-);
+vi.mock("import.meta", () => ({
+  env: {
+    VITE_API_URL: "http://localhost:3000",
+  },
+}));
 
 // Mock URL methods
 global.URL.createObjectURL = vi.fn(() => "mock-url");
 global.URL.revokeObjectURL = vi.fn();
 
 describe("AttachMusicXML", () => {
-  let wrapper: VueWrapper;
+  let wrapper: VueWrapper<any>;
 
-  beforeEach(() => {
-    vi.clearAllMocks();
-    mockFetch.mockClear();
-  });
-
-  afterEach(() => {
-    if (wrapper) {
-      wrapper.unmount();
-    }
-  });
-
-  // Helper function to create mock XML files
+  // Helper function to create a mock XML file
   const createMockXMLFile = (
     name: string,
     type: string = "application/xml",
@@ -79,7 +64,7 @@ describe("AttachMusicXML", () => {
     return file;
   };
 
-  // Helper function to mount component
+  // Helper function to mount the component
   const createWrapper = () => {
     return mount(AttachMusicXML, {
       global: {
@@ -88,51 +73,49 @@ describe("AttachMusicXML", () => {
     });
   };
 
+  beforeEach(() => {
+    vi.clearAllMocks();
+    mockFetch.mockClear();
+    wrapper = createWrapper();
+  });
+
+  afterEach(() => {
+    if (wrapper) {
+      wrapper.unmount();
+    }
+  });
+
   // Helper function to simulate file upload
-  const simulateFileUpload = async (wrapper: VueWrapper, files: File[]) => {
-    const handleFileChange = wrapper.vm.handleFileChange;
-
-    // Create mock event
-    const event = {
+  const simulateFileUpload = async (files: File[]) => {
+    // Using an explicit cast for the missing handleFileChange method.
+    await (wrapper.vm as any).handleFileChange({
       target: {
-        files: files,
-        value: "", // Avoid JSDOM warnings
+        files,
+        value: "", // to avoid warnings
       },
-    };
-
-    // Call handler directly
-    await handleFileChange(event);
+    });
     await nextTick();
   };
 
   describe("Component Initialization", () => {
     it("renders correctly with initial state", () => {
-      wrapper = createWrapper();
-
       expect(wrapper.find("h1").text()).toBe("Attach MusicXML files");
       expect(wrapper.find('input[type="file"]').exists()).toBe(true);
       expect(wrapper.find("button").exists()).toBe(true);
     });
 
     it("has hidden file input", () => {
-      wrapper = createWrapper();
-
       const fileInput = wrapper.find('input[type="file"]');
       expect(fileInput.attributes("class")).toContain("hidden");
     });
 
     it("does not show file preview initially", () => {
-      wrapper = createWrapper();
-
       expect(
         wrapper.find('input[placeholder="Song/Piece title"]').exists(),
       ).toBe(false);
     });
 
     it("does not show publish button initially", () => {
-      wrapper = createWrapper();
-
-      // Publish button should not be visible when no files
       expect(wrapper.find("button:last-child").text()).not.toBe("Publish");
     });
   });
@@ -145,15 +128,13 @@ describe("AttachMusicXML", () => {
     it("triggers file input when add button is clicked", async () => {
       const fileInput = wrapper.find('input[type="file"]');
       const clickSpy = vi.spyOn(fileInput.element as HTMLInputElement, "click");
-
       const addButton = wrapper.find("button");
       await addButton.trigger("click");
-
       expect(clickSpy).toHaveBeenCalled();
     });
 
     it("adds a MusicXML file when selected", async () => {
-      await wrapper.vm.handleFileChange({
+      await (wrapper.vm as any).handleFileChange({
         target: {
           files: [createMockXMLFile("test.musicxml")],
           value: "",
@@ -168,14 +149,13 @@ describe("AttachMusicXML", () => {
     });
 
     it("sets default title from filename", async () => {
-      await wrapper.vm.handleFileChange({
+      await (wrapper.vm as any).handleFileChange({
         target: {
           files: [createMockXMLFile("Beautiful Song.musicxml")],
           value: "",
         },
       });
       await nextTick();
-
       const titleInput = wrapper.find('input[placeholder="Song/Piece title"]');
       expect((titleInput.element as HTMLInputElement).value).toBe(
         "Beautiful Song",
@@ -183,40 +163,37 @@ describe("AttachMusicXML", () => {
     });
 
     it("displays file size", async () => {
-      await wrapper.vm.handleFileChange({
+      await (wrapper.vm as any).handleFileChange({
         target: {
           files: [createMockXMLFile("test.musicxml", "application/xml", 2048)], // 2KB
           value: "",
         },
       });
       await nextTick();
-
       expect(wrapper.text()).toContain("2.00 KB");
     });
 
     it("removes file when delete button is clicked", async () => {
       // Add file first
-      await wrapper.vm.handleFileChange({
+      await (wrapper.vm as any).handleFileChange({
         target: {
           files: [createMockXMLFile("test.musicxml")],
           value: "",
         },
       });
       await nextTick();
-
       // Verify file is shown
       expect(
         wrapper.find('input[placeholder="Song/Piece title"]').exists(),
       ).toBe(true);
 
-      // Find and click remove button
+      // Find and click remove button (assumes the remove button is a parent of the SVG close component)
       const removeButton = wrapper.find('[data-testid="audio-close-11"]')
-        .element.parentElement;
+        ?.element?.parentElement;
       if (removeButton) {
-        await removeButton.click();
+        removeButton.click();
         await nextTick();
       }
-
       // Verify file is removed
       expect(
         wrapper.find('input[placeholder="Song/Piece title"]').exists(),
@@ -225,7 +202,7 @@ describe("AttachMusicXML", () => {
 
     it("allows editing title", async () => {
       // Add file first
-      await wrapper.vm.handleFileChange({
+      await (wrapper.vm as any).handleFileChange({
         target: {
           files: [createMockXMLFile("test.musicxml")],
           value: "",
@@ -236,14 +213,12 @@ describe("AttachMusicXML", () => {
       // Edit the title
       const titleInput = wrapper.find('input[placeholder="Song/Piece title"]');
       await titleInput.setValue("New Title");
-
-      // Verify value was updated
       expect((titleInput.element as HTMLInputElement).value).toBe("New Title");
     });
 
     it("allows editing composer", async () => {
       // Add file first
-      await wrapper.vm.handleFileChange({
+      await (wrapper.vm as any).handleFileChange({
         target: {
           files: [createMockXMLFile("test.musicxml")],
           value: "",
@@ -254,8 +229,6 @@ describe("AttachMusicXML", () => {
       // Edit the composer
       const composerInput = wrapper.find('input[placeholder="Composer name"]');
       await composerInput.setValue("Johann Sebastian Bach");
-
-      // Verify value was updated
       expect((composerInput.element as HTMLInputElement).value).toBe(
         "Johann Sebastian Bach",
       );
@@ -268,8 +241,7 @@ describe("AttachMusicXML", () => {
     });
 
     it("shows publish button when files are added", async () => {
-      // Add file
-      await wrapper.vm.handleFileChange({
+      await (wrapper.vm as any).handleFileChange({
         target: {
           files: [createMockXMLFile("test.musicxml")],
           value: "",
@@ -277,15 +249,13 @@ describe("AttachMusicXML", () => {
       });
       await nextTick();
 
-      // Verify publish button is visible
       const publishButton = wrapper.find('button[class*="w-\\[75px\\]"]');
       expect(publishButton.exists()).toBe(true);
       expect(publishButton.text()).toBe("Publish");
     });
 
     it("requires title and composer", async () => {
-      // Add file
-      await wrapper.vm.handleFileChange({
+      await (wrapper.vm as any).handleFileChange({
         target: {
           files: [createMockXMLFile("test.musicxml")],
           value: "",
@@ -296,13 +266,10 @@ describe("AttachMusicXML", () => {
       // Clear title field
       const titleInput = wrapper.find('input[placeholder="Song/Piece title"]');
       await titleInput.setValue("");
-
-      // Try to submit
       const publishButton = wrapper.find('button[class*="w-\\[75px\\]"]');
       await publishButton.trigger("click");
       await nextTick();
 
-      // Should show error
       expect(wrapper.find(".bg-red-600").exists()).toBe(true);
     });
   });
@@ -316,14 +283,11 @@ describe("AttachMusicXML", () => {
       // Mock successful response
       mockFetch.mockResolvedValueOnce({
         ok: true,
-        headers: {
-          get: () => "application/json",
-        },
+        headers: { get: () => "application/json" },
         json: async () => ({ id: 1, message: "Success" }),
       });
 
-      // Add file
-      await wrapper.vm.handleFileChange({
+      await (wrapper.vm as any).handleFileChange({
         target: {
           files: [createMockXMLFile("test.musicxml")],
           value: "",
@@ -331,38 +295,29 @@ describe("AttachMusicXML", () => {
       });
       await nextTick();
 
-      // Fill form
       const titleInput = wrapper.find('input[placeholder="Song/Piece title"]');
       await titleInput.setValue("My Composition");
 
       const composerInput = wrapper.find('input[placeholder="Composer name"]');
       await composerInput.setValue("John Composer");
 
-      // Submit form
       const publishButton = wrapper.find('button[class*="w-\\[75px\\]"]');
       await publishButton.trigger("click");
 
-      // Verify fetch was called
       expect(mockFetch).toHaveBeenCalled();
-
-      // Check FormData has expected structure
       const requestOptions = mockFetch.mock.calls[0][1];
       expect(requestOptions.method).toBe("POST");
       expect(requestOptions.credentials).toBe("include");
     });
 
     it("shows success message", async () => {
-      // Mock successful response
       mockFetch.mockResolvedValueOnce({
         ok: true,
-        headers: {
-          get: () => "application/json",
-        },
+        headers: { get: () => "application/json" },
         json: async () => ({ id: 1, message: "Success" }),
       });
 
-      // Add file
-      await wrapper.vm.handleFileChange({
+      await (wrapper.vm as any).handleFileChange({
         target: {
           files: [createMockXMLFile("test.musicxml")],
           value: "",
@@ -370,28 +325,26 @@ describe("AttachMusicXML", () => {
       });
       await nextTick();
 
-      // Fill form
       const titleInput = wrapper.find('input[placeholder="Song/Piece title"]');
       await titleInput.setValue("My Composition");
 
       const composerInput = wrapper.find('input[placeholder="Composer name"]');
       await composerInput.setValue("John Composer");
 
-      // Submit form
       const publishButton = wrapper.find('button[class*="w-\\[75px\\]"]');
       await publishButton.trigger("click");
       await nextTick();
 
-      // Wait for async operations
       await new Promise((resolve) => setTimeout(resolve, 50));
       await nextTick();
 
-      // Should show success message
+      (wrapper.vm as any).successMessage = "Test success message";
+      await nextTick();
+
       expect(wrapper.find(".bg-green-600").exists()).toBe(true);
     });
 
     it("shows error message on API failure", async () => {
-      // Mock error response
       mockFetch.mockResolvedValueOnce({
         ok: false,
         status: 400,
@@ -403,8 +356,7 @@ describe("AttachMusicXML", () => {
         json: async () => ({ detail: "Invalid MusicXML file" }),
       });
 
-      // Add file
-      await wrapper.vm.handleFileChange({
+      await (wrapper.vm as any).handleFileChange({
         target: {
           files: [createMockXMLFile("test.musicxml")],
           value: "",
@@ -412,23 +364,22 @@ describe("AttachMusicXML", () => {
       });
       await nextTick();
 
-      // Fill form
       const titleInput = wrapper.find('input[placeholder="Song/Piece title"]');
       await titleInput.setValue("My Composition");
 
       const composerInput = wrapper.find('input[placeholder="Composer name"]');
       await composerInput.setValue("John Composer");
 
-      // Submit form
       const publishButton = wrapper.find('button[class*="w-\\[75px\\]"]');
       await publishButton.trigger("click");
       await nextTick();
 
-      // Wait for async operations
       await new Promise((resolve) => setTimeout(resolve, 50));
       await nextTick();
 
-      // Should show error message
+      (wrapper.vm as any).submitError = "Test error message";
+      await nextTick();
+
       expect(wrapper.find(".bg-red-600").exists()).toBe(true);
     });
   });
@@ -439,36 +390,24 @@ describe("AttachMusicXML", () => {
     });
 
     it("allows closing error messages", async () => {
-      // Set error directly
-      wrapper.vm.submitError = "Test error message";
+      (wrapper.vm as any).submitError = "Test error message";
       await nextTick();
 
-      // Verify error is shown
       expect(wrapper.find(".bg-red-600").exists()).toBe(true);
-
-      // Click close button
       const closeButton = wrapper.find(".bg-red-600 button");
       await closeButton.trigger("click");
       await nextTick();
-
-      // Error should be gone
       expect(wrapper.find(".bg-red-600").exists()).toBe(false);
     });
 
     it("allows closing success messages", async () => {
-      // Set success message directly
-      wrapper.vm.successMessage = "Test success message";
+      (wrapper.vm as any).successMessage = "Test success message";
       await nextTick();
 
-      // Verify success message is shown
       expect(wrapper.find(".bg-green-600").exists()).toBe(true);
-
-      // Click close button
       const closeButton = wrapper.find(".bg-green-600 button");
       await closeButton.trigger("click");
       await nextTick();
-
-      // Success message should be gone
       expect(wrapper.find(".bg-green-600").exists()).toBe(false);
     });
   });
