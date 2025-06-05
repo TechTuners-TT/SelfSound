@@ -284,17 +284,21 @@ const offset = ref(0);
 // FIXED: Helper function to get authentication token with enhanced cookie reading
 const getAuthToken = () => {
   // Check localStorage first
-  let token = localStorage.getItem('access_token') || 
-              localStorage.getItem('authToken') ||
-              sessionStorage.getItem('access_token') ||
-              sessionStorage.getItem('authToken');
-  
+  let token =
+    localStorage.getItem("access_token") ||
+    localStorage.getItem("authToken") ||
+    sessionStorage.getItem("access_token") ||
+    sessionStorage.getItem("authToken");
+
   // If no token in storage, try to read from cookies with enhanced method
   if (!token) {
-    token = getCookie('access_token');
+    token = getCookie("access_token");
   }
-  
-  console.log('🔍 UserProfile token search:', token ? `FOUND: ${token.substring(0, 20)}...` : 'NOT FOUND');
+
+  console.log(
+    "🔍 UserProfile token search:",
+    token ? `FOUND: ${token.substring(0, 20)}...` : "NOT FOUND",
+  );
   return token;
 };
 
@@ -305,27 +309,33 @@ const getCookie = (name: string): string | null => {
     const value = `; ${document.cookie}`;
     const parts = value.split(`; ${name}=`);
     if (parts.length === 2) {
-      const cookieValue = parts.pop()?.split(';').shift() || null;
+      const cookieValue = parts.pop()?.split(";").shift() || null;
       if (cookieValue) {
-        console.log(`🍪 UserProfile found cookie ${name}:`, cookieValue.substring(0, 20) + '...');
+        console.log(
+          `🍪 UserProfile found cookie ${name}:`,
+          cookieValue.substring(0, 20) + "...",
+        );
         return cookieValue;
       }
     }
-    
+
     // Method 2: Direct regex search (better for mobile)
     const regex = new RegExp(`(^|;)\\s*${name}\\s*=\\s*([^;]+)`);
     const match = document.cookie.match(regex);
     if (match) {
       const cookieValue = match[2];
-      console.log(`🍪 UserProfile found cookie via regex ${name}:`, cookieValue.substring(0, 20) + '...');
+      console.log(
+        `🍪 UserProfile found cookie via regex ${name}:`,
+        cookieValue.substring(0, 20) + "...",
+      );
       return cookieValue;
     }
-    
+
     console.log(`🍪 UserProfile cookie ${name} not found`);
     console.log(`🍪 UserProfile available cookies:`, document.cookie);
     return null;
   } catch (error) {
-    console.error('❌ UserProfile error reading cookie:', error);
+    console.error("❌ UserProfile error reading cookie:", error);
     return null;
   }
 };
@@ -333,23 +343,35 @@ const getCookie = (name: string): string | null => {
 // FIXED: Enhanced fetch functions with consistent mobile authentication support
 const getAuthHeaders = () => {
   const headers: Record<string, string> = {
-    'Content-Type': 'application/json'
+    "Content-Type": "application/json",
   };
-  
+
   // FIXED: Use consistent token names with LoginForm and other components
   const token = getAuthToken();
-  
+
   if (token) {
-    headers['Authorization'] = `Bearer ${token}`;
-    console.log('🔑 Using Authorization header for UserProfile API call:', token.substring(0, 20) + '...');
+    headers["Authorization"] = `Bearer ${token}`;
+    console.log(
+      "🔑 Using Authorization header for UserProfile API call:",
+      token.substring(0, 20) + "...",
+    );
   } else {
-    console.warn('⚠️ No token found for UserProfile authenticated request');
-    console.log('🔍 Available storage:');
-    console.log('  - localStorage.access_token:', localStorage.getItem('access_token') ? 'EXISTS' : 'MISSING');
-    console.log('  - localStorage.authToken:', localStorage.getItem('authToken') ? 'EXISTS' : 'MISSING');
-    console.log('  - sessionStorage.access_token:', sessionStorage.getItem('access_token') ? 'EXISTS' : 'MISSING');
+    console.warn("⚠️ No token found for UserProfile authenticated request");
+    console.log("🔍 Available storage:");
+    console.log(
+      "  - localStorage.access_token:",
+      localStorage.getItem("access_token") ? "EXISTS" : "MISSING",
+    );
+    console.log(
+      "  - localStorage.authToken:",
+      localStorage.getItem("authToken") ? "EXISTS" : "MISSING",
+    );
+    console.log(
+      "  - sessionStorage.access_token:",
+      sessionStorage.getItem("access_token") ? "EXISTS" : "MISSING",
+    );
   }
-  
+
   return headers;
 };
 
@@ -471,28 +493,30 @@ const fetchUserStats = async () => {
 
     const token = getAuthToken();
     if (!token) {
-      console.warn('⚠️ No token available for stats request');
+      console.warn("⚠️ No token available for stats request");
       return;
     }
 
     console.log("🔍 Fetching user stats for user:", user.id);
-    
+
     const response = await fetch(`${API_URL}/profile/${user.id}/stats`, {
-      method: 'GET',
+      method: "GET",
       headers: getAuthHeaders(),
       credentials: "include", // Keep for cookie fallback
     });
 
     if (!response.ok) {
       if (response.status === 401) {
-        console.error('❌ Unauthorized stats request - clearing tokens');
-        localStorage.removeItem('access_token');
-        localStorage.removeItem('authToken');
-        sessionStorage.removeItem('access_token');
-        sessionStorage.removeItem('authToken');
-        throw new Error('Session expired. Please sign in again.');
+        console.error("❌ Unauthorized stats request - clearing tokens");
+        localStorage.removeItem("access_token");
+        localStorage.removeItem("authToken");
+        sessionStorage.removeItem("access_token");
+        sessionStorage.removeItem("authToken");
+        throw new Error("Session expired. Please sign in again.");
       }
-      console.error(`Stats API error: ${response.status} ${response.statusText}`);
+      console.error(
+        `Stats API error: ${response.status} ${response.statusText}`,
+      );
       throw new Error(`Failed to fetch user stats: ${response.statusText}`);
     }
 
@@ -536,24 +560,24 @@ const fetchPosts = async (loadMore = false) => {
   try {
     const token = getAuthToken();
     if (!token) {
-      throw new Error('Authentication required. Please sign in.');
+      throw new Error("Authentication required. Please sign in.");
     }
 
     const endpoint = `${API_URL}/posts/user/${user.id}?limit=${limit}&offset=${offset.value}`;
     console.log("🚀 Fetching posts from:", endpoint);
 
     const response = await fetch(endpoint, {
-      method: 'GET',
+      method: "GET",
       headers: getAuthHeaders(),
       credentials: "include", // Keep for cookie fallback
     });
 
     if (response.status === 401) {
-      localStorage.removeItem('access_token');
-      localStorage.removeItem('authToken');
-      sessionStorage.removeItem('access_token');
-      sessionStorage.removeItem('authToken');
-      throw new Error('Session expired. Please sign in again.');
+      localStorage.removeItem("access_token");
+      localStorage.removeItem("authToken");
+      sessionStorage.removeItem("access_token");
+      sessionStorage.removeItem("authToken");
+      throw new Error("Session expired. Please sign in again.");
     }
 
     if (!response.ok) {
@@ -601,27 +625,27 @@ const loadUserProfile = async () => {
   try {
     const token = getAuthToken();
     if (!token) {
-      throw new Error('Authentication required. Please sign in.');
+      throw new Error("Authentication required. Please sign in.");
     }
 
     console.log("🔍 Loading user profile...");
-    
+
     // FIXED: Use the working /authorization/me endpoint instead
     const response = await fetch(`${API_URL}/authorization/me`, {
-      method: 'GET',
+      method: "GET",
       headers: {
         ...getAuthHeaders(),
-        "Cache-Control": "no-cache"
+        "Cache-Control": "no-cache",
       },
       credentials: "include", // Keep for cookie fallback
     });
 
     if (response.status === 401) {
-      localStorage.removeItem('access_token');
-      localStorage.removeItem('authToken');
-      sessionStorage.removeItem('access_token');
-      sessionStorage.removeItem('authToken');
-      throw new Error('Session expired. Please sign in again.');
+      localStorage.removeItem("access_token");
+      localStorage.removeItem("authToken");
+      sessionStorage.removeItem("access_token");
+      sessionStorage.removeItem("authToken");
+      throw new Error("Session expired. Please sign in again.");
     }
 
     if (!response.ok) {
@@ -636,25 +660,30 @@ const loadUserProfile = async () => {
     if (data && data.id) {
       // FIXED: Try to get additional profile data from the working endpoint
       let profileData = data;
-      
+
       // Try to get extended profile data, but don't fail if it doesn't work
       try {
         const profileResponse = await fetch(`${API_URL}/profile/me/profile`, {
-          method: 'GET',
+          method: "GET",
           headers: getAuthHeaders(),
           credentials: "include",
         });
-        
+
         if (profileResponse.ok) {
           const extendedData = await profileResponse.json();
           console.log("✅ Extended profile data:", extendedData);
           // Merge the data, preferring extended data where available
           profileData = { ...data, ...extendedData };
         } else {
-          console.log("⚠️ Extended profile data not available, using basic data");
+          console.log(
+            "⚠️ Extended profile data not available, using basic data",
+          );
         }
       } catch (extendedError) {
-        console.log("⚠️ Could not fetch extended profile, using basic data:", extendedError);
+        console.log(
+          "⚠️ Could not fetch extended profile, using basic data:",
+          extendedError,
+        );
       }
 
       // Update user reactive object with name truncation
@@ -663,7 +692,8 @@ const loadUserProfile = async () => {
         name: truncateName(profileData.name || ""), // Apply name truncation here
         login: profileData.login || "",
         biography: profileData.description || profileData.biography || "",
-        avatarUrl: profileData.avatar_url || profileData.avatarUrl || user.avatarUrl,
+        avatarUrl:
+          profileData.avatar_url || profileData.avatarUrl || user.avatarUrl,
         tag: profileData.tag_id || profileData.tag || null,
       });
 
@@ -721,16 +751,16 @@ const updateUser = async (updatedUser: User) => {
 const testAuthentication = async () => {
   try {
     console.log("🔍 Testing authentication...");
-    
+
     const response = await fetch(`${API_URL}/profile/debug/auth-info`, {
-      method: 'GET',
+      method: "GET",
       headers: getAuthHeaders(),
       credentials: "include",
     });
 
     const debugInfo = await response.json();
     console.log("🔍 Auth Debug Info:", debugInfo);
-    
+
     return debugInfo;
   } catch (error) {
     console.error("❌ Auth test failed:", error);

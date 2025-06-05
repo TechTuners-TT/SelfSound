@@ -104,29 +104,34 @@ export default defineComponent({
     // Device detection
     const isIOSSafari = (() => {
       const userAgent = navigator.userAgent.toLowerCase();
-      return userAgent.includes('safari') && 
-             userAgent.includes('mobile') && 
-             !userAgent.includes('chrome') && 
-             !userAgent.includes('crios');
+      return (
+        userAgent.includes("safari") &&
+        userAgent.includes("mobile") &&
+        !userAgent.includes("chrome") &&
+        !userAgent.includes("crios")
+      );
     })();
 
     // FIXED: Store token with correct key names that PostFeed expects
     const storeToken = (token: string) => {
       try {
         // PRIMARY: Use the same key as PostFeed expects
-        localStorage.setItem('access_token', token);
-        sessionStorage.setItem('access_token', token);
-        
+        localStorage.setItem("access_token", token);
+        sessionStorage.setItem("access_token", token);
+
         // BACKUP: Keep old keys for compatibility
-        localStorage.setItem('authToken', token);
-        sessionStorage.setItem('authToken', token);
-        localStorage.setItem('auth_backup', token);
-        
+        localStorage.setItem("authToken", token);
+        sessionStorage.setItem("authToken", token);
+        localStorage.setItem("auth_backup", token);
+
         // MOBILE FALLBACK: Set cookie for mobile compatibility
         document.cookie = `access_token=${token}; path=/; secure; samesite=lax; max-age=86400`;
-        
-        console.log('✅ Token stored successfully:', token.substring(0, 20) + '...');
-        console.log('📱 iOS Safari detected:', isIOSSafari);
+
+        console.log(
+          "✅ Token stored successfully:",
+          token.substring(0, 20) + "...",
+        );
+        console.log("📱 iOS Safari detected:", isIOSSafari);
       } catch (e) {
         console.warn("Token storage failed:", e);
         (window as any).__authToken = token;
@@ -137,18 +142,19 @@ export default defineComponent({
     const clearTokens = () => {
       try {
         // Clear all possible token storage locations
-        localStorage.removeItem('access_token');
-        localStorage.removeItem('authToken');
-        localStorage.removeItem('auth_backup');
-        sessionStorage.removeItem('access_token');
-        sessionStorage.removeItem('authToken');
-        
+        localStorage.removeItem("access_token");
+        localStorage.removeItem("authToken");
+        localStorage.removeItem("auth_backup");
+        sessionStorage.removeItem("access_token");
+        sessionStorage.removeItem("authToken");
+
         // Clear cookies
-        document.cookie = 'access_token=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT';
-        
+        document.cookie =
+          "access_token=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT";
+
         delete (window as any).__authToken;
         delete (window as any).__access_token;
-        console.log('🗑️ All tokens cleared');
+        console.log("🗑️ All tokens cleared");
       } catch (e) {
         console.warn("Token clearing failed:", e);
       }
@@ -157,11 +163,11 @@ export default defineComponent({
     onMounted(() => {
       console.log(`📱 SignIn page loaded - iOS Safari: ${isIOSSafari}`);
       console.log(`🌐 API URL: ${API_URL}`);
-      
+
       // Handle email verification
       const hash = window.location.hash;
       const query = new URLSearchParams(hash.split("?")[1]);
-      
+
       if (query.get("verified") === "true") {
         alert("✅ Email verified! You can now sign in.");
         window.location.hash = "#/sign-in";
@@ -211,7 +217,9 @@ export default defineComponent({
           headers["X-Requested-With"] = "XMLHttpRequest";
         }
 
-        console.log(`🚀 Attempting login to: ${API_URL}/authorization/logindefault`);
+        console.log(
+          `🚀 Attempting login to: ${API_URL}/authorization/logindefault`,
+        );
 
         const response = await fetch(`${API_URL}/authorization/logindefault`, {
           method: "POST",
@@ -237,29 +245,32 @@ export default defineComponent({
         // ENHANCED: Better token handling
         if (data.access_token) {
           storeToken(data.access_token);
-          
+
           // DEBUGGING: Verify token storage
-          const storedToken = localStorage.getItem('access_token');
-          console.log(`🔍 Token verification - Stored: ${storedToken ? storedToken.substring(0, 20) + '...' : 'NONE'}`);
-          
+          const storedToken = localStorage.getItem("access_token");
+          console.log(
+            `🔍 Token verification - Stored: ${storedToken ? storedToken.substring(0, 20) + "..." : "NONE"}`,
+          );
+
           if (!storedToken) {
-            console.error('❌ Token storage failed!');
-            alert('Login successful but token storage failed. Please try again.');
+            console.error("❌ Token storage failed!");
+            alert(
+              "Login successful but token storage failed. Please try again.",
+            );
             return;
           }
         } else {
-          console.error('❌ No access token in response');
-          alert('Login failed: No access token received');
+          console.error("❌ No access token in response");
+          alert("Login failed: No access token received");
           return;
         }
 
         console.log("✅ Login successful, redirecting to home");
-        
+
         // WAIT a moment to ensure token is stored before navigation
         setTimeout(() => {
           router.push("/home");
         }, 100);
-        
       } catch (error) {
         console.error("💥 Login error:", error);
         alert("Network error. Please check your connection and try again.");
@@ -270,17 +281,19 @@ export default defineComponent({
 
     const handleGoogleLogin = () => {
       const redirectState = encodeURIComponent(
-        "https://techtuners-tt.github.io/SelfSound/#/sign-in"
+        "https://techtuners-tt.github.io/SelfSound/#/sign-in",
       );
-      
+
       const params = new URLSearchParams({
         state: redirectState,
-        mobile: 'true',
-        ios: isIOSSafari ? 'true' : 'false'
+        mobile: "true",
+        ios: isIOSSafari ? "true" : "false",
       });
-      
+
       console.log("🔍 Starting Google OAuth login");
-      console.log(`🔗 Redirect URL: ${API_URL}/auth/login?${params.toString()}`);
+      console.log(
+        `🔗 Redirect URL: ${API_URL}/auth/login?${params.toString()}`,
+      );
       window.location.href = `${API_URL}/auth/login?${params.toString()}`;
     };
 
@@ -288,7 +301,7 @@ export default defineComponent({
       isLoading.value = true;
       try {
         clearTokens();
-        
+
         // ENHANCED: Better guest mode handling
         try {
           await fetch(`${API_URL}/auth/logout`, {

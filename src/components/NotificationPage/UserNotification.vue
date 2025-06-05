@@ -156,26 +156,28 @@ let timeInterval: ReturnType<typeof setTimeout> | null = null;
 
 // FIXED: Helper function to get authentication token
 const getAuthToken = () => {
-  return localStorage.getItem('access_token') || 
-         localStorage.getItem('authToken') ||
-         sessionStorage.getItem('access_token') ||
-         sessionStorage.getItem('authToken');
+  return (
+    localStorage.getItem("access_token") ||
+    localStorage.getItem("authToken") ||
+    sessionStorage.getItem("access_token") ||
+    sessionStorage.getItem("authToken")
+  );
 };
 
 // FIXED: Helper function to get authenticated headers
 const getAuthHeaders = () => {
   const headers: Record<string, string> = {
-    'Content-Type': 'application/json'
+    "Content-Type": "application/json",
   };
-  
+
   const token = getAuthToken();
   if (token) {
-    headers['Authorization'] = `Bearer ${token}`;
-    console.log('🔑 Using Authorization header for notifications API');
+    headers["Authorization"] = `Bearer ${token}`;
+    console.log("🔑 Using Authorization header for notifications API");
   } else {
-    console.warn('⚠️ No token found for notifications request');
+    console.warn("⚠️ No token found for notifications request");
   }
-  
+
   return headers;
 };
 
@@ -269,14 +271,16 @@ async function fetchNotifications(loadMore: boolean = false) {
   try {
     const token = getAuthToken();
     if (!token) {
-      throw new Error('Authentication required. Please sign in to view notifications.');
+      throw new Error(
+        "Authentication required. Please sign in to view notifications.",
+      );
     }
 
     console.log("🔔 Fetching notifications...");
     const res = await fetch(
       `${API_URL}/notifications?limit=${limit}&offset=${offset.value}`,
       {
-        method: 'GET',
+        method: "GET",
         headers: getAuthHeaders(),
         credentials: "include", // Keep for cookie fallback
       },
@@ -285,10 +289,10 @@ async function fetchNotifications(loadMore: boolean = false) {
     if (!res.ok) {
       if (res.status === 401) {
         // Clear invalid token
-        localStorage.removeItem('access_token');
-        localStorage.removeItem('authToken');
-        sessionStorage.removeItem('access_token');
-        sessionStorage.removeItem('authToken');
+        localStorage.removeItem("access_token");
+        localStorage.removeItem("authToken");
+        sessionStorage.removeItem("access_token");
+        sessionStorage.removeItem("authToken");
         throw new Error("Session expired. Please sign in again.");
       }
       throw new Error(`Failed to fetch notifications: ${res.statusText}`);
@@ -319,7 +323,7 @@ async function markAsRead(notificationId: string) {
   try {
     const token = getAuthToken();
     if (!token) {
-      console.warn('⚠️ No token available to mark notification as read');
+      console.warn("⚠️ No token available to mark notification as read");
       return;
     }
 
@@ -336,10 +340,10 @@ async function markAsRead(notificationId: string) {
       );
       if (notification) {
         notification.read = true;
-        console.log('✅ Notification marked as read:', notificationId);
+        console.log("✅ Notification marked as read:", notificationId);
       }
     } else {
-      console.error('❌ Failed to mark notification as read:', res.status);
+      console.error("❌ Failed to mark notification as read:", res.status);
     }
   } catch (err) {
     console.error("❌ Error marking notification as read:", err);

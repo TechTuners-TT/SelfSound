@@ -181,15 +181,16 @@ const router = useRouter();
 
 // FIXED: Helper function to get authentication token
 const getAuthToken = () => {
-  let token = localStorage.getItem('access_token') || 
-              localStorage.getItem('authToken') ||
-              sessionStorage.getItem('access_token') ||
-              sessionStorage.getItem('authToken');
-  
+  let token =
+    localStorage.getItem("access_token") ||
+    localStorage.getItem("authToken") ||
+    sessionStorage.getItem("access_token") ||
+    sessionStorage.getItem("authToken");
+
   if (!token) {
-    token = getCookie('access_token');
+    token = getCookie("access_token");
   }
-  
+
   return token;
 };
 
@@ -199,17 +200,17 @@ const getCookie = (name: string): string | null => {
     const value = `; ${document.cookie}`;
     const parts = value.split(`; ${name}=`);
     if (parts.length === 2) {
-      const cookieValue = parts.pop()?.split(';').shift() || null;
+      const cookieValue = parts.pop()?.split(";").shift() || null;
       if (cookieValue) return cookieValue;
     }
-    
+
     const regex = new RegExp(`(^|;)\\s*${name}\\s*=\\s*([^;]+)`);
     const match = document.cookie.match(regex);
     if (match) return match[2];
-    
+
     return null;
   } catch (error) {
-    console.error('❌ AttachMedia error reading cookie:', error);
+    console.error("❌ AttachMedia error reading cookie:", error);
     return null;
   }
 };
@@ -217,15 +218,15 @@ const getCookie = (name: string): string | null => {
 // FIXED: Helper function to get authenticated headers
 const getAuthHeaders = () => {
   const headers: Record<string, string> = {};
-  
+
   const token = getAuthToken();
   if (token) {
-    headers['Authorization'] = `Bearer ${token}`;
-    console.log('🔑 Using Authorization header for AttachMedia API call');
+    headers["Authorization"] = `Bearer ${token}`;
+    console.log("🔑 Using Authorization header for AttachMedia API call");
   } else {
-    console.warn('⚠️ No token found for AttachMedia request');
+    console.warn("⚠️ No token found for AttachMedia request");
   }
-  
+
   return headers;
 };
 
@@ -380,7 +381,7 @@ const submitPost = async () => {
   try {
     const token = getAuthToken();
     if (!token) {
-      throw new Error('Authentication required. Please sign in.');
+      throw new Error("Authentication required. Please sign in.");
     }
 
     const formData = new FormData();
@@ -407,11 +408,11 @@ const submitPost = async () => {
     clearInterval(progressInterval);
 
     if (response.status === 401) {
-      localStorage.removeItem('access_token');
-      localStorage.removeItem('authToken');
-      sessionStorage.removeItem('access_token');
-      sessionStorage.removeItem('authToken');
-      throw new Error('Session expired. Please sign in again.');
+      localStorage.removeItem("access_token");
+      localStorage.removeItem("authToken");
+      sessionStorage.removeItem("access_token");
+      sessionStorage.removeItem("authToken");
+      throw new Error("Session expired. Please sign in again.");
     }
 
     if (!response.ok) {

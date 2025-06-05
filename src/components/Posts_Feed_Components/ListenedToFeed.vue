@@ -12,7 +12,9 @@
             class="gap-[20px] sm:gap-[20px] md:gap-[25px] lg:gap-[30px] xl:gap-[35px] 2xl:gap-10 relative w-full md:w-3/5 xl:w-1/3 bg-black/30 flex flex-col min-h-screen overflow-y-auto"
           >
             <!-- Page Header -->
-            <section class="px-[10px] sm:px-[40px] md:px-[20px] lg:px-[30px] xl:px-[20px] 2xl:px-[40px] pt-8">
+            <section
+              class="px-[10px] sm:px-[40px] md:px-[20px] lg:px-[30px] xl:px-[20px] 2xl:px-[40px] pt-8"
+            >
               <h1 class="text-white text-2xl font-bold inter-font mb-4">
                 Listened To Feed
               </h1>
@@ -22,10 +24,14 @@
             </section>
 
             <!-- Divider -->
-            <div class="w-full h-px border border-[rgba(255,255,255,0.5)]"></div>
+            <div
+              class="w-full h-px border border-[rgba(255,255,255,0.5)]"
+            ></div>
 
             <!-- Feed Content -->
-            <section class="px-[10px] sm:px-[40px] md:px-[20px] lg:px-[30px] xl:px-[20px] 2xl:px-[40px]">
+            <section
+              class="px-[10px] sm:px-[40px] md:px-[20px] lg:px-[30px] xl:px-[20px] 2xl:px-[40px]"
+            >
               <!-- Loading State -->
               <div
                 v-if="isLoading && posts.length === 0"
@@ -38,10 +44,7 @@
               </div>
 
               <!-- Error State -->
-              <div
-                v-if="error"
-                class="text-red-400 text-center py-4 mb-4"
-              >
+              <div v-if="error" class="text-red-400 text-center py-4 mb-4">
                 {{ error }}
                 <button
                   @click="() => fetchListenedToFeed()"
@@ -57,16 +60,14 @@
                 class="text-gray-400 text-center py-8"
               >
                 <p class="text-lg mb-2">No posts yet</p>
-                <p class="text-sm">Follow some users to see their posts here!</p>
+                <p class="text-sm">
+                  Follow some users to see their posts here!
+                </p>
               </div>
 
               <!-- Posts -->
               <div v-if="posts.length > 0" class="space-y-4">
-                <PostCard 
-                  v-for="post in posts" 
-                  :key="post.id" 
-                  :post="post" 
-                />
+                <PostCard v-for="post in posts" :key="post.id" :post="post" />
               </div>
 
               <!-- Load More Button -->
@@ -91,9 +92,9 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from 'vue';
-import NavBar from '@/components/Navigation/NavBar.vue';
-import PostCard from '@/components/Posts_Feed_Components/PostCard.vue';
+import { ref, onMounted } from "vue";
+import NavBar from "@/components/Navigation/NavBar.vue";
+import PostCard from "@/components/Posts_Feed_Components/PostCard.vue";
 
 // Get API URL from environment variable
 const API_URL = import.meta.env.VITE_API_URL;
@@ -101,17 +102,21 @@ const API_URL = import.meta.env.VITE_API_URL;
 // 🔥 FIXED: Auth functions (exact copies from UserProfile.vue)
 const getAuthToken = () => {
   // Check localStorage first
-  let token = localStorage.getItem('access_token') || 
-              localStorage.getItem('authToken') ||
-              sessionStorage.getItem('access_token') ||
-              sessionStorage.getItem('authToken');
-  
+  let token =
+    localStorage.getItem("access_token") ||
+    localStorage.getItem("authToken") ||
+    sessionStorage.getItem("access_token") ||
+    sessionStorage.getItem("authToken");
+
   // If no token in storage, try to read from cookies with enhanced method
   if (!token) {
-    token = getCookie('access_token');
+    token = getCookie("access_token");
   }
-  
-  console.log('🔍 ListenedToFeed token search:', token ? `FOUND: ${token.substring(0, 20)}...` : 'NOT FOUND');
+
+  console.log(
+    "🔍 ListenedToFeed token search:",
+    token ? `FOUND: ${token.substring(0, 20)}...` : "NOT FOUND",
+  );
   return token;
 };
 
@@ -122,26 +127,32 @@ const getCookie = (name: string): string | null => {
     const value = `; ${document.cookie}`;
     const parts = value.split(`; ${name}=`);
     if (parts.length === 2) {
-      const cookieValue = parts.pop()?.split(';').shift() || null;
+      const cookieValue = parts.pop()?.split(";").shift() || null;
       if (cookieValue) {
-        console.log(`🍪 ListenedToFeed found cookie ${name}:`, cookieValue.substring(0, 20) + '...');
+        console.log(
+          `🍪 ListenedToFeed found cookie ${name}:`,
+          cookieValue.substring(0, 20) + "...",
+        );
         return cookieValue;
       }
     }
-    
+
     // Method 2: Direct regex search (better for mobile)
     const regex = new RegExp(`(^|;)\\s*${name}\\s*=\\s*([^;]+)`);
     const match = document.cookie.match(regex);
     if (match) {
       const cookieValue = match[2];
-      console.log(`🍪 ListenedToFeed found cookie via regex ${name}:`, cookieValue.substring(0, 20) + '...');
+      console.log(
+        `🍪 ListenedToFeed found cookie via regex ${name}:`,
+        cookieValue.substring(0, 20) + "...",
+      );
       return cookieValue;
     }
-    
+
     console.log(`🍪 ListenedToFeed cookie ${name} not found`);
     return null;
   } catch (error) {
-    console.error('❌ ListenedToFeed error reading cookie:', error);
+    console.error("❌ ListenedToFeed error reading cookie:", error);
     return null;
   }
 };
@@ -149,18 +160,21 @@ const getCookie = (name: string): string | null => {
 // Enhanced auth headers function
 const getAuthHeaders = () => {
   const headers: Record<string, string> = {
-    'Content-Type': 'application/json'
+    "Content-Type": "application/json",
   };
-  
+
   const token = getAuthToken();
-  
+
   if (token) {
-    headers['Authorization'] = `Bearer ${token}`;
-    console.log('🔑 ListenedToFeed using Authorization header:', token.substring(0, 20) + '...');
+    headers["Authorization"] = `Bearer ${token}`;
+    console.log(
+      "🔑 ListenedToFeed using Authorization header:",
+      token.substring(0, 20) + "...",
+    );
   } else {
-    console.warn('⚠️ ListenedToFeed no token found for authenticated request');
+    console.warn("⚠️ ListenedToFeed no token found for authenticated request");
   }
-  
+
   return headers;
 };
 
@@ -185,7 +199,7 @@ interface Post {
 const posts = ref<Post[]>([]);
 const isLoading = ref(false);
 const isLoadingMore = ref(false);
-const error = ref('');
+const error = ref("");
 const hasMore = ref(true);
 const limit = 10;
 const offset = ref(0);
@@ -193,12 +207,14 @@ const offset = ref(0);
 // Map UUIDs to tag names
 const tagMap: Record<string, string> = {
   "146fb41a-2f3e-48c7-bef9-01de0279dfd7": "Listener",
-  "b361c6f9-9425-4548-8c07-cb408140c304": "Musician", 
+  "b361c6f9-9425-4548-8c07-cb408140c304": "Musician",
   "5ee121a6-b467-4ead-b3f7-00e1ce6097d5": "Learner",
 };
 
 // Helper functions
-const mapUserRole = (tagId: string | null): "Musician" | "Listener" | "Learner" => {
+const mapUserRole = (
+  tagId: string | null,
+): "Musician" | "Listener" | "Learner" => {
   const roleMap: Record<string, "Musician" | "Listener" | "Learner"> = {
     "146fb41a-2f3e-48c7-bef9-01de0279dfd7": "Listener",
     "b361c6f9-9425-4548-8c07-cb408140c304": "Musician",
@@ -310,12 +326,12 @@ const fetchListenedToFeed = async (loadMore = false) => {
     offset.value = 0;
   }
 
-  error.value = '';
+  error.value = "";
 
   try {
     const token = getAuthToken();
     if (!token) {
-      throw new Error('Authentication required. Please sign in.');
+      throw new Error("Authentication required. Please sign in.");
     }
 
     // Endpoint for posts from users you're listening to
@@ -323,18 +339,18 @@ const fetchListenedToFeed = async (loadMore = false) => {
     console.log("🚀 Fetching listened to feed from:", endpoint);
 
     const response = await fetch(endpoint, {
-      method: 'GET',
+      method: "GET",
       headers: getAuthHeaders(),
       credentials: "include",
     });
 
     // Handle 401 responses with token cleanup
     if (response.status === 401) {
-      localStorage.removeItem('access_token');
-      localStorage.removeItem('authToken');
-      sessionStorage.removeItem('access_token');
-      sessionStorage.removeItem('authToken');
-      throw new Error('Session expired. Please sign in again.');
+      localStorage.removeItem("access_token");
+      localStorage.removeItem("authToken");
+      sessionStorage.removeItem("access_token");
+      sessionStorage.removeItem("authToken");
+      throw new Error("Session expired. Please sign in again.");
     }
 
     if (!response.ok) {
@@ -356,7 +372,6 @@ const fetchListenedToFeed = async (loadMore = false) => {
 
     hasMore.value = backendPosts.length === limit;
     offset.value += backendPosts.length;
-
   } catch (err) {
     console.error("❌ Error fetching listened to feed:", err);
     error.value = err instanceof Error ? err.message : "Failed to load feed";
