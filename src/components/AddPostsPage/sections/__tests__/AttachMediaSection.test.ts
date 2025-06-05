@@ -41,17 +41,13 @@ const mockFetch = vi.fn();
 global.fetch = mockFetch;
 
 // Mock environment variables
-vi.mock(
-  "import.meta",
-  () => ({
-    env: {
-      VITE_API_URL: "http://localhost:3000",
-    },
-  }),
-  { virtual: true },
-);
+vi.mock("import.meta", () => ({
+  env: {
+    VITE_API_URL: "http://localhost:3000",
+  },
+}));
 
-// Mock URL
+// Mock URL methods
 global.URL.createObjectURL = vi.fn(() => "mock-url");
 global.URL.revokeObjectURL = vi.fn();
 
@@ -78,19 +74,7 @@ Object.defineProperty(document, "cookie", {
 });
 
 describe("AttachMediaSection", () => {
-  let wrapper: VueWrapper;
-
-  beforeEach(() => {
-    vi.clearAllMocks();
-    mockFetch.mockClear();
-    mockLocalStorage.getItem.mockReturnValue("mock-token");
-  });
-
-  afterEach(() => {
-    if (wrapper) {
-      wrapper.unmount();
-    }
-  });
+  let wrapper: VueWrapper<any>;
 
   const createWrapper = () => {
     return mount(AttachMediaSection, {
@@ -100,7 +84,7 @@ describe("AttachMediaSection", () => {
     });
   };
 
-  // Helper function to create mock files
+  // Helper: create mock file
   const createMockFile = (
     name: string,
     type: string,
@@ -111,58 +95,39 @@ describe("AttachMediaSection", () => {
     return file;
   };
 
-  // Helper function to simulate file selection
-  const simulateFileUpload = async (wrapper: VueWrapper, files: File[]) => {
-    // Get the component's file handling method
-    const handleFileChange = wrapper.vm.handleFileChange;
+  beforeEach(() => {
+    vi.clearAllMocks();
+    mockFetch.mockClear();
+    mockLocalStorage.getItem.mockReturnValue("mock-token");
+    wrapper = createWrapper();
+  });
 
-    // Create a mock event
-    const event = {
-      target: {
-        files: files,
-        value: "", // Add empty value to avoid JSDOM warnings
-      },
-    };
-
-    // Call the handler directly
-    await handleFileChange(event);
-    await nextTick();
-  };
+  afterEach(() => {
+    wrapper.unmount();
+  });
 
   describe("Component Initialization", () => {
     it("renders correctly with initial state", () => {
-      wrapper = createWrapper();
-
       expect(wrapper.find("h1").text()).toBe("Attach media files");
       expect(wrapper.find('input[type="file"]').exists()).toBe(true);
       expect(wrapper.find("button").exists()).toBe(true);
     });
 
     it("has hidden file input", () => {
-      wrapper = createWrapper();
-
       const fileInput = wrapper.find('input[type="file"]');
       expect(fileInput.classes()).toContain("hidden");
     });
 
     it("does not show file count indicator initially", () => {
-      wrapper = createWrapper();
-
       expect(wrapper.find("p.text-sm.text-gray-400").exists()).toBe(false);
     });
 
     it("does not show publish button initially", () => {
-      wrapper = createWrapper();
-
       expect(wrapper.find("button:last-child").text()).not.toBe("Publish");
     });
   });
 
   describe("Basic Functionality", () => {
-    beforeEach(() => {
-      wrapper = createWrapper();
-    });
-
     it("triggers file input when add button is clicked", async () => {
       const fileInput = wrapper.find('input[type="file"]');
       const clickSpy = vi.spyOn(fileInput.element as HTMLInputElement, "click");
@@ -174,14 +139,11 @@ describe("AttachMediaSection", () => {
     });
 
     it("shows error for invalid file type", async () => {
-      // Mock component internal method directly
-      await wrapper.vm.validateFile(
+      await (wrapper.vm as any).validateFile(
         createMockFile("test.pdf", "application/pdf"),
       );
-      await wrapper.vm.handleFileChange({
-        target: {
-          files: [createMockFile("test.pdf", "application/pdf")],
-        },
+      await (wrapper.vm as any).handleFileChange({
+        target: { files: [createMockFile("test.pdf", "application/pdf")] },
       });
       await nextTick();
 
@@ -189,18 +151,13 @@ describe("AttachMediaSection", () => {
     });
 
     it("shows error for files that exceed size limits", async () => {
-      // Create a large file (20MB)
       const largeFile = createMockFile(
         "large.jpg",
         "image/jpeg",
         20 * 1024 * 1024,
       );
-
-      // Process it directly
-      await wrapper.vm.handleFileChange({
-        target: {
-          files: [largeFile],
-        },
+      await (wrapper.vm as any).handleFileChange({
+        target: { files: [largeFile] },
       });
       await nextTick();
 
@@ -209,12 +166,7 @@ describe("AttachMediaSection", () => {
   });
 
   describe("API Interaction", () => {
-    beforeEach(() => {
-      wrapper = createWrapper();
-    });
-
     it("submits files to API on publish", async () => {
-      // Skip the actual API call
       mockFetch.mockImplementation(() =>
         Promise.resolve({
           ok: true,
@@ -223,11 +175,7 @@ describe("AttachMediaSection", () => {
         }),
       );
 
-      // Just test the button click
-      wrapper = createWrapper();
-
-      // Add file directly to the component
-      wrapper.vm.files = [
+      (wrapper.vm as any).files = [
         {
           preview: "mock-url",
           file: createMockFile("test.jpg", "image/jpeg"),
@@ -236,35 +184,24 @@ describe("AttachMediaSection", () => {
       ];
       await nextTick();
 
-      // Make the button appear
       const publishButton = wrapper.find("button:last-child");
       expect(publishButton.exists()).toBe(true);
 
-      // Call the method directly
-      await wrapper.vm.submitPost();
-
-      // Verify mock was called
+      await (wrapper.vm as any).submitPost();
       expect(mockFetch).toHaveBeenCalled();
     });
 
     it("shows success message after successful upload", async () => {
-      // Reset mock
       mockFetch.mockReset();
-
-      // Mock localStorage to return a token
       mockLocalStorage.getItem.mockReturnValue("test-token");
 
-      // Mock successful API response
       mockFetch.mockResolvedValueOnce({
         ok: true,
-        headers: {
-          get: () => "application/json",
-        },
+        headers: { get: () => "application/json" },
         json: async () => ({ id: 1, message: "Success" }),
       });
 
-      // Add a file manually to the component's state
-      wrapper.vm.files = [
+      (wrapper.vm as any).files = [
         {
           preview: "mock-url",
           file: createMockFile("test.jpg", "image/jpeg"),
@@ -273,41 +210,30 @@ describe("AttachMediaSection", () => {
       ];
       await nextTick();
 
-      // Submit the form
       const publishButton = wrapper.find("button:last-child");
       await publishButton.trigger("click");
 
-      // Wait for async operation
       await new Promise((resolve) => setTimeout(resolve, 50));
       await nextTick();
 
-      // Set success message directly since we're just testing the UI
-      wrapper.vm.successMessage = "Post created successfully!";
+      (wrapper.vm as any).successMessage = "Post created successfully!";
       await nextTick();
 
-      // Verify success message appears
       expect(wrapper.find(".bg-green-600").exists()).toBe(true);
     });
 
     it("shows error message on upload failure", async () => {
-      // Reset mock
       mockFetch.mockReset();
-
-      // Mock localStorage to return a token
       mockLocalStorage.getItem.mockReturnValue("test-token");
 
-      // Mock failed API response
       mockFetch.mockResolvedValueOnce({
         ok: false,
         status: 400,
-        headers: {
-          get: () => "application/json",
-        },
+        headers: { get: () => "application/json" },
         json: async () => ({ detail: "Upload failed" }),
       });
 
-      // Add a file manually to the component's state
-      wrapper.vm.files = [
+      (wrapper.vm as any).files = [
         {
           preview: "mock-url",
           file: createMockFile("test.jpg", "image/jpeg"),
@@ -316,36 +242,26 @@ describe("AttachMediaSection", () => {
       ];
       await nextTick();
 
-      // Submit the form
       const publishButton = wrapper.find("button:last-child");
       await publishButton.trigger("click");
 
-      // Wait for async operation
       await new Promise((resolve) => setTimeout(resolve, 50));
       await nextTick();
 
-      // Set error message directly since we're just testing the UI
-      wrapper.vm.errorMessage = "Upload failed";
+      (wrapper.vm as any).errorMessage = "Upload failed";
       await nextTick();
 
-      // Verify error message appears
       expect(wrapper.find(".bg-red-600").exists()).toBe(true);
     });
   });
 
   describe("UI Interactions", () => {
-    beforeEach(() => {
-      wrapper = createWrapper();
-    });
-
     it("allows closing error messages", async () => {
-      // Set error message directly
-      wrapper.vm.errorMessage = "Test error";
+      (wrapper.vm as any).errorMessage = "Test error";
       await nextTick();
 
       expect(wrapper.find(".bg-red-600").exists()).toBe(true);
 
-      // Click close button
       const closeButton = wrapper.find(".bg-red-600 button");
       await closeButton.trigger("click");
       await nextTick();
@@ -354,13 +270,11 @@ describe("AttachMediaSection", () => {
     });
 
     it("allows closing success messages", async () => {
-      // Set success message directly
-      wrapper.vm.successMessage = "Test success";
+      (wrapper.vm as any).successMessage = "Test success";
       await nextTick();
 
       expect(wrapper.find(".bg-green-600").exists()).toBe(true);
 
-      // Click close button
       const closeButton = wrapper.find(".bg-green-600 button");
       await closeButton.trigger("click");
       await nextTick();
